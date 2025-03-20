@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react"
 
-const GROQ_API_KEY ="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"
+const GROQ_API_KEY ="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"
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 
 export function useGroqAI() {
@@ -20,7 +20,7 @@ export function useGroqAI() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            model: "mixtral-8x7b-32768",
+            model: "deepseek-r1-distill-llama-70b",
             messages: [
               {
                 role: "system",

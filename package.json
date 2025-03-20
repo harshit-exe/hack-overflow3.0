@@ -34,6 +34,7 @@
     "@react-three/drei": "^9.121.4",
     "@react-three/fiber": "^8.13.0",
     "axios": "^1.7.9",
+    "canvas-confetti": "^1.9.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dagre": "^0.8.5",
