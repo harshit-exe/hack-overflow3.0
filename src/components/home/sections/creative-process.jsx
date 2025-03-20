@@ -28,10 +28,10 @@ export default function CreativeProcess() {
 
       <div className="container mx-auto px-4 relative z-10">
         <motion.div className="max-w-3xl mx-auto" style={{ opacity, y }}>
-          <Badge className="mb-6">INTRODUCING LAYERS</Badge>
+          <Badge className="mb-6">INTRODUCING MARG.ai</Badge>
 
           <TextReveal className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6" delay={0.1}>
-            Your creative process deserves better.
+          Your Future, Your Success – Marg.AI Helps You Achieve It
           </TextReveal>
 
           <motion.p
@@ -41,8 +41,7 @@ export default function CreativeProcess() {
             transition={{ duration: 0.5, delay: 0.4 }}
             viewport={{ once: true }}
           >
-            You're racing to create exceptional work, but traditional design tools slow you down with unnecessary
-            complexity and steep learning curves.
+            Building a career can be overwhelming. MARG.ai simplifies your journey by providing career counseling, skill assessments, and expert mentorship, so you can make informed decisions with confidence.
           </motion.p>
 
           <motion.p
@@ -52,7 +51,7 @@ export default function CreativeProcess() {
             transition={{ duration: 0.5, delay: 0.5 }}
             viewport={{ once: true }}
           >
-            That's why we built Layers.
+            That's why we Marg.ai
           </motion.p>
 
           <motion.div
