@@ -1,18 +1,8 @@
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata = {
   title: "Create Next App",
@@ -24,7 +14,7 @@ export default function RootLayout({ children }) {
     <GoogleOAuthProvider clientId="826677420756-nko3kgf62n3sr85l5spgduhs1qi2o0tq.apps.googleusercontent.com">
       <html lang="en">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`antialiased`}
         >
           {children}
           <ToastContainer />

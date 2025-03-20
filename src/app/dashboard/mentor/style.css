@@ -1,0 +1,35 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap");
+
+:root {
+  --leva-sizes-rootWidth: 340px;
+}
+
+/* Keep #root styles for other components */
+#root {
+  width: 100vw;
+  height: 100vh;
+}
+
+/* Ensure Three.js Canvas is full-screen */
+.three-canvas {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 1;
+}
+
+body {
+  margin: 0;
+  /* background-color: #312c2b; */
+  /* background-image: url('/bg.png');
+  background-repeat: no-repeat; */
+  /* width: 100vh; */
+}
+
+body.greenScreen {
+  background-color: #00ff00;
+  background-image: none;
+}
+

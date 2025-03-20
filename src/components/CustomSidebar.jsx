@@ -25,7 +25,7 @@ const navigationItems = [
       {
         name: "Virtual Mentor",
         icon: "mdi:account-school",
-        link: "/dashboard/path/mentor",
+        link: "/dashboard/mentor",
       },
       {
         name: "AI Generated Roadmap",
