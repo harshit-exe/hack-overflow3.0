@@ -255,7 +255,7 @@ export default function DashboardLayout({ children }) {
                   </Avatar>
                   <div className="hidden md:block">
                     <span className="text-sm font-medium">
-                      {isAuthenticated ? user?.name : "_"}
+                      {isAuthenticated ? user?.name : "__"}
                     </span>
                   </div>
                   <ChevronDown className="h-4 w-4 text-[#9ca3af]" />
