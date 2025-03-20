@@ -1,18 +1,24 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import { motion, AnimatePresence } from "framer-motion"
-import { Icon } from "@iconify/react"
-import { cn } from "@/lib/utils"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Separator } from "@/components/ui/separator"
-import { useRouter, usePathname } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { LogOut, ChevronLeft, ChevronDown, Search } from "lucide-react"
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+import { Icon } from "@iconify/react";
+import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
+import { useRouter, usePathname } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { LogOut, ChevronLeft, ChevronDown, Search } from "lucide-react";
 // import { useAuth } from "@/hooks/useAuth";
-import { toast } from "react-toastify"
+import { toast } from "react-toastify";
+import { useAuth } from "@/hooks/useAuth";
 
 // Updated navigation items with links for parent items
 const navigationItems = [
@@ -137,141 +143,141 @@ const navigationItems = [
     color: "#c084fc",
     link: "/dashboard/settings",
   },
-]
+];
 
 export function EnhancedSidebar({ user, onExpandChange, setToggleFunction }) {
-  const [isExpanded, setIsExpanded] = useState(true)
-  const [activeItem, setActiveItem] = useState(null)
-  const [activeSubItem, setActiveSubItem] = useState(null)
-  const [hoveredItem, setHoveredItem] = useState(null)
-  const [searchQuery, setSearchQuery] = useState("")
-  const router = useRouter()
-  const pathname = usePathname()
-  const { logout } = useState(null)
+  const [isExpanded, setIsExpanded] = useState(true);
+  const [activeItem, setActiveItem] = useState(null);
+  const [activeSubItem, setActiveSubItem] = useState(null);
+  const [hoveredItem, setHoveredItem] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
+  const pathname = usePathname();
+  const { logout } = useAuth();
 
   // Function to check if a path is active
   const isPathActive = (path) => {
-    if (!pathname) return false
-    return pathname === path || pathname.startsWith(`${path}/`)
-  }
+    if (!pathname) return false;
+    return pathname === path || pathname.startsWith(`${path}/`);
+  };
 
   // Initialize active items based on current path
   useEffect(() => {
-    if (!pathname) return
+    if (!pathname) return;
 
     // Find which navigation item matches the current path
     for (const item of navigationItems) {
       if (item.link && isPathActive(item.link)) {
-        setActiveItem(item.name)
+        setActiveItem(item.name);
 
         if (item.children) {
           for (const child of item.children) {
             if (child.link && isPathActive(child.link)) {
-              setActiveSubItem(child.name)
-              return
+              setActiveSubItem(child.name);
+              return;
             }
 
             if (child.children) {
               for (const subChild of child.children) {
                 if (subChild.link && isPathActive(subChild.link)) {
-                  setActiveSubItem(child.name)
-                  return
+                  setActiveSubItem(child.name);
+                  return;
                 }
               }
             }
           }
         }
-        return
+        return;
       }
     }
-  }, [pathname])
+  }, [pathname]);
 
   const handleLogout = async () => {
-    const response = await logout()
+    const response = await logout();
     if (response?.success) {
-      toast.success("Logout successful!")
-      router.push("/login")
+      toast.success("Logout successful!");
+      router.push("/login");
     } else {
-      toast.error(response?.message || "Logout failed")
+      toast.error(response?.message || "Logout failed");
     }
-  }
+  };
 
   // Handle clicking on a parent item
   const handleItemClick = (item, event) => {
     if (!isExpanded) {
-      setIsExpanded(true)
+      setIsExpanded(true);
     }
 
     // If the item has children, toggle the dropdown
     if (item.children) {
       // If the dropdown arrow is clicked, only toggle the dropdown
       if (event.target.closest(".dropdown-arrow")) {
-        event.preventDefault()
-        setActiveItem(activeItem === item.name ? null : item.name)
-        return
+        event.preventDefault();
+        setActiveItem(activeItem === item.name ? null : item.name);
+        return;
       }
 
       // If the item itself is clicked (not the arrow), navigate to its link
       if (item.link) {
-        router.push(item.link)
+        router.push(item.link);
       }
 
       // Always open the dropdown when clicking on the item
-      setActiveItem(item.name)
+      setActiveItem(item.name);
     } else if (item.link) {
       // If the item has no children, just navigate to its link
-      router.push(item.link)
+      router.push(item.link);
     }
-  }
+  };
 
   // Handle clicking on a child item
   const handleSubItemClick = (subItem, event) => {
-    event.stopPropagation()
+    event.stopPropagation();
 
     // If the dropdown arrow is clicked, only toggle the dropdown
     if (event.target.closest(".dropdown-arrow")) {
-      event.preventDefault()
-      setActiveSubItem(activeSubItem === subItem.name ? null : subItem.name)
-      return
+      event.preventDefault();
+      setActiveSubItem(activeSubItem === subItem.name ? null : subItem.name);
+      return;
     }
 
     // If the item has children, toggle the dropdown and navigate to its link
     if (subItem.children) {
       if (subItem.link) {
-        router.push(subItem.link)
+        router.push(subItem.link);
       }
-      setActiveSubItem(activeSubItem === subItem.name ? null : subItem.name)
+      setActiveSubItem(activeSubItem === subItem.name ? null : subItem.name);
     } else if (subItem.link) {
       // If the item has no children, just navigate to its link
-      router.push(subItem.link)
+      router.push(subItem.link);
     }
-  }
+  };
 
   const toggleSidebar = () => {
-    setIsExpanded((prev) => !prev)
-    onExpandChange(!isExpanded)
-  }
+    setIsExpanded((prev) => !prev);
+    onExpandChange(!isExpanded);
+  };
 
   useEffect(() => {
     if (setToggleFunction) {
-      setToggleFunction(toggleSidebar)
+      setToggleFunction(toggleSidebar);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
-        setIsExpanded(false)
-        onExpandChange(false)
+        setIsExpanded(false);
+        onExpandChange(false);
       } else {
-        setIsExpanded(true)
-        onExpandChange(true)
+        setIsExpanded(true);
+        onExpandChange(true);
       }
-    }
+    };
 
-    window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
-  }, [onExpandChange])
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [onExpandChange]);
 
   // Filter navigation items based on search query
   const filteredItems = searchQuery
@@ -283,16 +289,20 @@ export function EnhancedSidebar({ user, onExpandChange, setToggleFunction }) {
               (child) =>
                 child.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 (child.children &&
-                  child.children.some((subChild) => subChild.name.toLowerCase().includes(searchQuery.toLowerCase()))),
-            )),
+                  child.children.some((subChild) =>
+                    subChild.name
+                      .toLowerCase()
+                      .includes(searchQuery.toLowerCase())
+                  ))
+            ))
       )
-    : navigationItems
+    : navigationItems;
 
   return (
     <motion.div
       className={cn(
         "fixed left-0 top-0 h-screen bg-[#000000] text-white transition-all duration-200 ease-in-out z-50 border-r border-[#3c3c3c]",
-        isExpanded ? "w-64" : "w-16",
+        isExpanded ? "w-64" : "w-16"
       )}
       animate={{ width: isExpanded ? 256 : 64 }}
       style={{
@@ -306,9 +316,9 @@ export function EnhancedSidebar({ user, onExpandChange, setToggleFunction }) {
               onClick={toggleSidebar}
               className="w-10 h-10 border-2 border-[#6366F1] cursor-pointer transition-transform hover:scale-105 active:scale-95"
             >
-              <AvatarImage src={user?.picture} alt={user?.firstName} />
+              <AvatarImage src={user?.picture} alt={user?.name} />
               <AvatarFallback className="bg-gradient-to-br from-[#2563eb] to-[#6366F1] text-white">
-                {user?.firstName?.charAt(0) || "U"}
+                {user?.name?.charAt(0) || "U"}
               </AvatarFallback>
             </Avatar>
             {isExpanded && (
@@ -319,8 +329,12 @@ export function EnhancedSidebar({ user, onExpandChange, setToggleFunction }) {
                 transition={{ duration: 0.2 }}
                 className="ml-3"
               >
-                <p className="text-sm font-medium text-white">{user?.firstName || "User"}</p>
-                <p className="text-xs text-[#9ca3af]">{user?.email || "user@example.com"}</p>
+                <p className="text-sm font-medium text-white">
+                  {user?.name || "User"}
+                </p>
+                <p className="text-xs text-[#9ca3af]">
+                  {user?.email || "user@example.com"}
+                </p>
               </motion.div>
             )}
           </div>
@@ -366,8 +380,8 @@ export function EnhancedSidebar({ user, onExpandChange, setToggleFunction }) {
                           activeItem === item.name
                             ? "bg-[#1a1a1a] text-white border-l-2 border-l-[#6366F1]"
                             : hoveredItem === item.name
-                              ? "bg-[#1a1a1a] text-white"
-                              : "text-[#9ca3af] hover:bg-[#1a1a1a] hover:text-white",
+                            ? "bg-[#1a1a1a] text-white"
+                            : "text-[#9ca3af] hover:bg-[#1a1a1a] hover:text-white"
                         )}
                         onClick={(e) => handleItemClick(item, e)}
                         onHoverStart={() => setHoveredItem(item.name)}
@@ -378,22 +392,33 @@ export function EnhancedSidebar({ user, onExpandChange, setToggleFunction }) {
                         <div
                           className={cn(
                             "flex items-center justify-center w-8 h-8 rounded-lg mr-3",
-                            activeItem === item.name ? "bg-gradient-to-br from-black to-[#1a1a1a]" : "",
+                            activeItem === item.name
+                              ? "bg-gradient-to-br from-black to-[#1a1a1a]"
+                              : ""
                           )}
                         >
                           <Icon
                             icon={item.icon}
-                            className={cn("w-5 h-5 transition-transform", activeItem === item.name ? "scale-110" : "")}
+                            className={cn(
+                              "w-5 h-5 transition-transform",
+                              activeItem === item.name ? "scale-110" : ""
+                            )}
                             style={{ color: item.color }}
                           />
                         </div>
-                        {isExpanded && <span className="text-sm flex-1 font-medium">{item.name}</span>}
+                        {isExpanded && (
+                          <span className="text-sm flex-1 font-medium">
+                            {item.name}
+                          </span>
+                        )}
                         {isExpanded && item.children && (
                           <div
                             className="dropdown-arrow p-1 rounded-full hover:bg-[#2a2a2a] transition-colors"
                             onClick={(e) => {
-                              e.stopPropagation()
-                              setActiveItem(activeItem === item.name ? null : item.name)
+                              e.stopPropagation();
+                              setActiveItem(
+                                activeItem === item.name ? null : item.name
+                              );
                             }}
                           >
                             <ChevronDown
@@ -407,7 +432,10 @@ export function EnhancedSidebar({ user, onExpandChange, setToggleFunction }) {
                     </div>
                   </TooltipTrigger>
                   {!isExpanded && (
-                    <TooltipContent side="right" className="bg-[#1a1a1a] text-white border border-[#3c3c3c]">
+                    <TooltipContent
+                      side="right"
+                      className="bg-[#1a1a1a] text-white border border-[#3c3c3c]"
+                    >
                       {item.name}
                     </TooltipContent>
                   )}
@@ -430,26 +458,38 @@ export function EnhancedSidebar({ user, onExpandChange, setToggleFunction }) {
                                   "flex items-center p-2 rounded-lg cursor-pointer transition-all duration-200",
                                   activeSubItem === child.name
                                     ? "bg-[#1a1a1a] text-white"
-                                    : "text-[#9ca3af] hover:bg-[#1a1a1a] hover:text-white",
+                                    : "text-[#9ca3af] hover:bg-[#1a1a1a] hover:text-white"
                                 )}
                                 whileHover={{ scale: 1.02, x: 2 }}
                                 whileTap={{ scale: 0.98 }}
                                 onClick={(e) => handleSubItemClick(child, e)}
                               >
                                 <div className="flex items-center justify-center w-6 h-6 rounded-md mr-3">
-                                  <Icon icon={child.icon} className="w-4 h-4" style={{ color: item.color }} />
+                                  <Icon
+                                    icon={child.icon}
+                                    className="w-4 h-4"
+                                    style={{ color: item.color }}
+                                  />
                                 </div>
-                                <span className="text-sm flex-1">{child.name}</span>
+                                <span className="text-sm flex-1">
+                                  {child.name}
+                                </span>
                                 <div
                                   className="dropdown-arrow p-1 rounded-full hover:bg-[#2a2a2a] transition-colors"
                                   onClick={(e) => {
-                                    e.stopPropagation()
-                                    setActiveSubItem(activeSubItem === child.name ? null : child.name)
+                                    e.stopPropagation();
+                                    setActiveSubItem(
+                                      activeSubItem === child.name
+                                        ? null
+                                        : child.name
+                                    );
                                   }}
                                 >
                                   <ChevronDown
                                     className={`w-3 h-3 transition-transform duration-300 ${
-                                      activeSubItem === child.name ? "rotate-180" : ""
+                                      activeSubItem === child.name
+                                        ? "rotate-180"
+                                        : ""
                                     }`}
                                   />
                                 </div>
@@ -461,13 +501,17 @@ export function EnhancedSidebar({ user, onExpandChange, setToggleFunction }) {
                                     "flex items-center p-2 rounded-lg transition-all duration-200",
                                     isPathActive(child.link)
                                       ? "bg-[#1a1a1a] text-white"
-                                      : "text-[#9ca3af] hover:bg-[#1a1a1a] hover:text-white",
+                                      : "text-[#9ca3af] hover:bg-[#1a1a1a] hover:text-white"
                                   )}
                                   whileHover={{ scale: 1.02, x: 2 }}
                                   whileTap={{ scale: 0.98 }}
                                 >
                                   <div className="flex items-center justify-center w-6 h-6 rounded-md mr-3">
-                                    <Icon icon={child.icon} className="w-4 h-4" style={{ color: item.color }} />
+                                    <Icon
+                                      icon={child.icon}
+                                      className="w-4 h-4"
+                                      style={{ color: item.color }}
+                                    />
                                   </div>
                                   <span className="text-sm">{child.name}</span>
                                 </motion.div>
@@ -486,13 +530,16 @@ export function EnhancedSidebar({ user, onExpandChange, setToggleFunction }) {
                                 className="ml-4 mt-1 space-y-1 pl-3 border-l border-[#3c3c3c]"
                               >
                                 {child.children.map((subChild) => (
-                                  <Link href={subChild.link} key={subChild.name}>
+                                  <Link
+                                    href={subChild.link}
+                                    key={subChild.name}
+                                  >
                                     <motion.div
                                       className={cn(
                                         "flex items-center p-1.5 rounded-lg transition-all duration-200",
                                         isPathActive(subChild.link)
                                           ? "bg-[#1a1a1a] text-white"
-                                          : "text-[#9ca3af] hover:bg-[#1a1a1a] hover:text-white",
+                                          : "text-[#9ca3af] hover:bg-[#1a1a1a] hover:text-white"
                                       )}
                                       whileHover={{ scale: 1.02, x: 2 }}
                                       whileTap={{ scale: 0.98 }}
@@ -504,7 +551,9 @@ export function EnhancedSidebar({ user, onExpandChange, setToggleFunction }) {
                                           style={{ color: item.color }}
                                         />
                                       </div>
-                                      <span className="text-xs">{subChild.name}</span>
+                                      <span className="text-xs">
+                                        {subChild.name}
+                                      </span>
                                     </motion.div>
                                   </Link>
                                 ))}
@@ -533,12 +582,13 @@ export function EnhancedSidebar({ user, onExpandChange, setToggleFunction }) {
               onClick={handleLogout}
             >
               <LogOut className="mr-2 h-4 w-4" />
-              {isExpanded && <span className="text-sm font-medium">Logout</span>}
+              {isExpanded && (
+                <span className="text-sm font-medium">Logout</span>
+              )}
             </Button>
           </motion.div>
         </div>
       </div>
     </motion.div>
-  )
+  );
 }
-
