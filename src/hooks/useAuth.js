@@ -223,6 +223,7 @@ export const useAuth = () => {
 
   return {
     ...authState,
+    signup,
     googleLogin,
     login,
     logout,

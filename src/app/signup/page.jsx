@@ -17,7 +17,7 @@ const page = () => {
   const handleSignup = async () => {
     const response = await signup(name, email, password);
     if (response.success) {
-      toast.success("Signup successful!");
+      toast.success("Signup successful");
       router.push("/login");
     } else {
       toast.error(response.message);
