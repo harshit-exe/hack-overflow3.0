@@ -14,26 +14,28 @@ import { LogOut, ChevronLeft, ChevronDown, Search } from "lucide-react"
 // import { useAuth } from "@/hooks/useAuth";
 import { toast } from "react-toastify"
 
+// Updated navigation items with links for parent items
 const navigationItems = [
   {
     name: "Course Path",
     icon: "mdi:book-open-variant",
     color: "#60a5fa",
+    link: "/dashboard/path", // Added link for parent item
     children: [
       {
         name: "Virtual Mentor",
         icon: "mdi:account-school",
-        link: "/dashboard/mentor",
+        link: "/dashboard/path/mentor",
       },
       {
         name: "AI Generated Roadmap",
         icon: "mdi:map-outline",
-        link: "/dashboard/roadmap",
+        link: "/dashboard/path/roadmap",
       },
       {
         name: "AI Powered Course Recommender",
         icon: "mdi:robot-outline",
-        link: "/dashboard/course-recommender",
+        link: "/dashboard/path/course-recommender",
       },
     ],
   },
@@ -41,10 +43,12 @@ const navigationItems = [
     name: "Skill Prepare",
     icon: "mdi:briefcase-outline",
     color: "#4ade80",
+    link: "/dashboard/skill", // Added link for parent item
     children: [
       {
         name: "Resume",
         icon: "mdi:file-document-edit-outline",
+        link: "/dashboard/resume", // Added link for parent item
         children: [
           {
             name: "Builder",
@@ -71,6 +75,7 @@ const navigationItems = [
       {
         name: "Preparation",
         icon: "mdi:notebook-outline",
+        link: "/dashboard/preparation", // Added link for parent item
         children: [
           {
             name: "Mock Interview",
@@ -87,6 +92,7 @@ const navigationItems = [
       {
         name: "Job Simulation",
         icon: "mdi:virtual-reality",
+        link: "/dashboard/job-simulation", // Added link for parent item
         children: [
           {
             name: "VR Job Simulation",
@@ -106,6 +112,7 @@ const navigationItems = [
     name: "Job",
     icon: "mdi:briefcase-search",
     color: "#facc15",
+    link: "/dashboard/job", // Added link for parent item
     children: [
       {
         name: "Trend and Salary",
@@ -156,27 +163,25 @@ export function EnhancedSidebar({ user, onExpandChange, setToggleFunction }) {
     for (const item of navigationItems) {
       if (item.link && isPathActive(item.link)) {
         setActiveItem(item.name)
-        return
-      }
 
-      if (item.children) {
-        for (const child of item.children) {
-          if (child.link && isPathActive(child.link)) {
-            setActiveItem(item.name)
-            setActiveSubItem(null)
-            return
-          }
+        if (item.children) {
+          for (const child of item.children) {
+            if (child.link && isPathActive(child.link)) {
+              setActiveSubItem(child.name)
+              return
+            }
 
-          if (child.children) {
-            for (const subChild of child.children) {
-              if (subChild.link && isPathActive(subChild.link)) {
-                setActiveItem(item.name)
-                setActiveSubItem(child.name)
-                return
+            if (child.children) {
+              for (const subChild of child.children) {
+                if (subChild.link && isPathActive(subChild.link)) {
+                  setActiveSubItem(child.name)
+                  return
+                }
               }
             }
           }
         }
+        return
       }
     }
   }, [pathname])
@@ -191,25 +196,53 @@ export function EnhancedSidebar({ user, onExpandChange, setToggleFunction }) {
     }
   }
 
-  const handleItemClick = (item) => {
+  // Handle clicking on a parent item
+  const handleItemClick = (item, event) => {
     if (!isExpanded) {
       setIsExpanded(true)
     }
 
+    // If the item has children, toggle the dropdown
     if (item.children) {
-      setActiveItem(activeItem === item.name ? null : item.name)
-      setActiveSubItem(null)
+      // If the dropdown arrow is clicked, only toggle the dropdown
+      if (event.target.closest(".dropdown-arrow")) {
+        event.preventDefault()
+        setActiveItem(activeItem === item.name ? null : item.name)
+        return
+      }
+
+      // If the item itself is clicked (not the arrow), navigate to its link
+      if (item.link) {
+        router.push(item.link)
+      }
+
+      // Always open the dropdown when clicking on the item
+      setActiveItem(item.name)
     } else if (item.link) {
+      // If the item has no children, just navigate to its link
       router.push(item.link)
     }
   }
 
+  // Handle clicking on a child item
   const handleSubItemClick = (subItem, event) => {
     event.stopPropagation()
 
+    // If the dropdown arrow is clicked, only toggle the dropdown
+    if (event.target.closest(".dropdown-arrow")) {
+      event.preventDefault()
+      setActiveSubItem(activeSubItem === subItem.name ? null : subItem.name)
+      return
+    }
+
+    // If the item has children, toggle the dropdown and navigate to its link
     if (subItem.children) {
+      if (subItem.link) {
+        router.push(subItem.link)
+      }
       setActiveSubItem(activeSubItem === subItem.name ? null : subItem.name)
     } else if (subItem.link) {
+      // If the item has no children, just navigate to its link
       router.push(subItem.link)
     }
   }
@@ -240,7 +273,7 @@ export function EnhancedSidebar({ user, onExpandChange, setToggleFunction }) {
     return () => window.removeEventListener("resize", handleResize)
   }, [onExpandChange])
 
-  // Filter navigation items based on search q
+  // Filter navigation items based on search query
   const filteredItems = searchQuery
     ? navigationItems.filter(
         (item) =>
@@ -273,9 +306,9 @@ export function EnhancedSidebar({ user, onExpandChange, setToggleFunction }) {
               onClick={toggleSidebar}
               className="w-10 h-10 border-2 border-[#6366F1] cursor-pointer transition-transform hover:scale-105 active:scale-95"
             >
-              <AvatarImage src={user?.picture} alt={user?.name} />
+              <AvatarImage src={user?.picture} alt={user?.firstName} />
               <AvatarFallback className="bg-gradient-to-br from-[#2563eb] to-[#6366F1] text-white">
-                {user?.name?.charAt(0) || "U"}
+                {user?.firstName?.charAt(0) || "U"}
               </AvatarFallback>
             </Avatar>
             {isExpanded && (
@@ -286,7 +319,7 @@ export function EnhancedSidebar({ user, onExpandChange, setToggleFunction }) {
                 transition={{ duration: 0.2 }}
                 className="ml-3"
               >
-                <p className="text-sm font-medium text-white">{user?.name || "User"}</p>
+                <p className="text-sm font-medium text-white">{user?.firstName || "User"}</p>
                 <p className="text-xs text-[#9ca3af]">{user?.email || "user@example.com"}</p>
               </motion.div>
             )}
@@ -326,42 +359,52 @@ export function EnhancedSidebar({ user, onExpandChange, setToggleFunction }) {
               <TooltipProvider key={item.name}>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <motion.div
-                      className={cn(
-                        "flex items-center p-2.5 rounded-lg cursor-pointer transition-all duration-200",
-                        activeItem === item.name
-                          ? "bg-[#1a1a1a] text-white border-l-2 border-l-[#6366F1]"
-                          : hoveredItem === item.name
-                            ? "bg-[#1a1a1a] text-white"
-                            : "text-[#9ca3af] hover:bg-[#1a1a1a] hover:text-white",
-                      )}
-                      onClick={() => handleItemClick(item)}
-                      onHoverStart={() => setHoveredItem(item.name)}
-                      onHoverEnd={() => setHoveredItem(null)}
-                      whileHover={{ scale: 1.02, x: 2 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <div
+                    <div className="relative">
+                      <motion.div
                         className={cn(
-                          "flex items-center justify-center w-8 h-8 rounded-lg mr-3",
-                          activeItem === item.name ? "bg-gradient-to-br from-black to-[#1a1a1a]" : "",
+                          "flex items-center p-2.5 rounded-lg cursor-pointer transition-all duration-200",
+                          activeItem === item.name
+                            ? "bg-[#1a1a1a] text-white border-l-2 border-l-[#6366F1]"
+                            : hoveredItem === item.name
+                              ? "bg-[#1a1a1a] text-white"
+                              : "text-[#9ca3af] hover:bg-[#1a1a1a] hover:text-white",
                         )}
+                        onClick={(e) => handleItemClick(item, e)}
+                        onHoverStart={() => setHoveredItem(item.name)}
+                        onHoverEnd={() => setHoveredItem(null)}
+                        whileHover={{ scale: 1.02, x: 2 }}
+                        whileTap={{ scale: 0.98 }}
                       >
-                        <Icon
-                          icon={item.icon}
-                          className={cn("w-5 h-5 transition-transform", activeItem === item.name ? "scale-110" : "")}
-                          style={{ color: item.color }}
-                        />
-                      </div>
-                      {isExpanded && <span className="text-sm flex-1 font-medium">{item.name}</span>}
-                      {isExpanded && item.children && (
-                        <ChevronDown
-                          className={`w-4 h-4 transition-transform duration-300 ${
-                            activeItem === item.name ? "rotate-180" : ""
-                          }`}
-                        />
-                      )}
-                    </motion.div>
+                        <div
+                          className={cn(
+                            "flex items-center justify-center w-8 h-8 rounded-lg mr-3",
+                            activeItem === item.name ? "bg-gradient-to-br from-black to-[#1a1a1a]" : "",
+                          )}
+                        >
+                          <Icon
+                            icon={item.icon}
+                            className={cn("w-5 h-5 transition-transform", activeItem === item.name ? "scale-110" : "")}
+                            style={{ color: item.color }}
+                          />
+                        </div>
+                        {isExpanded && <span className="text-sm flex-1 font-medium">{item.name}</span>}
+                        {isExpanded && item.children && (
+                          <div
+                            className="dropdown-arrow p-1 rounded-full hover:bg-[#2a2a2a] transition-colors"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setActiveItem(activeItem === item.name ? null : item.name)
+                            }}
+                          >
+                            <ChevronDown
+                              className={`w-4 h-4 transition-transform duration-300 ${
+                                activeItem === item.name ? "rotate-180" : ""
+                              }`}
+                            />
+                          </div>
+                        )}
+                      </motion.div>
+                    </div>
                   </TooltipTrigger>
                   {!isExpanded && (
                     <TooltipContent side="right" className="bg-[#1a1a1a] text-white border border-[#3c3c3c]">
@@ -380,47 +423,57 @@ export function EnhancedSidebar({ user, onExpandChange, setToggleFunction }) {
                     >
                       {item.children.map((child) => (
                         <div key={child.name}>
-                          {child.children ? (
-                            <motion.div
-                              className={cn(
-                                "flex items-center p-2 rounded-lg cursor-pointer transition-all duration-200",
-                                activeSubItem === child.name
-                                  ? "bg-[#1a1a1a] text-white"
-                                  : "text-[#9ca3af] hover:bg-[#1a1a1a] hover:text-white",
-                              )}
-                              whileHover={{ scale: 1.02, x: 2 }}
-                              whileTap={{ scale: 0.98 }}
-                              onClick={(e) => handleSubItemClick(child, e)}
-                            >
-                              <div className="flex items-center justify-center w-6 h-6 rounded-md mr-3">
-                                <Icon icon={child.icon} className="w-4 h-4" style={{ color: item.color }} />
-                              </div>
-                              <span className="text-sm flex-1">{child.name}</span>
-                              <ChevronDown
-                                className={`w-3 h-3 transition-transform duration-300 ${
-                                  activeSubItem === child.name ? "rotate-180" : ""
-                                }`}
-                              />
-                            </motion.div>
-                          ) : (
-                            <Link href={child.link}>
+                          <div className="relative">
+                            {child.children ? (
                               <motion.div
                                 className={cn(
-                                  "flex items-center p-2 rounded-lg transition-all duration-200",
-                                  isPathActive(child.link)
+                                  "flex items-center p-2 rounded-lg cursor-pointer transition-all duration-200",
+                                  activeSubItem === child.name
                                     ? "bg-[#1a1a1a] text-white"
                                     : "text-[#9ca3af] hover:bg-[#1a1a1a] hover:text-white",
                                 )}
                                 whileHover={{ scale: 1.02, x: 2 }}
                                 whileTap={{ scale: 0.98 }}
+                                onClick={(e) => handleSubItemClick(child, e)}
                               >
                                 <div className="flex items-center justify-center w-6 h-6 rounded-md mr-3">
                                   <Icon icon={child.icon} className="w-4 h-4" style={{ color: item.color }} />
                                 </div>
-                                <span className="text-sm">{child.name}</span>
+                                <span className="text-sm flex-1">{child.name}</span>
+                                <div
+                                  className="dropdown-arrow p-1 rounded-full hover:bg-[#2a2a2a] transition-colors"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    setActiveSubItem(activeSubItem === child.name ? null : child.name)
+                                  }}
+                                >
+                                  <ChevronDown
+                                    className={`w-3 h-3 transition-transform duration-300 ${
+                                      activeSubItem === child.name ? "rotate-180" : ""
+                                    }`}
+                                  />
+                                </div>
                               </motion.div>
-                            </Link>
-                          )}
+                            ) : (
+                              <Link href={child.link}>
+                                <motion.div
+                                  className={cn(
+                                    "flex items-center p-2 rounded-lg transition-all duration-200",
+                                    isPathActive(child.link)
+                                      ? "bg-[#1a1a1a] text-white"
+                                      : "text-[#9ca3af] hover:bg-[#1a1a1a] hover:text-white",
+                                  )}
+                                  whileHover={{ scale: 1.02, x: 2 }}
+                                  whileTap={{ scale: 0.98 }}
+                                >
+                                  <div className="flex items-center justify-center w-6 h-6 rounded-md mr-3">
+                                    <Icon icon={child.icon} className="w-4 h-4" style={{ color: item.color }} />
+                                  </div>
+                                  <span className="text-sm">{child.name}</span>
+                                </motion.div>
+                              </Link>
+                            )}
+                          </div>
 
                           {/* Third level navigation */}
                           {child.children && activeSubItem === child.name && (
