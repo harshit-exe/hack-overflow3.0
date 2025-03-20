@@ -1,276 +1,464 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
-import { Icon } from "@iconify/react";
-import { cn } from "@/lib/utils";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { LogOut, ChevronRight, ChevronLeft, Menu } from "lucide-react";
+import { useState, useEffect } from "react"
+import Link from "next/link"
+import { motion, AnimatePresence } from "framer-motion"
+import { Icon } from "@iconify/react"
+import { cn } from "@/lib/utils"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Separator } from "@/components/ui/separator"
+import { useRouter, usePathname } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { LogOut, ChevronLeft, ChevronDown, Search } from "lucide-react"
 // import { useAuth } from "@/hooks/useAuth";
-import { toast } from "react-toastify";
+import { toast } from "react-toastify"
 
 const navigationItems = [
   {
-    "name": "Learning Hub",
-    "icon": "mdi:book-open-variant",
-    "color": "#60a5fa",
-    "children": [
+    name: "Course Path",
+    icon: "mdi:book-open-variant",
+    color: "#60a5fa",
+    children: [
       {
-        "name": "Virtual Mentor",
-        "icon": "mdi:school-outline",
-        "link": "/dashboard/mentor"
+        name: "Virtual Mentor",
+        icon: "mdi:account-school",
+        link: "/dashboard/mentor",
       },
       {
-        "name": "Roadmap Generator",
-        "icon": "mdi:map-outline",
-        "link": "/dashboard/sidebar/learning-hub/roadmap"
+        name: "AI Generated Roadmap",
+        icon: "mdi:map-outline",
+        link: "/dashboard/roadmap",
       },
       {
-        "name": "AI Mock Test",
-        "icon": "mdi:robot-outline",
-        "link": "/dashboard/sidebar/learning-hub/mocktest"
+        name: "AI Powered Course Recommender",
+        icon: "mdi:robot-outline",
+        link: "/dashboard/course-recommender",
+      },
+    ],
+  },
+  {
+    name: "Skill Prepare",
+    icon: "mdi:briefcase-outline",
+    color: "#4ade80",
+    children: [
+      {
+        name: "Resume",
+        icon: "mdi:file-document-edit-outline",
+        children: [
+          {
+            name: "Builder",
+            icon: "mdi:file-document-plus",
+            link: "/dashboard/resume-builder",
+          },
+          {
+            name: "Cover Letter",
+            icon: "mdi:file-document-edit",
+            link: "/dashboard/cover-letter",
+          },
+          {
+            name: "Blockchain",
+            icon: "mdi:cube-outline",
+            link: "/dashboard/blockchain",
+          },
+          {
+            name: "Project Recommender",
+            icon: "mdi:lightbulb-outline",
+            link: "/dashboard/project-recommender",
+          },
+        ],
       },
       {
-        "name": "Courses",
-        "icon": "mdi:book-multiple-outline",
-        "link": "/dashboard/sidebar/learning-hub/courses"
-      }
-    ]
-  },
-  {
-    "name": "Career Development",
-    "icon": "mdi:briefcase-outline",
-    "color": "#4ade80",
-    "children": [
-      {
-        "name": "Resume Builder",
-        "icon": "mdi:file-document-edit-outline",
-        "link": "/dashboard/sidebar/career-development/resume"
+        name: "Preparation",
+        icon: "mdi:notebook-outline",
+        children: [
+          {
+            name: "Mock Interview",
+            icon: "mdi:account-voice",
+            link: "/dashboard/mock-interview",
+          },
+          {
+            name: "Mock Test",
+            icon: "mdi:clipboard-text-outline",
+            link: "/dashboard/mock-test",
+          },
+        ],
       },
       {
-        "name": "Mock Interview",
-        "icon": "mdi:account-voice",
-        "link": "/dashboard/sidebar/career-development/mockinterview"
+        name: "Job Simulation",
+        icon: "mdi:virtual-reality",
+        children: [
+          {
+            name: "VR Job Simulation",
+            icon: "mdi:vr-headset",
+            link: "/dashboard/vr-job-simulation",
+          },
+          {
+            name: "VR Mentoring",
+            icon: "mdi:account-supervisor",
+            link: "/dashboard/vr-mentoring",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    name: "Job",
+    icon: "mdi:briefcase-search",
+    color: "#facc15",
+    children: [
+      {
+        name: "Trend and Salary",
+        icon: "mdi:trending-up",
+        link: "/dashboard/trends",
       },
       {
-        "name": "Crash Course Generator",
-        "icon": "mdi:flash-outline",
-        "link": "/dashboard/sidebar/career-development/crashcourse"
-      }
-    ]
+        name: "Job Opening",
+        icon: "mdi:door-open",
+        link: "/dashboard/job-openings",
+      },
+      {
+        name: "Events and Updates",
+        icon: "mdi:calendar-clock",
+        link: "/dashboard/events",
+      },
+    ],
   },
   {
-    "name": "VR Simulation",
-    "icon": "mdi:virtual-reality",
-    "color": "#facc15",
-    "link": "/dashboard/virtual-room"
+    name: "Settings",
+    icon: "mdi:cog-outline",
+    color: "#c084fc",
+    link: "/dashboard/settings",
   },
-  {
-    "name": "Events & Webinars",
-    "icon": "mdi:calendar-multiple-check",
-    "color": "#fb923c",
-    "link": "/dashboard/sidebar/event-webinars/events"
-  },
-  {
-    "name": "Astrotalks",
-    "icon": "mdi:podcast",
-    "color": "#ff6b6b",
-    "link": "/dashboard/sidebar/gamification/astrotalks"
-  },
-  {
-    "name": "Account Settings",
-    "icon": "mdi:cog-outline",
-    "color": "#c084fc",
-    "link": "/dashboard/sidebar/account-settings/settings"
-  }
-  
-];
+]
 
 export function EnhancedSidebar({ user, onExpandChange, setToggleFunction }) {
-  const [isExpanded, setIsExpanded] = useState(true);
-  const [activeItem, setActiveItem] = useState(null);
-  const [hoveredItem, setHoveredItem] = useState(null);
-  const router = useRouter();
-  const { logout } = useState(null);
+  const [isExpanded, setIsExpanded] = useState(true)
+  const [activeItem, setActiveItem] = useState(null)
+  const [activeSubItem, setActiveSubItem] = useState(null)
+  const [hoveredItem, setHoveredItem] = useState(null)
+  const [searchQuery, setSearchQuery] = useState("")
+  const router = useRouter()
+  const pathname = usePathname()
+  const { logout } = useState(null)
+
+  // Function to check if a path is active
+  const isPathActive = (path) => {
+    if (!pathname) return false
+    return pathname === path || pathname.startsWith(`${path}/`)
+  }
+
+  // Initialize active items based on current path
+  useEffect(() => {
+    if (!pathname) return
+
+    // Find which navigation item matches the current path
+    for (const item of navigationItems) {
+      if (item.link && isPathActive(item.link)) {
+        setActiveItem(item.name)
+        return
+      }
+
+      if (item.children) {
+        for (const child of item.children) {
+          if (child.link && isPathActive(child.link)) {
+            setActiveItem(item.name)
+            setActiveSubItem(null)
+            return
+          }
+
+          if (child.children) {
+            for (const subChild of child.children) {
+              if (subChild.link && isPathActive(subChild.link)) {
+                setActiveItem(item.name)
+                setActiveSubItem(child.name)
+                return
+              }
+            }
+          }
+        }
+      }
+    }
+  }, [pathname])
 
   const handleLogout = async () => {
-    const response = await logout();
-    if (response.success) {
-      toast.success("Logout successful!");
-      router.push("/login");
+    const response = await logout()
+    if (response?.success) {
+      toast.success("Logout successful!")
+      router.push("/login")
     } else {
-      toast.error(response.message);
+      toast.error(response?.message || "Logout failed")
     }
-  };
+  }
 
   const handleItemClick = (item) => {
     if (!isExpanded) {
-      setIsExpanded(true);
+      setIsExpanded(true)
     }
-  
+
     if (item.children) {
-      setActiveItem(activeItem === item.name ? null : item.name);
+      setActiveItem(activeItem === item.name ? null : item.name)
+      setActiveSubItem(null)
     } else if (item.link) {
-      router.push(item.link); // Redirect to the parent route
+      router.push(item.link)
     }
-  };
+  }
+
+  const handleSubItemClick = (subItem, event) => {
+    event.stopPropagation()
+
+    if (subItem.children) {
+      setActiveSubItem(activeSubItem === subItem.name ? null : subItem.name)
+    } else if (subItem.link) {
+      router.push(subItem.link)
+    }
+  }
 
   const toggleSidebar = () => {
-    setIsExpanded((prev) => !prev);
-    setActiveItem(null);
-    onExpandChange(!isExpanded);
-  };
+    setIsExpanded((prev) => !prev)
+    onExpandChange(!isExpanded)
+  }
 
   useEffect(() => {
     if (setToggleFunction) {
-      setToggleFunction(toggleSidebar);
+      setToggleFunction(toggleSidebar)
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
-        setIsExpanded(false);
-        onExpandChange(false);
+        setIsExpanded(false)
+        onExpandChange(false)
       } else {
-        setIsExpanded(true);
-        onExpandChange(true);
+        setIsExpanded(true)
+        onExpandChange(true)
       }
-    };
+    }
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [onExpandChange]);
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [onExpandChange])
+
+  // Filter navigation items based on search query
+  const filteredItems = searchQuery
+    ? navigationItems.filter(
+        (item) =>
+          item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (item.children &&
+            item.children.some(
+              (child) =>
+                child.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                (child.children &&
+                  child.children.some((subChild) => subChild.name.toLowerCase().includes(searchQuery.toLowerCase()))),
+            )),
+      )
+    : navigationItems
 
   return (
     <motion.div
       className={cn(
-        "fixed left-0 top-0 h-screen bg-[#000000] text-white transition-all duration-100 ease-in-out z-50 border-r border-[#3c3c3c]",
-        isExpanded ? "w-64" : "w-18"
+        "fixed left-0 top-0 h-screen bg-[#000000] text-white transition-all duration-200 ease-in-out z-50 border-r border-[#3c3c3c]",
+        isExpanded ? "w-64" : "w-16",
       )}
       animate={{ width: isExpanded ? 256 : 64 }}
-      // transition={{ duration: 0.1 }}
+      style={{
+        boxShadow: "0 0 15px rgba(0, 0, 0, 0.5)",
+      }}
     >
-      <div className="flex flex-col h-full ">
-        <div className="p-4 pl-0 flex items-center justify-between">
-          <div className="p-4 flex items-center">
-            <Avatar   onClick={toggleSidebar} className="w-10 h-10 border-2 border-[#6366F1]">
+      <div className="flex flex-col h-full">
+        <div className="p-4 flex items-center justify-between">
+          <div className="flex items-center">
+            <Avatar
+              onClick={toggleSidebar}
+              className="w-10 h-10 border-2 border-[#6366F1] cursor-pointer transition-transform hover:scale-105 active:scale-95"
+            >
               <AvatarImage src={user?.picture} alt={user?.firstName} />
-              <AvatarFallback className="bg-[#2563eb] text-white">
-                {user?.firstName?.charAt(0)}
+              <AvatarFallback className="bg-gradient-to-br from-[#2563eb] to-[#6366F1] text-white">
+                {user?.firstName?.charAt(0) || "U"}
               </AvatarFallback>
             </Avatar>
             {isExpanded && (
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -10 }}
+                transition={{ duration: 0.2 }}
                 className="ml-3"
               >
-                <p className="text-sm font-medium text-white">
-                  {user?.firstName}
-                </p>
-                <p className="text-xs text-[#9ca3af]">{user?.email}</p>
+                <p className="text-sm font-medium text-white">{user?.firstName || "User"}</p>
+                <p className="text-xs text-[#9ca3af]">{user?.email || "user@example.com"}</p>
               </motion.div>
             )}
           </div>
-          {/* {isExpanded ? (
-            <Li href="/dashboard">
-              <motion.h2
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="text-xl font-bold bg-gradient-to-r from-[#60a5fa] to-[#6366F1] bg-clip-text text-transparent cursor-pointer"
-              >
-                DishaMarg
-              </motion.h2>
-            </Li
-          ) : // <Icon icon="noto:books" className="w-8 h-8" />
-          null} */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleSidebar}
-            className="text-white hover:bg-[#374151]"
-          >
-            {isExpanded ? <ChevronLeft size={20} /> : null}
-          </Button>
+          {isExpanded && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleSidebar}
+              className="text-white hover:bg-[#374151] rounded-full transition-all duration-200 hover:scale-110 active:scale-95"
+            >
+              <ChevronLeft size={18} />
+            </Button>
+          )}
         </div>
-        <Separator className=" bg-[#3c3c3c]" />
-        <div className="flex-1  overflow-y-auto scrollbar-hide">
-          <div className="mt-5 space-y-6 p-2">
-            {navigationItems.map((item) => (
+
+        {isExpanded && (
+          <div className="px-4 pb-2">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[#9ca3af]" />
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full h-9 pl-10 pr-4 rounded-lg bg-[#111111] text-white border border-[#3c3c3c] focus:outline-none focus:ring-1 focus:ring-[#6366F1] focus:border-[#6366F1] transition-all"
+              />
+            </div>
+          </div>
+        )}
+
+        <Separator className="bg-[#3c3c3c] my-2" />
+
+        <div className="flex-1 overflow-y-auto scrollbar-hide">
+          <div className="mt-2 space-y-1 p-2">
+            {filteredItems.map((item) => (
               <TooltipProvider key={item.name}>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <motion.div
                       className={cn(
-                        "flex items-center p-2 rounded-lg cursor-pointer transition-colors",
-                        activeItem === item.name || hoveredItem === item.name
-                          ? "bg-[#374151] text-white"
-                          : "text-[#9ca3af] hover:bg-[#374151] hover:text-white"
+                        "flex items-center p-2.5 rounded-lg cursor-pointer transition-all duration-200",
+                        activeItem === item.name
+                          ? "bg-[#1a1a1a] text-white border-l-2 border-l-[#6366F1]"
+                          : hoveredItem === item.name
+                            ? "bg-[#1a1a1a] text-white"
+                            : "text-[#9ca3af] hover:bg-[#1a1a1a] hover:text-white",
                       )}
                       onClick={() => handleItemClick(item)}
                       onHoverStart={() => setHoveredItem(item.name)}
                       onHoverEnd={() => setHoveredItem(null)}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
+                      whileHover={{ scale: 1.02, x: 2 }}
+                      whileTap={{ scale: 0.98 }}
                     >
-                      <Icon
-                        icon={item.icon}
-                        className="w-6 h-6 mr-3"
-                        style={{ color: item.color }}
-                      />
-                      {isExpanded && (
-                        <span className="text-sm">{item.name}</span>
-                      )}
-                      {isExpanded && activeItem === item.name && (
-                        <ChevronRight className="ml-auto w-4 h-4" />
+                      <div
+                        className={cn(
+                          "flex items-center justify-center w-8 h-8 rounded-lg mr-3",
+                          activeItem === item.name ? "bg-gradient-to-br from-black to-[#1a1a1a]" : "",
+                        )}
+                      >
+                        <Icon
+                          icon={item.icon}
+                          className={cn("w-5 h-5 transition-transform", activeItem === item.name ? "scale-110" : "")}
+                          style={{ color: item.color }}
+                        />
+                      </div>
+                      {isExpanded && <span className="text-sm flex-1 font-medium">{item.name}</span>}
+                      {isExpanded && item.children && (
+                        <ChevronDown
+                          className={`w-4 h-4 transition-transform duration-300 ${
+                            activeItem === item.name ? "rotate-180" : ""
+                          }`}
+                        />
                       )}
                     </motion.div>
                   </TooltipTrigger>
                   {!isExpanded && (
-                    <TooltipContent
-                      side="right"
-                      className="bg-[#374151] text-white"
-                    >
+                    <TooltipContent side="right" className="bg-[#1a1a1a] text-white border border-[#3c3c3c]">
                       {item.name}
                     </TooltipContent>
                   )}
                 </Tooltip>
-                {isExpanded && activeItem === item.name && (
+                {isExpanded && activeItem === item.name && item.children && (
                   <AnimatePresence>
                     <motion.div
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
-                      className="ml-6 mt-2 space-y-2"
+                      transition={{ duration: 0.2 }}
+                      className="ml-4 mt-1 space-y-1 pl-4 border-l border-[#3c3c3c]"
                     >
                       {item.children.map((child) => (
-                        <Link href={child.link} key={child.name}>
-                          <motion.div
-                            className="flex items-center p-2 rounded-lg text-[#9ca3af] hover:bg-[#374151] hover:text-white transition-colors"
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                          >
-                            <Icon
-                              icon={child.icon}
-                              className="w-5 h-5 mr-3"
-                              style={{ color: item.color }}
-                            />
-                            <span className="text-sm">{child.name}</span>
-                          </motion.div>
-                        </Link>
+                        <div key={child.name}>
+                          {child.children ? (
+                            <motion.div
+                              className={cn(
+                                "flex items-center p-2 rounded-lg cursor-pointer transition-all duration-200",
+                                activeSubItem === child.name
+                                  ? "bg-[#1a1a1a] text-white"
+                                  : "text-[#9ca3af] hover:bg-[#1a1a1a] hover:text-white",
+                              )}
+                              whileHover={{ scale: 1.02, x: 2 }}
+                              whileTap={{ scale: 0.98 }}
+                              onClick={(e) => handleSubItemClick(child, e)}
+                            >
+                              <div className="flex items-center justify-center w-6 h-6 rounded-md mr-3">
+                                <Icon icon={child.icon} className="w-4 h-4" style={{ color: item.color }} />
+                              </div>
+                              <span className="text-sm flex-1">{child.name}</span>
+                              <ChevronDown
+                                className={`w-3 h-3 transition-transform duration-300 ${
+                                  activeSubItem === child.name ? "rotate-180" : ""
+                                }`}
+                              />
+                            </motion.div>
+                          ) : (
+                            <Link href={child.link}>
+                              <motion.div
+                                className={cn(
+                                  "flex items-center p-2 rounded-lg transition-all duration-200",
+                                  isPathActive(child.link)
+                                    ? "bg-[#1a1a1a] text-white"
+                                    : "text-[#9ca3af] hover:bg-[#1a1a1a] hover:text-white",
+                                )}
+                                whileHover={{ scale: 1.02, x: 2 }}
+                                whileTap={{ scale: 0.98 }}
+                              >
+                                <div className="flex items-center justify-center w-6 h-6 rounded-md mr-3">
+                                  <Icon icon={child.icon} className="w-4 h-4" style={{ color: item.color }} />
+                                </div>
+                                <span className="text-sm">{child.name}</span>
+                              </motion.div>
+                            </Link>
+                          )}
+
+                          {/* Third level navigation */}
+                          {child.children && activeSubItem === child.name && (
+                            <AnimatePresence>
+                              <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: "auto" }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.2 }}
+                                className="ml-4 mt-1 space-y-1 pl-3 border-l border-[#3c3c3c]"
+                              >
+                                {child.children.map((subChild) => (
+                                  <Link href={subChild.link} key={subChild.name}>
+                                    <motion.div
+                                      className={cn(
+                                        "flex items-center p-1.5 rounded-lg transition-all duration-200",
+                                        isPathActive(subChild.link)
+                                          ? "bg-[#1a1a1a] text-white"
+                                          : "text-[#9ca3af] hover:bg-[#1a1a1a] hover:text-white",
+                                      )}
+                                      whileHover={{ scale: 1.02, x: 2 }}
+                                      whileTap={{ scale: 0.98 }}
+                                    >
+                                      <div className="flex items-center justify-center w-5 h-5 rounded-md mr-2">
+                                        <Icon
+                                          icon={subChild.icon}
+                                          className="w-3.5 h-3.5"
+                                          style={{ color: item.color }}
+                                        />
+                                      </div>
+                                      <span className="text-xs">{subChild.name}</span>
+                                    </motion.div>
+                                  </Link>
+                                ))}
+                              </motion.div>
+                            </AnimatePresence>
+                          )}
+                        </div>
                       ))}
                     </motion.div>
                   </AnimatePresence>
@@ -280,40 +468,24 @@ export function EnhancedSidebar({ user, onExpandChange, setToggleFunction }) {
           </div>
         </div>
         <Separator className="my-2 bg-[#3c3c3c]" />
-        <div className="p-4 mb-5">
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+        <div className="p-4 mb-2">
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="overflow-hidden rounded-lg bg-gradient-to-r from-[#1a1a1a] to-[#111111] hover:from-[#111111] hover:to-[#1a1a1a]"
+          >
             <Button
               variant="ghost"
-              className="w-full justify-start text-[#ff4e4e] hover:text-[#e84343] hover:bg-[#374151]"
+              className="w-full justify-start text-[#ff4e4e] hover:text-[#ff6b6b] hover:bg-transparent"
               onClick={handleLogout}
             >
               <LogOut className="mr-2 h-4 w-4" />
-              {isExpanded && <span className="text-sm">Logout</span>}
+              {isExpanded && <span className="text-sm font-medium">Logout</span>}
             </Button>
           </motion.div>
         </div>
-        {/* <div className="p-4 flex items-center">
-          <Avatar className="w-10 h-10 border-2 border-[#6366F1]">
-            <AvatarImage src={user?.pic} alt={user?.username} />
-            <AvatarFallback className="bg-[#2563eb] text-white">
-              {user?.username?.charAt(0)}
-            </AvatarFallback>
-          </Avatar>
-          {isExpanded && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="ml-3"
-            >
-              <p className="text-sm font-medium text-white">
-                {user?.firstName}
-              </p>
-              <p className="text-xs text-[#9ca3af]">{user?.email}</p>
-            </motion.div>
-          )}
-        </div> */}
       </div>
     </motion.div>
-  );
+  )
 }
+
