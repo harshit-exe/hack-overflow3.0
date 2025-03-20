@@ -66,10 +66,10 @@ export default function Features() {
                     <div className="w-8 h-8 rounded-full bg-yellow-500 border-2 border-gray-900"></div>
                   </div>
                 </div>
-                <h3 className="font-bold mb-2">Real-time Collaboration</h3>
+                <h3 className="font-bold mb-2">AI 3D Mentor</h3>
                 <p className="text-gray-400 text-sm">
-                  Work together seamlessly with your team in real-time. See changes as they happen and never worry about
-                  version conflicts again.
+                Your personal virtual career guide
+
                 </p>
               </HoverCard>
             </motion.div>
@@ -81,10 +81,10 @@ export default function Features() {
                     We've achieved <span className="text-purple-300">incredible</span> growth this year
                   </div>
                 </div>
-                <h3 className="font-bold mb-2">Interactive Prototyping</h3>
+                <h3 className="font-bold mb-2">VR Office</h3>
                 <p className="text-gray-400 text-sm">
-                  Engage your clients with prototypes that feel like the real product. Create interactive experiences
-                  without writing a single line of code.
+                Try jobs in a virtual world
+
                 </p>
               </HoverCard>
             </motion.div>
@@ -96,7 +96,7 @@ export default function Features() {
                   <div className="w-8 h-8 rounded-md bg-gray-800 flex items-center justify-center">⇧</div>
                   <div className="w-8 h-8 rounded-md bg-gray-800 flex items-center justify-center">P</div>
                 </div>
-                <h3 className="font-bold mb-2">Keyboard Quick Actions</h3>
+                <h3 className="font-bold mb-2">AI Astrotalk</h3>
                 <p className="text-gray-400 text-sm">
                   Powerful commands to help you create designs more quickly. Access any tool or feature with just a few
                   keystrokes.
@@ -112,11 +112,11 @@ export default function Features() {
             viewport={{ once: true }}
             className="grid grid-cols-2 md:grid-cols-5 gap-6"
           >
-            <FeatureItem icon={<Zap className="w-2 h-2 text-black" />} text="Asset Library" />
-            <FeatureItem icon={<Code className="w-2 h-2 text-black" />} text="Code Preview" />
-            <FeatureItem icon={<Layout className="w-2 h-2 text-black" />} text="Flow Mode" />
-            <FeatureItem icon={<Zap className="w-2 h-2 text-black" />} text="Smart Sync" />
-            <FeatureItem icon={<Layout className="w-2 h-2 text-black" />} text="Auto Layout" />
+            <FeatureItem icon={<Zap className="w-2 h-2 text-black" />} text="Roadmap-Generator" />
+            <FeatureItem icon={<Code className="w-2 h-2 text-black" />} text="Resume-Builder" />
+            <FeatureItem icon={<Layout className="w-2 h-2 text-black" />} text="Trending-Jobs" />
+            <FeatureItem icon={<Zap className="w-2 h-2 text-black" />} text="Event-Updates" />
+            <FeatureItem icon={<Layout className="w-2 h-2 text-black" />} text="Switch-domain" />
           </motion.div>
         </motion.div>
       </div>

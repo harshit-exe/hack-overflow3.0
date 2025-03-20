@@ -19,29 +19,29 @@ export default function Faq() {
 
   const faqs = [
     {
-      question: "How is Layers different from other design tools?",
+      question: "What is Marg.ai?",
       answer:
-        "Unlike traditional design tools, Layers prioritizes speed and simplicity without sacrificing power. Our intelligent interface adapts to your workflow, learns from your actions, and eliminates clicks that would slow you down.",
+        "Marg.ai helps students and professionals choose the right career with expert guidance, skill assessments, and mentorship.",
     },
     {
-      question: "Is there a learning curve?",
+      question: "Who can use Marg.ai?",
       answer:
-        "Layers is designed to be intuitive from day one. Most users can get started immediately with zero training, and our contextual help system guides you through advanced features as you need them.",
+        "Anyone looking for career clarity—students, job seekers, or working professionals.",
     },
     {
-      question: "How do you handle version control?",
+      question: "Is Marg.ai free to use?",
       answer:
-        "Layers includes built-in version history that automatically tracks changes. You can name versions, compare differences, and roll back to previous states with a single click.",
+        "Basic features are free. Advanced mentorship may have premium plans.",
     },
     {
-      question: "Can I work offline?",
+      question: "How does Marg.ai help me?",
       answer:
-        "Yes! Layers has a robust offline mode that automatically syncs your changes when you reconnect. You'll never lose work due to connectivity issues.",
+        "Through career counseling, skill-building tools, and personalized roadmaps.",
     },
     {
-      question: "How does Layers handle collaboration?",
+      question: "Do I need a career goal to start?",
       answer:
-        "Layers offers real-time collaboration where multiple team members can work on the same file simultaneously. Changes are synced instantly, and our commenting system makes feedback and revisions seamless.",
+        "No, Marg.ai helps you explore and discover the right career path.",
     },
   ]
 

@@ -1,26 +1,29 @@
-"use client"
+"use client";
 
-import { useRef } from "react"
-import { motion, useScroll, useTransform } from "framer-motion"
-import { Star } from "lucide-react"
-import Badge from "../ui-components/badge"
-import GlowButton from "../ui-components/glow-button"
-import TextReveal from "../ui-components/text-reveal"
-import ParallaxLayer from "../ui-components/parallax-layer"
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { Star } from "lucide-react";
+import Badge from "../ui-components/badge";
+import GlowButton from "../ui-components/glow-button";
+import TextReveal from "../ui-components/text-reveal";
+import ParallaxLayer from "../ui-components/parallax-layer";
 
 export default function Hero() {
-  const heroRef = useRef(null)
+  const heroRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
-  })
+  });
 
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
-  const y = useTransform(scrollYProgress, [0, 0.5], [0, 100])
-  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.9])
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const y = useTransform(scrollYProgress, [0, 0.5], [0, 100]);
+  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.9]);
 
   return (
-    <section ref={heroRef} className="relative min-h-screen flex items-center pt-20 pb-16 overflow-hidden">
+    <section
+      ref={heroRef}
+      className="relative min-h-screen flex items-center pt-20 pb-16 overflow-hidden"
+    >
       {/* Background elements */}
       <ParallaxLayer className="absolute inset-0 z-0" speed={0.2}>
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-[#8CE563]/10 rounded-full filter blur-3xl"></div>
@@ -29,17 +32,33 @@ export default function Hero() {
 
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-gray-900 via-black to-black z-0"></div>
 
-      <motion.div className="container mx-auto px-4 relative z-10" style={{ opacity, y, scale }}>
+      <motion.div
+        className="container mx-auto px-4 relative z-10"
+        style={{ opacity, y, scale }}
+      >
         <div className="max-w-4xl mx-auto text-center">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
             <Badge variant="purple" className="mb-6">
-              $19/mo personal license
+              Cipher Squad Present
             </Badge>
           </motion.div>
 
-          <TextReveal className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight" delay={0.2}>
-            Impactful design, created effortlessly
-          </TextReveal>
+          {/* <TextReveal
+            className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight"
+            delay={0.2}
+          > */}
+          <div
+            className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight"
+            delay={0.2}
+          >
+            <span className="text-[#8CE563]">Marg.ai</span> - Smart Career
+            Choice, उज्ज्वल भविष्य!
+          </div>
+          {/* </TextReveal> */}
 
           <motion.p
             className="text-gray-400 max-w-xl mx-auto mb-8 text-sm md:text-base lg:text-lg"
@@ -47,8 +66,9 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.6 }}
           >
-            Design tools shouldn't slow you down. Layers combines powerful features with an intuitive interface that
-            keeps you in your creative flow.
+            Confused about your career? Marg.AI guides you with expert advice,
+            skill-building, and personalized mentorship — plan your future with
+            confidence.
           </motion.p>
 
           <motion.div
@@ -57,15 +77,9 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.8 }}
           >
-            <div className="relative w-full sm:w-80 max-w-sm">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="w-full px-4 py-3 rounded-full bg-gray-900/80 backdrop-blur-sm border border-gray-800 focus:outline-none focus:border-[#8CE563] transition-colors duration-300"
-              />
-            </div>
+           
             <GlowButton variant="primary" size="lg">
-              Sign up
+              Get started
             </GlowButton>
           </motion.div>
 
@@ -75,7 +89,7 @@ export default function Hero() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 1 }}
           >
-            Already chosen by these market leaders
+            Trusted by thousands of students and professionals
           </motion.div>
 
           <motion.div
@@ -90,7 +104,7 @@ export default function Hero() {
             >
               <div className="flex items-center">
                 <Star className="w-4 h-4 mr-1 text-[#8CE563]" />
-                <span className="font-medium">Quantum</span>
+                <span className="font-medium">Career Guidance</span>
               </div>
             </motion.div>
             <motion.div
@@ -98,7 +112,7 @@ export default function Hero() {
               whileHover={{ scale: 1.05, y: -5 }}
             >
               <div className="flex items-center">
-                <span className="font-medium">Acme Corp</span>
+                <span className="font-medium">Boost Skills</span>
               </div>
             </motion.div>
             <motion.div
@@ -106,7 +120,7 @@ export default function Hero() {
               whileHover={{ scale: 1.05, y: -5 }}
             >
               <div className="flex items-center">
-                <span className="font-medium">Echo Valley</span>
+                <span className="font-medium">Acheive Goals</span>
               </div>
             </motion.div>
           </motion.div>
@@ -124,6 +138,5 @@ export default function Hero() {
         </div>
       </motion.div>
     </section>
-  )
+  );
 }
-
