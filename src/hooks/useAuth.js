@@ -10,6 +10,29 @@ export const useAuth = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // useEffect(() => {
+  //   const checkAuth = async () => {
+  //     try {
+  //       const response = await fetch(`${apiURL}/api/auth/me`, {
+  //         method: "GET",
+  //         credentials: "include",
+  //       });
+
+  //       if (response.ok) {
+  //         const data = await response.json();
+  //         setIsAuthenticated(true);
+  //         setUser(data.user);
+  //       }
+  //     } catch (error) {
+  //       console.error("Auth check failed:", error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   checkAuth();
+  // }, []);
+
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -18,13 +41,18 @@ export const useAuth = () => {
           credentials: "include",
         });
 
+        const data = await response.json();
+
         if (response.ok) {
-          const data = await response.json();
           setIsAuthenticated(true);
           setUser(data.user);
+        } else {
+          setIsAuthenticated(false);
+          setUser(null);
         }
       } catch (error) {
-        console.error("Auth check failed:", error);
+        setIsAuthenticated(false);
+        setUser(null);
       } finally {
         setLoading(false);
       }

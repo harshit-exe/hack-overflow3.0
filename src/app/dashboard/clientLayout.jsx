@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useCallback, useRef } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { useState, useEffect, useCallback, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowUpRight,
   Bell,
@@ -16,9 +16,9 @@ import {
   BookOpen,
   Briefcase,
   BarChart,
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { EnhancedSidebar } from "@/components/CustomSidebar"
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { EnhancedSidebar } from "@/components/CustomSidebar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,60 +26,90 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import "./style.css"
-import Link from "next/link"
-// import { useAuth } from "@/hooks/useAuth";
+} from "@/components/ui/dropdown-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import "./style.css";
+import Link from "next/link";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function DashboardLayout({ children }) {
-  const { user } = useState(null)
-  const [notifications, setNotifications] = useState([])
-  const [isSidebarExpanded, setIsSidebarExpanded] = useState(true)
-  const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const [searchQuery, setSearchQuery] = useState("")
-  const sidebarRef = useRef(null) // Ref to store child function reference
-  const searchInputRef = useRef(null)
+  const { user, logout, isAuthenticated } = useAuth();
+  const [notifications, setNotifications] = useState([]);
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const sidebarRef = useRef(null); // Ref to store child function reference
+  const searchInputRef = useRef(null);
 
   // Function to call toggleSidebar in child
   const handleToggleSidebar = () => {
     if (sidebarRef.current) {
-      sidebarRef.current() // Calls toggleSidebar from the child
+      sidebarRef.current(); // Calls toggleSidebar from the child
     }
-  }
+  };
 
   const fetchNotifications = useCallback(async () => {
     // Simulating API call
     setNotifications([
-      { id: 1, message: "New course available: Advanced React", time: "2 hours ago", read: false },
-      { id: 2, message: "Your mock interview is scheduled for tomorrow", time: "5 hours ago", read: false },
-      { id: 3, message: "Congratulations! You've earned a new badge", time: "1 day ago", read: true },
-    ])
-  }, [])
+      {
+        id: 1,
+        message: "New course available: Advanced React",
+        time: "2 hours ago",
+        read: false,
+      },
+      {
+        id: 2,
+        message: "Your mock interview is scheduled for tomorrow",
+        time: "5 hours ago",
+        read: false,
+      },
+      {
+        id: 3,
+        message: "Congratulations! You've earned a new badge",
+        time: "1 day ago",
+        read: true,
+      },
+    ]);
+  }, []);
 
   useEffect(() => {
-    fetchNotifications()
-  }, [fetchNotifications])
+    fetchNotifications();
+  }, [fetchNotifications]);
 
   useEffect(() => {
     if (isSearchOpen && searchInputRef.current) {
-      searchInputRef.current.focus()
+      searchInputRef.current.focus();
     }
-  }, [isSearchOpen])
+  }, [isSearchOpen]);
 
   const handleSearch = (e) => {
-    e.preventDefault()
-    console.log("Searching for:", searchQuery)
+    e.preventDefault();
+    console.log("Searching for:", searchQuery);
     // Implement search functionality here
-  }
+  };
 
   const markAllAsRead = () => {
-    setNotifications(notifications.map((n) => ({ ...n, read: true })))
-  }
+    setNotifications(notifications.map((n) => ({ ...n, read: true })));
+  };
 
-  const unreadCount = notifications.filter((n) => !n.read).length
+  const unreadCount = notifications.filter((n) => !n.read).length;
+
+  const handleLogout = async () => {
+    const response = await logout();
+    if (response?.success) {
+      toast.success("Logout successful!");
+      router.push("/login");
+    } else {
+      toast.error(response?.message || "Logout failed");
+    }
+  };
 
   return (
     <div className="flex min-h-screen bg-transparent text-white">
@@ -170,7 +200,11 @@ export default function DashboardLayout({ children }) {
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="relative rounded-full hover:bg-[#1a1a1a]">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="relative rounded-full hover:bg-[#1a1a1a]"
+                      >
                         <Bell className="h-5 w-5 text-[#9ca3af]" />
                         {unreadCount > 0 && (
                           <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-[#ff4e4e] flex items-center justify-center p-0 text-xs">
@@ -188,13 +222,20 @@ export default function DashboardLayout({ children }) {
               <DropdownMenuContent className="w-80 bg-[#1a1a1a] border border-[#3c3c3c] text-white">
                 <DropdownMenuLabel className="flex items-center justify-between">
                   <span>Notifications</span>
-                  <Button variant="ghost" size="sm" className="h-8 text-xs hover:bg-[#2a2a2a]" onClick={markAllAsRead}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 text-xs hover:bg-[#2a2a2a]"
+                    onClick={markAllAsRead}
+                  >
                     Mark all as read
                   </Button>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-[#3c3c3c]" />
                 {notifications.length === 0 ? (
-                  <div className="py-4 text-center text-sm text-[#9ca3af]">No notifications</div>
+                  <div className="py-4 text-center text-sm text-[#9ca3af]">
+                    No notifications
+                  </div>
                 ) : (
                   notifications.map((notification) => (
                     <DropdownMenuItem
@@ -205,10 +246,14 @@ export default function DashboardLayout({ children }) {
                         {!notification.read && (
                           <div className="h-2 w-2 mt-1.5 rounded-full bg-[#6366F1] flex-shrink-0" />
                         )}
-                        {notification.read && <div className="h-2 w-2 mt-1.5 flex-shrink-0" />}
+                        {notification.read && (
+                          <div className="h-2 w-2 mt-1.5 flex-shrink-0" />
+                        )}
                         <div className="flex-1">
                           <p className="text-sm">{notification.message}</p>
-                          <p className="text-xs text-[#9ca3af] mt-1">{notification.time}</p>
+                          <p className="text-xs text-[#9ca3af] mt-1">
+                            {notification.time}
+                          </p>
                         </div>
                       </div>
                     </DropdownMenuItem>
@@ -216,7 +261,10 @@ export default function DashboardLayout({ children }) {
                 )}
                 <DropdownMenuSeparator className="bg-[#3c3c3c]" />
                 <DropdownMenuItem className="justify-center hover:bg-[#2a2a2a]">
-                  <Link href="/dashboard/notifications" className="text-sm text-[#6366F1]">
+                  <Link
+                    href="/dashboard/notifications"
+                    className="text-sm text-[#6366F1]"
+                  >
                     View all notifications
                   </Link>
                 </DropdownMenuItem>
@@ -249,15 +297,21 @@ export default function DashboardLayout({ children }) {
                     </AvatarFallback>
                   </Avatar>
                   <div className="hidden md:block">
-                    <span className="text-sm font-medium">Grace Stanley</span>
+                    <span className="text-sm font-medium">
+                      {isAuthenticated ? user?.name : "_"}
+                    </span>
                   </div>
                   <ChevronDown className="h-4 w-4 text-[#9ca3af]" />
                 </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56 bg-[#1a1a1a] border border-[#3c3c3c] text-white">
                 <DropdownMenuLabel className="flex flex-col">
-                  <span className="font-medium">Grace Stanley</span>
-                  <span className="text-xs text-[#9ca3af]">grace@example.com</span>
+                  <span className="font-medium">
+                    {isAuthenticated ? user?.name : "_"}
+                  </span>
+                  <span className="text-xs text-[#9ca3af]">
+                    {isAuthenticated ? user?.email : "__"}
+                  </span>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-[#3c3c3c]" />
                 <DropdownMenuItem className="hover:bg-[#2a2a2a] cursor-pointer">
@@ -275,7 +329,7 @@ export default function DashboardLayout({ children }) {
                 <DropdownMenuSeparator className="bg-[#3c3c3c]" />
                 <DropdownMenuItem className="hover:bg-[#2a2a2a] text-[#ff4e4e] cursor-pointer">
                   <LogOut className="mr-2 h-4 w-4" />
-                  <span>Logout</span>
+                  <span onClick={handleLogout}>Logout</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -306,6 +360,5 @@ export default function DashboardLayout({ children }) {
         </main>
       </motion.div>
     </div>
-  )
+  );
 }
-
