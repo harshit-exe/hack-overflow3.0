@@ -240,7 +240,7 @@ export function EnhancedSidebar({ user, onExpandChange, setToggleFunction }) {
     return () => window.removeEventListener("resize", handleResize)
   }, [onExpandChange])
 
-  // Filter navigation items based on search query
+  // Filter navigation items based on search que
   const filteredItems = searchQuery
     ? navigationItems.filter(
         (item) =>
