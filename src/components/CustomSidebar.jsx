@@ -273,9 +273,9 @@ export function EnhancedSidebar({ user, onExpandChange, setToggleFunction }) {
               onClick={toggleSidebar}
               className="w-10 h-10 border-2 border-[#6366F1] cursor-pointer transition-transform hover:scale-105 active:scale-95"
             >
-              <AvatarImage src={user?.picture} alt={user?.firstName} />
+              <AvatarImage src={user?.picture} alt={user?.name} />
               <AvatarFallback className="bg-gradient-to-br from-[#2563eb] to-[#6366F1] text-white">
-                {user?.firstName?.charAt(0) || "U"}
+                {user?.name?.charAt(0) || "U"}
               </AvatarFallback>
             </Avatar>
             {isExpanded && (
@@ -286,7 +286,7 @@ export function EnhancedSidebar({ user, onExpandChange, setToggleFunction }) {
                 transition={{ duration: 0.2 }}
                 className="ml-3"
               >
-                <p className="text-sm font-medium text-white">{user?.firstName || "User"}</p>
+                <p className="text-sm font-medium text-white">{user?.name || "User"}</p>
                 <p className="text-xs text-[#9ca3af]">{user?.email || "user@example.com"}</p>
               </motion.div>
             )}
