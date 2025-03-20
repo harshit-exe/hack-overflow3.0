@@ -43,7 +43,7 @@ export default function Footer() {
           viewport={{ once: true }}
           className="mt-6 text-center text-xs text-gray-500"
         >
-          © {new Date().getFullYear()} Layers. All rights reserved.
+          © {new Date().getFullYear()} Marg.ai All rights reserved.
         </motion.div>
       </div>
     </footer>
