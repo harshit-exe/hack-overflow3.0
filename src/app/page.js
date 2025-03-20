@@ -1,17 +1,17 @@
 "use client"
 
 import { useEffect } from "react"
-import Header from "../components/sections/header"
-import Hero from "../components/sections/hero"
-import CreativeProcess from "../components/sections/creative-process"
-import Features from "../components/sections/features"
-import Integrations from "../components/sections/integrations"
-import Faq from "../components/sections/faq"
-import Cta from "../components/sections/cta"
-import Footer from "../components/sections/footer"
-import CursorEffect from "../components/ui-components/cursor-effect"
-import ParticleBackground from "../components/ui-components/particle-background"
-import AnimatedGradient from "../components/ui-components/animated-gradient"
+import Header from "@/components/home/sections/header"
+import Hero from "@/components/home/sections/hero"
+import CreativeProcess from "@/components/home/sections/creative-process"
+import Features from "@/components/home/sections/features"
+import Integrations from "@/components/home/sections/integrations"
+import Faq from "@/components/home/sections/faq"
+import Cta from "@/components/home/sections/cta"
+import Footer from "@/components/home/sections/footer"
+import CursorEffect from "@/components/home/ui-components/cursor-effect"
+import ParticleBackground from "@/components/home/ui-components/particle-background"
+import AnimatedGradient from "@/components/home/ui-components/animated-gradient"
 
 export default function Home() {
   // Smooth scroll implementation

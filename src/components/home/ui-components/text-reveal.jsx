@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { useEffect, useRef } from "react"
-import { motion, useInView, useAnimation } from "framer-motion"
+import { useEffect, useRef } from "react";
+import { motion, useInView, useAnimation } from "framer-motion";
 
 export default function TextReveal({
   children,
@@ -12,18 +12,18 @@ export default function TextReveal({
   duration = 0.5,
   ...props
 }) {
-  const controls = useAnimation()
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once, threshold })
+  const controls = useAnimation();
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once, threshold });
 
   useEffect(() => {
     if (isInView) {
-      controls.start("visible")
+      controls.start("visible");
     }
-  }, [controls, isInView])
+  }, [controls, isInView]);
 
   // Split text into words
-  const words = children.split(" ")
+  const words = typeof children === "string" ? children.split(" ") : [];
 
   const container = {
     hidden: { opacity: 0 },
@@ -34,7 +34,7 @@ export default function TextReveal({
         delayChildren: delay,
       },
     },
-  }
+  };
 
   const child = {
     hidden: { opacity: 0, y: 20 },
@@ -45,16 +45,22 @@ export default function TextReveal({
         duration: duration,
       },
     },
-  }
+  };
 
   return (
-    <motion.div ref={ref} className={className} variants={container} initial="hidden" animate={controls} {...props}>
+    <motion.div
+      ref={ref}
+      className={className}
+      variants={container}
+      initial="hidden"
+      animate={controls}
+      {...props}
+    >
       {words.map((word, i) => (
         <motion.span key={i} className="inline-block mr-1" variants={child}>
           {word}
         </motion.span>
       ))}
     </motion.div>
-  )
+  );
 }
-
