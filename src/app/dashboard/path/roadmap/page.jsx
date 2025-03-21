@@ -46,7 +46,7 @@ export default function CareerRoadmapPage() {
               className="text-center mb-12"
             >
               <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-white to-indigo-300">
-                CAREER DEVELOPMENT ROADMAP
+              <span className="text-blue-600"> CAREER</span>  DEVELOPMENT ROADMAP
               </h1>
               <p className="text-white max-w-3xl mx-auto">
                 Plan your professional journey with our AI-powered career roadmap generator. Get personalized guidance,

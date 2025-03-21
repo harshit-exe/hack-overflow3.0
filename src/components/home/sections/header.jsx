@@ -21,6 +21,13 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const navItems = [
+    { name: "Home", href: "#" },
+    { name: "Features", href: "#features" },
+    { name: "Integrations", href: "#integrations" },
+    { name: "FAQs", href: "#faqs" },
+  ]
+
   const handleLogin = () => router.push("/login"); // Navigate to Login Page
   const handleSignUp = () => router.push("/signup"); // Navigate to Signup Page
 
@@ -28,7 +35,7 @@ export default function Header() {
     <motion.header
       className={`fixed top-0 left-0 right-0 z-50 py-5 transition-all duration-500 ${
         isScrolled
-          ? "bg-black/80 backdrop-blur-md border-b border-gray-800 shadow-lg"
+          ? "bg-black/10 backdrop-blur-md border-b border-gray-800 shadow-lg"
           : "bg-transparent"
       }`}
       initial={{ y: -100 }}
@@ -37,6 +44,25 @@ export default function Header() {
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
         <Logo />
+
+        <nav className="hidden pl-20 md:flex items-center space-x-8">
+          {navItems.map((item, index) => (
+            <motion.a
+              key={item.name}
+              href={item.href}
+              className="text-sm text-gray-300 hover:text-white transition-colors duration-300 relative group"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.1 * index }}
+            >
+              {item.name}
+              <motion.span
+                className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8CE563] group-hover:w-full transition-all duration-300"
+                layoutId={`underline-${item.name}`}
+              />
+            </motion.a>
+          ))}
+        </nav>
 
         <div className="hidden md:flex items-center space-x-6">
           <GlowButton
