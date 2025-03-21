@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { apiURL } from "@/constants";
+import { toast } from "react-toastify";
 
 // Company logos
 const companyLogos = {
@@ -34,205 +35,225 @@ export default function JobListings() {
     const fetchJobs = async () => {
       setIsLoading(true);
       try {
-        // In a real app, this would be an API call
-        // await fetch('/api/jobs')
+        const params = new URLSearchParams({
+          query: "IT jobs",
+          limit: "10",
+          page: "1",
+          num_pages: "1",
+          country: "in",
+          language: "en",
+        });
 
-        const res = await fetch(`${apiURL}/api/jobs/`);
+        const res = await fetch(
+          `${apiURL}/api/jobs/getMergedTrendingJobs?${params.toString()}`,
+          {
+            method: "GET",
+          }
+        );
+
+        if (!res) toast.error("Unable to fetch");
+
+        const data = await res.json();
+
+        setJobs(data.data);
+        setFilteredJobs(data.data);
+
+        setIsLoading(false);
 
         // For demo purposes, we'll use mock data
-        const mockJobs = [
-          {
-            job_id: 1,
-            job_title: "Senior Software Engineer",
-            employer_name: "Google",
-            job_publisher: "Tech Jobs",
-            job_employment_type: "Full-time",
-            job_apply_link: "https://www.google.com/careers",
-            job_country: "United States",
-            job_state: "California",
-            job_city: "Mountain View",
-            job_salary: 150000,
-            employer_logo:
-              "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1200px-Google_%22G%22_Logo.svg.png",
-            job_posted_at: "2022-01-01",
-          },
-          {
-            job_id: 2,
-            job_title: "Software Engineer",
-            employer_name: "Dropbox",
-            job_publisher: "Tech Jobs",
-            job_employment_type: "Full-time",
-            job_apply_link: "https://www.dropbox.com/careers",
-            job_country: "United States",
-            job_state: "California",
-            job_city: "San Francisco",
-            job_salary: 120000,
-            employer_logo:
-              "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Dropbox_logo.svg/1200px-Dropbox_logo.svg.png",
-            job_posted_at: "2022-01-02",
-          },
-          {
-            job_id: 3,
-            job_title: "Product Designer",
-            employer_name: "Airbnb",
-            job_publisher: "Design Jobs",
-            job_employment_type: "Full-time",
-            job_apply_link: "https://www.airbnb.com/careers",
-            job_country: "United States",
-            job_state: "California",
-            job_city: "San Francisco",
-            job_salary: 130000,
-            employer_logo:
-              "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Airbnb_logo.svg/2560px-Airbnb_logo.svg.png",
-            job_posted_at: "2022-01-03",
-          },
-          {
-            job_id: 4,
-            job_title: "Software Engineer",
-            employer_name: "Microsoft",
-            job_publisher: "Tech Jobs",
-            job_employment_type: "Full-time",
-            job_apply_link: "https://www.microsoft.com/careers",
-            job_country: "United States",
-            job_state: "Washington",
-            job_city: "Redmond",
-            job_salary: 140000,
-            employer_logo:
-              "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/1200px-Microsoft_logo.svg.png",
-            job_posted_at: "2022-01-04",
-          },
-          {
-            job_id: 5,
-            job_title: "Software Engineer",
-            employer_name: "Amazon",
-            job_publisher: "Tech Jobs",
-            job_employment_type: "Full-time",
-            job_apply_link: "https://www.amazon.com/careers",
-            job_country: "United States",
-            job_state: "Washington",
-            job_city: "Seattle",
-            job_salary: 145000,
-            employer_logo:
-              "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/1200px-Amazon_logo.svg.png",
-            job_posted_at: "2022-01-05",
-          },
-          {
-            job_id: 6,
-            job_title: "Product Designer",
-            employer_name: "Netflix",
-            job_publisher: "Design Jobs",
-            job_employment_type: "Full-time",
-            job_apply_link: "https://www.netflix.com/careers",
-            job_country: "United States",
-            job_state: "California",
-            job_city: "Los Gatos",
-            job_salary: 125000,
-            employer_logo:
-              "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Netflix_2015_logo.svg/1200px-Netflix_2015_logo.svg.png",
-            job_posted_at: "2022-01-06",
-          },
-          {
-            job_id: "L2TC6UgFvjR8UYBTAAAAAA==",
-            job_title: "Data Scientist- Niharika",
-            employer_name: "Nityo Infotech Services Pte. Ltd",
-            job_publisher: "Foundit.in",
-            job_employment_type: "Full–time",
-            job_apply_link:
-              "https://www.foundit.in/job/data-scientist-niharika-nityo-infotech-services-pte-ltd-india-34218173?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
-            job_country: "IN",
-            job_state: "Gujarat",
-            job_city: "Jaipur",
-            job_salary: 142369,
-            employer_logo:
-              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEt4oc1CfLcOH6D1p8rzmOFtJUQ5HgnMmn_AJ-&s=0",
-            job_posted_at: "1 day ago",
-          },
-          {
-            job_id: "L2TC6UgFvjR8UYBTAAAAAA==",
-            job_title: "Data Scientist- Niharika",
-            employer_name: "Nityo Infotech Services Pte. Ltd",
-            job_publisher: "Foundit.in",
-            job_employment_type: "Full–time",
-            job_apply_link:
-              "https://www.foundit.in/job/data-scientist-niharika-nityo-infotech-services-pte-ltd-india-34218173?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
-            job_country: "IN",
-            job_state: "Gujarat",
-            job_city: "Jaipur",
-            job_salary: 142369,
-            employer_logo:
-              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEt4oc1CfLcOH6D1p8rzmOFtJUQ5HgnMmn_AJ-&s=0",
-            job_posted_at: "1 day ago",
-          },
-          {
-            job_id: "X2YG7TjKPLF8UYCTBBBBBB==",
-            job_title: "Software Engineer",
-            employer_name: "TechSoft Solutions",
-            job_publisher: "LinkedIn",
-            job_employment_type: "Full-time",
-            job_apply_link: "https://www.linkedin.com/jobs/view/1234567890",
-            job_country: "IN",
-            job_state: "Maharashtra",
-            job_city: "Mumbai",
-            job_salary: 95000,
-            employer_logo:
-              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEt4oc1CfLcOH6D1p8rzmOFtJUQ5HgnMmn_AJ-&s=0",
-            job_posted_at: "2 days ago",
-          },
-          {
-            job_id: "M8WZ3XfVjkQ9UYAPCCCCCC==",
-            job_title: "Frontend Developer",
-            employer_name: "WebCrafters Pvt Ltd",
-            job_publisher: "Naukri.com",
-            job_employment_type: "Remote",
-            job_apply_link:
-              "https://www.naukri.com/job-listings-frontend-developer",
-            job_country: "IN",
-            job_state: "Karnataka",
-            job_city: "Bangalore",
-            job_salary: 120000,
-            employer_logo:
-              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEt4oc1CfLcOH6D1p8rzmOFtJUQ5HgnMmn_AJ-&s=0",
-            job_posted_at: "5 hours ago",
-          },
-          {
-            job_id: "Q9PV8BzLkJX7UYDFDDDDDD==",
-            job_title: "Machine Learning Engineer",
-            employer_name: "AI Innovators Inc.",
-            job_publisher: "Indeed",
-            job_employment_type: "Contract",
-            job_apply_link: "https://www.indeed.com/viewjob?jk=87654321",
-            job_country: "IN",
-            job_state: "Telangana",
-            job_city: "Hyderabad",
-            job_salary: 150000,
-            employer_logo:
-              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEt4oc1CfLcOH6D1p8rzmOFtJUQ5HgnMmn_AJ-&s=0",
-            job_posted_at: "3 days ago",
-          },
-          {
-            job_id: "T5XZ6QjLYPK8UYGTEEEEEE==",
-            job_title: "Cyber Security Analyst",
-            employer_name: "SecureNet Global",
-            job_publisher: "Glassdoor",
-            job_employment_type: "Full-time",
-            job_apply_link:
-              "https://www.glassdoor.com/job-listing-cyber-security-analyst",
-            job_country: "IN",
-            job_state: "Delhi",
-            job_city: "New Delhi",
-            job_salary: 110000,
-            employer_logo:
-              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEt4oc1CfLcOH6D1p8rzmOFtJUQ5HgnMmn_AJ-&s=0",
-            job_posted_at: "4 days ago",
-          },
-        ];
+        // const mockJobs = [
+        //   {
+        //     job_id: 1,
+        //     job_title: "Senior Software Engineer",
+        //     employer_name: "Google",
+        //     job_publisher: "Tech Jobs",
+        //     job_employment_type: "Full-time",
+        //     job_apply_link: "https://www.google.com/careers",
+        //     job_country: "United States",
+        //     job_state: "California",
+        //     job_city: "Mountain View",
+        //     job_salary: 150000,
+        //     employer_logo:
+        //       "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1200px-Google_%22G%22_Logo.svg.png",
+        //     job_posted_at: "2022-01-01",
+        //   },
+        //   {
+        //     job_id: 2,
+        //     job_title: "Software Engineer",
+        //     employer_name: "Dropbox",
+        //     job_publisher: "Tech Jobs",
+        //     job_employment_type: "Full-time",
+        //     job_apply_link: "https://www.dropbox.com/careers",
+        //     job_country: "United States",
+        //     job_state: "California",
+        //     job_city: "San Francisco",
+        //     job_salary: 120000,
+        //     employer_logo:
+        //       "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Dropbox_logo.svg/1200px-Dropbox_logo.svg.png",
+        //     job_posted_at: "2022-01-02",
+        //   },
+        //   {
+        //     job_id: 3,
+        //     job_title: "Product Designer",
+        //     employer_name: "Airbnb",
+        //     job_publisher: "Design Jobs",
+        //     job_employment_type: "Full-time",
+        //     job_apply_link: "https://www.airbnb.com/careers",
+        //     job_country: "United States",
+        //     job_state: "California",
+        //     job_city: "San Francisco",
+        //     job_salary: 130000,
+        //     employer_logo:
+        //       "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Airbnb_logo.svg/2560px-Airbnb_logo.svg.png",
+        //     job_posted_at: "2022-01-03",
+        //   },
+        //   {
+        //     job_id: 4,
+        //     job_title: "Software Engineer",
+        //     employer_name: "Microsoft",
+        //     job_publisher: "Tech Jobs",
+        //     job_employment_type: "Full-time",
+        //     job_apply_link: "https://www.microsoft.com/careers",
+        //     job_country: "United States",
+        //     job_state: "Washington",
+        //     job_city: "Redmond",
+        //     job_salary: 140000,
+        //     employer_logo:
+        //       "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/1200px-Microsoft_logo.svg.png",
+        //     job_posted_at: "2022-01-04",
+        //   },
+        //   {
+        //     job_id: 5,
+        //     job_title: "Software Engineer",
+        //     employer_name: "Amazon",
+        //     job_publisher: "Tech Jobs",
+        //     job_employment_type: "Full-time",
+        //     job_apply_link: "https://www.amazon.com/careers",
+        //     job_country: "United States",
+        //     job_state: "Washington",
+        //     job_city: "Seattle",
+        //     job_salary: 145000,
+        //     employer_logo:
+        //       "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/1200px-Amazon_logo.svg.png",
+        //     job_posted_at: "2022-01-05",
+        //   },
+        //   {
+        //     job_id: 6,
+        //     job_title: "Product Designer",
+        //     employer_name: "Netflix",
+        //     job_publisher: "Design Jobs",
+        //     job_employment_type: "Full-time",
+        //     job_apply_link: "https://www.netflix.com/careers",
+        //     job_country: "United States",
+        //     job_state: "California",
+        //     job_city: "Los Gatos",
+        //     job_salary: 125000,
+        //     employer_logo:
+        //       "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Netflix_2015_logo.svg/1200px-Netflix_2015_logo.svg.png",
+        //     job_posted_at: "2022-01-06",
+        //   },
+        //   {
+        //     job_id: "L2TC6UgFvjR8UYBTAAAAAA==",
+        //     job_title: "Data Scientist- Niharika",
+        //     employer_name: "Nityo Infotech Services Pte. Ltd",
+        //     job_publisher: "Foundit.in",
+        //     job_employment_type: "Full–time",
+        //     job_apply_link:
+        //       "https://www.foundit.in/job/data-scientist-niharika-nityo-infotech-services-pte-ltd-india-34218173?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+        //     job_country: "IN",
+        //     job_state: "Gujarat",
+        //     job_city: "Jaipur",
+        //     job_salary: 142369,
+        //     employer_logo:
+        //       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEt4oc1CfLcOH6D1p8rzmOFtJUQ5HgnMmn_AJ-&s=0",
+        //     job_posted_at: "1 day ago",
+        //   },
+        //   {
+        //     job_id: "L2TC6UgFvjR8UYBTAAAAAA==",
+        //     job_title: "Data Scientist- Niharika",
+        //     employer_name: "Nityo Infotech Services Pte. Ltd",
+        //     job_publisher: "Foundit.in",
+        //     job_employment_type: "Full–time",
+        //     job_apply_link:
+        //       "https://www.foundit.in/job/data-scientist-niharika-nityo-infotech-services-pte-ltd-india-34218173?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+        //     job_country: "IN",
+        //     job_state: "Gujarat",
+        //     job_city: "Jaipur",
+        //     job_salary: 142369,
+        //     employer_logo:
+        //       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEt4oc1CfLcOH6D1p8rzmOFtJUQ5HgnMmn_AJ-&s=0",
+        //     job_posted_at: "1 day ago",
+        //   },
+        //   {
+        //     job_id: "X2YG7TjKPLF8UYCTBBBBBB==",
+        //     job_title: "Software Engineer",
+        //     employer_name: "TechSoft Solutions",
+        //     job_publisher: "LinkedIn",
+        //     job_employment_type: "Full-time",
+        //     job_apply_link: "https://www.linkedin.com/jobs/view/1234567890",
+        //     job_country: "IN",
+        //     job_state: "Maharashtra",
+        //     job_city: "Mumbai",
+        //     job_salary: 95000,
+        //     employer_logo:
+        //       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEt4oc1CfLcOH6D1p8rzmOFtJUQ5HgnMmn_AJ-&s=0",
+        //     job_posted_at: "2 days ago",
+        //   },
+        //   {
+        //     job_id: "M8WZ3XfVjkQ9UYAPCCCCCC==",
+        //     job_title: "Frontend Developer",
+        //     employer_name: "WebCrafters Pvt Ltd",
+        //     job_publisher: "Naukri.com",
+        //     job_employment_type: "Remote",
+        //     job_apply_link:
+        //       "https://www.naukri.com/job-listings-frontend-developer",
+        //     job_country: "IN",
+        //     job_state: "Karnataka",
+        //     job_city: "Bangalore",
+        //     job_salary: 120000,
+        //     employer_logo:
+        //       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEt4oc1CfLcOH6D1p8rzmOFtJUQ5HgnMmn_AJ-&s=0",
+        //     job_posted_at: "5 hours ago",
+        //   },
+        //   {
+        //     job_id: "Q9PV8BzLkJX7UYDFDDDDDD==",
+        //     job_title: "Machine Learning Engineer",
+        //     employer_name: "AI Innovators Inc.",
+        //     job_publisher: "Indeed",
+        //     job_employment_type: "Contract",
+        //     job_apply_link: "https://www.indeed.com/viewjob?jk=87654321",
+        //     job_country: "IN",
+        //     job_state: "Telangana",
+        //     job_city: "Hyderabad",
+        //     job_salary: 150000,
+        //     employer_logo:
+        //       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEt4oc1CfLcOH6D1p8rzmOFtJUQ5HgnMmn_AJ-&s=0",
+        //     job_posted_at: "3 days ago",
+        //   },
+        //   {
+        //     job_id: "T5XZ6QjLYPK8UYGTEEEEEE==",
+        //     job_title: "Cyber Security Analyst",
+        //     employer_name: "SecureNet Global",
+        //     job_publisher: "Glassdoor",
+        //     job_employment_type: "Full-time",
+        //     job_apply_link:
+        //       "https://www.glassdoor.com/job-listing-cyber-security-analyst",
+        //     job_country: "IN",
+        //     job_state: "Delhi",
+        //     job_city: "New Delhi",
+        //     job_salary: 110000,
+        //     employer_logo:
+        //       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEt4oc1CfLcOH6D1p8rzmOFtJUQ5HgnMmn_AJ-&s=0",
+        //     job_posted_at: "4 days ago",
+        //   },
+        // ];
 
         // Simulate network delay
-        setTimeout(() => {
-          setJobs(mockJobs);
-          setFilteredJobs(mockJobs);
-          setIsLoading(false);
-        }, 800);
+        // setTimeout(() => {
+        //   setJobs(mockJobs);
+        //   setFilteredJobs(mockJobs);
+        //   setIsLoading(false);
+        // }, 800);
       } catch (error) {
         console.error("Error fetching jobs:", error);
         setIsLoading(false);
