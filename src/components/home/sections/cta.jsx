@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion"
 import GlowButton from "../ui-components/glow-button"
 import TextReveal from "../ui-components/text-reveal"
 import ParallaxLayer from "../ui-components/parallax-layer"
+import { useRouter } from "next/navigation"
 
 export default function Cta() {
   const sectionRef = useRef(null)
@@ -13,6 +14,7 @@ export default function Cta() {
     offset: ["start end", "end start"],
   })
 
+  const router = useRouter()
   const opacity = useTransform(scrollYProgress, [0, 0.3, 0.8], [0, 1, 0.5])
   const scale = useTransform(scrollYProgress, [0, 0.3, 0.8], [0.9, 1, 0.95])
 
@@ -66,6 +68,7 @@ export default function Cta() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
             viewport={{ once: true }}
+            onClick={()=>router.push("/career-gen")}
           >
             <GlowButton variant="primary" size="lg" glowColor="rgba(140, 229, 99, 0.8)">
               Get started

@@ -69,7 +69,7 @@ const navigationItems = [
           {
             name: "Blockchain",
             icon: "mdi:cube-outline",
-            link: "/dashboard/skill/resume/blockchain",
+            link: "/dashboard/blockchain-verify",
           },
           {
             name: "Project Recommender",
