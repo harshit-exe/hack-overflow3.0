@@ -106,10 +106,10 @@ const events = [
 export default function Events() {
   return (
     <div className="bg-transparent text-white min-h-screen p-6">
-      <h2 className="text-5xl font-bold mb-8 text-center"><span className="text-blue-600">U</span>pcoming Events</h2>
+      <h2 className="text-5xl font-bold mb-8 pb-9 text-center"><span className="text-blue-600">U</span>pcoming Events</h2>
       <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {events.map((event) => (
-          <div key={event.id} className="bg-gray-800 rounded-lg overflow-hidden shadow-lg transform transition hover:scale-105">
+          <div key={event.id} className="bg-[#181818] rounded-lg overflow-hidden shadow-lg transform transition hover:scale-105">
             <Image src={event.image} alt={event.title} width={400} height={250} className="w-full h-40 object-cover" />
             <div className="p-4">
               <span className="bg-blue-600 text-xs uppercase px-2 py-1 rounded-md">{event.category}</span>
