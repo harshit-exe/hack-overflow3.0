@@ -20,6 +20,7 @@ import {
   Download,
   RotateCw,
   Eye,
+  Shield,
 } from "lucide-react"
 import { exportToPDF } from "@/lib/pdf-export"
 import { exportResumeJSON } from "@/lib/json-export"
@@ -35,6 +36,8 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import BlockchainVerification from "./blockchain-verification"
+import Link from "next/link"
 
 // Local storage key
 const RESUME_STORAGE_KEY = "resume-builder-data"
@@ -427,7 +430,7 @@ ${repo.description || "No description available"}
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <div className="space-y-6">
-      
+
 
         <Card className="bg-gray-800 border-gray-700">
           <CardContent className="pt-6">
@@ -766,6 +769,13 @@ ${repo.description || "No description available"}
             <Eye className="mr-2 h-4 w-4" />
             {showPreview ? "Edit Mode" : "Preview Resume"}
           </Button>
+
+          <Link href="/dashboard/blockchain-verify">
+            <Button className="bg-purple-600 hover:bg-purple-700 text-white">
+              <Shield className="mr-2 h-4 w-4" />
+              Blockchain Verify
+            </Button>
+          </Link>
         </div>
 
         {atsScore !== null && (
@@ -797,6 +807,9 @@ ${repo.description || "No description available"}
             </CardContent>
           </Card>
         )}
+
+        {/* Blockchain Verification */}
+        <BlockchainVerification resume={resume} />
       </div>
 
       <div className="bg-gray-800 rounded-lg border border-gray-700 p-6 h-fit sticky top-6">
