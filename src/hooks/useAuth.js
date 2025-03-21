@@ -37,7 +37,7 @@ export const useAuth = () => {
     checkAuth();
   }, []);
 
-  const signup = async (email, password, name) => {
+  const signup = async (name, email, password) => {
     try {
       const response = await fetch(`${apiURL}/api/auth/signup`, {
         method: "POST",
