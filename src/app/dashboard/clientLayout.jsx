@@ -139,7 +139,7 @@ export default function DashboardLayout({ children }) {
               </motion.h1>
             </Link>
 
-            <div className="hidden md:flex items-center gap-2 ml-4">
+            <div className="hidden md:flex items-center pl-30 gap-4 ml-4">
               <Link href="/dashboard">
                 <Button
                   variant="ghost"
@@ -184,7 +184,7 @@ export default function DashboardLayout({ children }) {
           </div>
 
           <div className="flex items-center gap-4">
-            <form onSubmit={handleSearch} className="relative hidden md:block">
+            {/* <form onSubmit={handleSearch} className="relative hidden md:block">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[#9ca3af]" />
               <input
                 type="text"
@@ -193,7 +193,7 @@ export default function DashboardLayout({ children }) {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-64 h-9 pl-10 pr-4 rounded-lg bg-[#1a1a1a] text-white border border-[#3c3c3c] focus:outline-none focus:ring-1 focus:ring-[#6366F1] focus:border-[#6366F1] transition-all"
               />
-            </form>
+            </form> */}
 
             <DropdownMenu>
               <TooltipProvider>

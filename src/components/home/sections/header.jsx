@@ -52,7 +52,7 @@ export default function Header() {
             >
               {item.name}
               <motion.span
-                className="absolute bottom-0 left-0 w-0 h-1 bg-[#8CE563] group-hover:w-full transition-all duration-300"
+                className="absolute bottom-0 left-0 w-0 h-1 bg-[#57FF31] group-hover:w-full transition-all duration-300"
                 layoutId={`underline-${item.name}`}
               />
             </motion.a>

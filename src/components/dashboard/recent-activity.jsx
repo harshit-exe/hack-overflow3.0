@@ -33,21 +33,21 @@ export function RecentActivity() {
             <p className="text-gray-300">Participants</p>
             <div className="flex -space-x-2">
               <Image
-                src="/Ellipse 4.png"
+                src="/Ellipse 4.jpg"
                 alt="Participant"
                 width={32}
                 height={32}
                 className="w-8 h-8 rounded-full border-2 border-white"
               />
               <Image
-                src="/Ellipse 5.png"
+                src="/Ellipse 5.jpg"
                 alt="Participant"
                 width={32}
                 height={32}
                 className="w-8 h-8 rounded-full border-2 border-white"
               />
               <Image
-                src="/Ellipse 6.png"
+                src="/Ellipse 6.jpg"
                 alt="Participant"
                 width={32}
                 height={32}

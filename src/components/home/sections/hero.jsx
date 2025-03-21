@@ -55,7 +55,7 @@ export default function Hero() {
             className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight"
             delay={0.2}
           >
-            <span className="text-[#8CE563]">Marg.ai</span> - Smart Career
+            <span className="text-[#57FF31]">Marg.ai</span> - Smart Career
             Choice, उज्ज्वल भविष्य!
           </div>
           {/* </TextReveal> */}
@@ -103,7 +103,7 @@ export default function Hero() {
               whileHover={{ scale: 1.05, y: -5 }}
             >
               <div className="flex items-center">
-                <Star className="w-4 h-4 mr-1 text-[#8CE563]" />
+                <Star className="w-4 h-4 mr-1 text-[#57FF31]" />
                 <span className="font-medium">Career Guidance</span>
               </div>
             </motion.div>
