@@ -440,7 +440,7 @@ ${repo.description || "No description available"}
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-green-600 text-green-500 hover:text-white hover:bg-green-900 "
+                  className="border-green-600 text-white bg-green-900 hover:text-green-900"
                   onClick={handleManualSave}
                   disabled={loading.save}
                 >
@@ -450,7 +450,7 @@ ${repo.description || "No description available"}
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-blue-600 text-blue-500 hover:text-white hover:bg-blue-900"
+                  className="border-blue-600 hover:text-blue-500 text-white bg-blue-900"
                   onClick={handleExportJSON}
                 >
                   <Download className="h-4 w-4 mr-1" />
@@ -459,7 +459,7 @@ ${repo.description || "No description available"}
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-red-600 text-red-500 hover:text-white hover:bg-red-900"
+                  className="border-red-600 hover:text-red-500 text-white bg-red-900"
                   onClick={resetResume}
                 >
                   <RotateCw className="h-4 w-4 mr-1" />
@@ -489,7 +489,7 @@ ${repo.description || "No description available"}
                 <Button
                   onClick={fetchGithubData}
                   variant="outline"
-                  className="border-blue-500 text-blue-400 hover:text-white hover:bg-blue-900"
+                  className="border-blue-500 hovertext-blue-400 text-white bg-blue-900"
                   disabled={loading.github}
                 >
                   {loading.github ? <Loader2 className="h-4 w-4 animate-spin" /> : "Fetch"}
