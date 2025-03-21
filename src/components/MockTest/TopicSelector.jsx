@@ -48,7 +48,7 @@ const TopicSelector = ({ onTopicSubmit }) => {
       transition={{ duration: 0.5 }}
       className="bg-gray-900 rounded-lg p-6 mb-4 shadow-lg"
     >
-      <h2 className="text-2xl font-bold mb-4 text-white">Choose Your Career Topic</h2>
+      <h2 className="text-2xl font-bold mb-4 text-white"><span className="text-blue-400">Choose</span> Your Career Topic</h2>
       <SearchBar onSearch={onTopicSubmit} suggestions={allTopics} />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         {predefinedTopics.map((topic) => (

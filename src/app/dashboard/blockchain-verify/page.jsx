@@ -119,17 +119,17 @@ export default function VerifyPage() {
     <div className="min-h-screen">
       <div className="container mx-auto py-8">
         <div className="flex items-center mb-6">
-          <Link href="/dashboard/skill/resume/resume-builder" className="flex items-center text-blue-500 hover:text-blue-400">
+          <Link href="/dashboard/skill/resume/resume-builder" className="flex items-center text-white hover:text-blue-400">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Resume Builder
           </Link>
         </div>
 
-        <h1 className="text-4xl font-bold text-blue-500 text-center mb-8 animate-fadeIn">Resume Verification System</h1>
+        <h1 className="text-4xl font-bold text-white text-center mb-8 animate-fadeIn"> <span className="text-blue-400">Resume</span>  Verification System</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-6">
-            <Card className="bg-gray-800 border-gray-700">
+            <Card className="bg-[#181818] border-gray-700">
               <CardHeader>
                 <CardTitle className="text-xl font-semibold text-blue-400">Verify Your Resume</CardTitle>
                 <CardDescription className="text-gray-400">
@@ -354,7 +354,7 @@ export default function VerifyPage() {
             )}
 
             {/* How It Works */}
-            <Card className="bg-gray-800 border-gray-700">
+            <Card className="bg-[#181818] border-gray-700">
               <CardHeader>
                 <CardTitle className="text-xl font-semibold text-blue-400">How It Works</CardTitle>
                 <CardDescription className="text-gray-400">Understanding resume verification</CardDescription>
