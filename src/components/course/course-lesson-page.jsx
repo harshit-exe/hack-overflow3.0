@@ -20,12 +20,14 @@ import {
   AlertTriangle,
   List,
 } from "lucide-react"
-import VideoPlayerWithVerification from "./video-player-with-verification"
+import BiometricVideoPlayer from "./biometric-video-player"
+import InteractiveVideoPlayer from "./interactive-video-player"
 
 export default function CourseLessonPage({ course, lesson, module, nextLesson }) {
   const [activeTab, setActiveTab] = useState("video")
   const [lessonProgress, setLessonProgress] = useState(null)
   const [quizResults, setQuizResults] = useState(null)
+  const [playerType, setPlayerType] = useState("interactive") // "biometric" or "interactive"
 
   // Load lesson progress from localStorage or backend
   useEffect(() => {
@@ -34,26 +36,6 @@ export default function CourseLessonPage({ course, lesson, module, nextLesson })
       setLessonProgress(JSON.parse(savedProgress))
     }
   }, [course.id, lesson.id])
-
-  // Key points for verification checks
-  const lessonKeyPoints = [
-    {
-      topic: "Video Engagement",
-      key: "attention verification",
-      relatedTerms: ["engagement", "focus", "attention"],
-    },
-    {
-      topic: "Learning Retention",
-      key: "knowledge checks",
-      relatedTerms: ["quiz", "verification", "understanding"],
-    },
-    {
-      type: "code",
-      topic: "JavaScript Functions",
-      snippet: "function calculateProgress(watched, total) { return ... }",
-      solutions: ["watched / total * 100", "(watched / total) * 100", "watched * 100 / total"],
-    },
-  ]
 
   return (
     <div className="flex flex-col space-y-6">
@@ -78,20 +60,24 @@ export default function CourseLessonPage({ course, lesson, module, nextLesson })
                 </Badge>
               )}
 
-              {lessonProgress?.attentionScore && (
-                <Badge
-                  className={`${
-                    lessonProgress.attentionScore > 70
-                      ? "bg-green-600"
-                      : lessonProgress.attentionScore > 40
-                        ? "bg-yellow-600"
-                        : "bg-red-600"
-                  }`}
+              <div className="flex">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className={`border-gray-700 ${playerType === "interactive" ? "bg-[#57FF31]/20 text-[#57FF31]" : ""}`}
+                  onClick={() => setPlayerType("interactive")}
                 >
-                  <Brain className="h-3 w-3 mr-1" />
-                  Attention: {lessonProgress.attentionScore}%
-                </Badge>
-              )}
+                  Interactive
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className={`border-gray-700 ${playerType === "biometric" ? "bg-[#4F46E5]/20 text-[#4F46E5]" : ""}`}
+                  onClick={() => setPlayerType("biometric")}
+                >
+                  Biometric
+                </Button>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -118,15 +104,25 @@ export default function CourseLessonPage({ course, lesson, module, nextLesson })
             </TabsList>
 
             <TabsContent value="video" className="p-0 m-0">
-              <VideoPlayerWithVerification
-                videoUrl={lesson.videoUrl}
-                title={lesson.title}
-                duration={lesson.duration}
-                nextLessonUrl={nextLesson ? `/courses/${course.id}/lessons/${nextLesson.id}` : null}
-                courseId={course.id}
-                lessonId={lesson.id}
-                keyPoints={lessonKeyPoints}
-              />
+              {playerType === "biometric" ? (
+                <BiometricVideoPlayer
+                  videoUrl={lesson.videoUrl || "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4"}
+                  title={lesson.title}
+                  duration={lesson.duration || "10 minutes"}
+                  nextLessonUrl={nextLesson ? `/courses/${course.id}/lessons/${nextLesson.id}` : null}
+                  courseId={course.id}
+                  lessonId={lesson.id}
+                />
+              ) : (
+                <InteractiveVideoPlayer
+                  videoUrl={lesson.videoUrl || "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4"}
+                  title={lesson.title}
+                  duration={lesson.duration || "10 minutes"}
+                  nextLessonUrl={nextLesson ? `/courses/${course.id}/lessons/${nextLesson.id}` : null}
+                  courseId={course.id}
+                  lessonId={lesson.id}
+                />
+              )}
             </TabsContent>
 
             <TabsContent value="resources" className="p-6">
@@ -234,7 +230,9 @@ export default function CourseLessonPage({ course, lesson, module, nextLesson })
                   <div className="space-y-6 mb-6">
                     {/* Sample quiz questions */}
                     <div className="border border-gray-700 rounded-lg p-4">
-                      <p className="text-white mb-3">1. What is the main purpose of video verification checks?</p>
+                      <p className="text-white mb-3">
+                        1. What is the main purpose of the interactive verification system?
+                      </p>
                       <div className="space-y-2">
                         <div className="flex items-center">
                           <input type="radio" id="q1-a" name="q1" className="mr-2" />
@@ -259,49 +257,49 @@ export default function CourseLessonPage({ course, lesson, module, nextLesson })
 
                     <div className="border border-gray-700 rounded-lg p-4">
                       <p className="text-white mb-3">
-                        2. Which of these is NOT a type of verification check used in the system?
+                        2. Which of these verification methods is used in the biometric player?
                       </p>
                       <div className="space-y-2">
                         <div className="flex items-center">
                           <input type="radio" id="q2-a" name="q2" className="mr-2" />
                           <label htmlFor="q2-a" className="text-gray-300">
-                            Knowledge quiz
+                            Face detection
                           </label>
                         </div>
                         <div className="flex items-center">
                           <input type="radio" id="q2-b" name="q2" className="mr-2" />
                           <label htmlFor="q2-b" className="text-gray-300">
-                            Attention check
+                            Fingerprint scanning
                           </label>
                         </div>
                         <div className="flex items-center">
                           <input type="radio" id="q2-c" name="q2" className="mr-2" />
                           <label htmlFor="q2-c" className="text-gray-300">
-                            Facial recognition
+                            Voice recognition
                           </label>
                         </div>
                       </div>
                     </div>
 
                     <div className="border border-gray-700 rounded-lg p-4">
-                      <p className="text-white mb-3">3. What happens when a user fails a verification check?</p>
+                      <p className="text-white mb-3">3. What happens when a user is inactive for too long?</p>
                       <div className="space-y-2">
                         <div className="flex items-center">
                           <input type="radio" id="q3-a" name="q3" className="mr-2" />
                           <label htmlFor="q3-a" className="text-gray-300">
-                            Their attention score decreases
+                            The video pauses automatically
                           </label>
                         </div>
                         <div className="flex items-center">
                           <input type="radio" id="q3-b" name="q3" className="mr-2" />
                           <label htmlFor="q3-b" className="text-gray-300">
-                            They are locked out of the course
+                            The user is logged out
                           </label>
                         </div>
                         <div className="flex items-center">
                           <input type="radio" id="q3-c" name="q3" className="mr-2" />
                           <label htmlFor="q3-c" className="text-gray-300">
-                            The video automatically restarts
+                            Nothing happens
                           </label>
                         </div>
                       </div>
