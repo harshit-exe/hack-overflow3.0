@@ -18,7 +18,7 @@ const page = () => {
     const response = await login(email, password);
     if (response.success) {
       toast.success("Login successful!");
-      router.push("/");
+      router.push("/dashboard");
     } else {
       toast.error(response.message);
     }
