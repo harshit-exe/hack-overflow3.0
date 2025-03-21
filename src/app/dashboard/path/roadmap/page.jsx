@@ -68,21 +68,21 @@ export default function CareerRoadmapPage() {
             </div>
 
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-2 max-w-md mx-auto mb-6 bg-zinc-900/80 backdrop-blur-sm rounded-xl overflow-hidden">
+              <TabsList className="grid w-[7dvw] grid-cols-2 mx-auto mb-6 bg-zinc-900/80 backdrop-blur-sm rounded-lg overflow-hidden">
                 <TabsTrigger
                   value="roadmap"
-                  className="flex items-center justify-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-indigo-500 data-[state=active]:text-white rounded-lg m-1 transition-all duration-300"
+                  className="flex w-[max-content] items-center justify-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-indigo-500 data-[state=active]:text-white rounded-lg m-1 transition-all duration-300"
                 >
                   <MapPin size={16} />
                   <span>Roadmap</span>
                 </TabsTrigger>
-                <TabsTrigger
+                {/* <TabsTrigger
                   value="dashboard"
                   className="flex items-center justify-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-indigo-500 data-[state=active]:text-white rounded-lg m-1 transition-all duration-300"
                 >
                   <LayoutDashboard size={16} />
                   <span>Dashboard</span>
-                </TabsTrigger>
+                </TabsTrigger> */}
               </TabsList>
 
               <TabsContent value="roadmap" className="mt-2">

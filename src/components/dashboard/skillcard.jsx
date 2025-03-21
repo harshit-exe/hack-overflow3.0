@@ -56,7 +56,7 @@ export const SkillsCard = ({ jobs }) => {
         </div>
       ) : (
         <div className="space-y-4">
-          {skills.map((skill, index) => (
+          {skills?.map((skill, index) => (
             <div
               key={index}
               className={`bg-[#2a2a2a] p-4 rounded-lg flex items-center gap-4 transform transition-all duration-300 cursor-pointer

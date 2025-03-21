@@ -312,7 +312,7 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
       className="space-y-8 max-w-5xl mx-auto bg-zinc-900/90 rounded-2xl border border-indigo-600/30 shadow-xl shadow-indigo-600/10 backdrop-blur-sm"
     >
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="w-full grid grid-cols-2 bg-zinc-800/90 border-b border-indigo-600/30 rounded-t-2xl overflow-hidden">
+        <TabsList className="w-full pb-[2.5rem] grid grid-cols-2 bg-zinc-800/90 border-b border-indigo-600/30 rounded-t-2xl overflow-hidden">
           <TabsTrigger
             value="basic"
             className="text-white data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-indigo-500 data-[state=active]:text-white rounded-lg m-1 transition-all duration-300 border-r border-indigo-600/30"
