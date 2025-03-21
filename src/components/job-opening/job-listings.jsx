@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { apiURL } from "@/constants";
 
 // Company logos
 const companyLogos = {
@@ -35,6 +36,8 @@ export default function JobListings() {
       try {
         // In a real app, this would be an API call
         // await fetch('/api/jobs')
+
+        const res = await fetch(`${apiURL}/api/jobs/`);
 
         // For demo purposes, we'll use mock data
         const mockJobs = [
@@ -166,8 +169,7 @@ export default function JobListings() {
             employer_name: "TechSoft Solutions",
             job_publisher: "LinkedIn",
             job_employment_type: "Full-time",
-            job_apply_link:
-              "https://www.linkedin.com/jobs/view/1234567890",
+            job_apply_link: "https://www.linkedin.com/jobs/view/1234567890",
             job_country: "IN",
             job_state: "Maharashtra",
             job_city: "Mumbai",
@@ -198,8 +200,7 @@ export default function JobListings() {
             employer_name: "AI Innovators Inc.",
             job_publisher: "Indeed",
             job_employment_type: "Contract",
-            job_apply_link:
-              "https://www.indeed.com/viewjob?jk=87654321",
+            job_apply_link: "https://www.indeed.com/viewjob?jk=87654321",
             job_country: "IN",
             job_state: "Telangana",
             job_city: "Hyderabad",
