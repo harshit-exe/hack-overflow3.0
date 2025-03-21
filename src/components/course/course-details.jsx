@@ -104,6 +104,11 @@ export default function CourseDetails({ course, onBack }) {
     )
   }
 
+  const handleStartCourse = () => {
+    // Navigate to the first lesson with the anti-skip system
+    window.location.href = `/courses/${course.id}/lessons/1`
+  }
+
   return (
     <Card className="bg-gray-900 backdrop-blur-md border border-gray-700 rounded-xl overflow-hidden shadow-xl">
       <div className="border-b border-gray-700 bg-black/70 p-4 flex justify-between items-center">
@@ -269,14 +274,13 @@ export default function CourseDetails({ course, onBack }) {
                   </div>
 
                   <div className="space-y-3">
-                    <a
-                      href={course.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <Button
+                      onClick={handleStartCourse}
                       className="bg-[#57FF31] hover:bg-[#4F46E5] text-black hover:text-white w-full py-2 rounded-lg flex items-center justify-center font-medium transition-colors"
                     >
                       {isPaid ? "Enroll Now" : "Start Learning"}
-                    </a>
+                      <BookOpen className="ml-2 h-4 w-4" />
+                    </Button>
 
                     <Button
                       variant="outline"
