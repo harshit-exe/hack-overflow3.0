@@ -560,7 +560,7 @@ ${repo.description || "No description available"}
               <Button
                 size="sm"
                 variant="outline"
-                className="h-8 border-gray-400 text-green-500 hover:text-white hover:bg-green-900"
+                className="h-8 border-gray-400 hover:text-green-500 text-white bg-green-900"
                 onClick={() => optimizeSection("name")}
                 disabled={loading.section === "name"}
               >
@@ -584,7 +584,7 @@ ${repo.description || "No description available"}
               <Button
                 size="sm"
                 variant="outline"
-                className="h-8 border-green-600 text-green-500 hover:text-white hover:bg-green-900"
+                className="h-8 border-gray-400 hover:text-green-500 text-white bg-green-900"
                 onClick={() => optimizeSection("title")}
                 disabled={loading.section === "title"}
               >
@@ -608,7 +608,7 @@ ${repo.description || "No description available"}
               <Button
                 size="sm"
                 variant="outline"
-                className="h-8 border-green-600 text-green-500 hover:text-white hover:bg-green-900"
+                className="h-8 border-gray-400 hover:text-green-500 text-white bg-green-900"
                 onClick={() => optimizeSection("bio")}
                 disabled={loading.section === "bio"}
               >
@@ -632,7 +632,7 @@ ${repo.description || "No description available"}
               <Button
                 size="sm"
                 variant="outline"
-                className="h-8 border-green-600 hover:text-white text-green-500 hover:bg-green-900"
+                className="h-8 border-gray-400 hover:text-green-500 text-white bg-green-900"
                 onClick={() => optimizeSection("contact")}
                 disabled={loading.section === "contact"}
               >
@@ -658,7 +658,7 @@ ${repo.description || "No description available"}
               <Button
                 size="sm"
                 variant="outline"
-                className="h-8 border-green-600 hover:text-white text-green-500 hover:bg-green-900"
+                className="h-8 border-gray-400 hover:text-green-500 text-white bg-green-900"
                 onClick={() => optimizeSection("experience")}
                 disabled={loading.section === "experience"}
               >
@@ -684,7 +684,7 @@ ${repo.description || "No description available"}
               <Button
                 size="sm"
                 variant="outline"
-                className="h-8 border-green-600 hover:text-white text-green-500 hover:bg-green-900"
+                className="h-8 border-gray-400 hover:text-green-500 text-white bg-green-900"
                 onClick={() => optimizeSection("skills")}
                 disabled={loading.section === "skills"}
               >
@@ -708,7 +708,7 @@ ${repo.description || "No description available"}
               <Button
                 size="sm"
                 variant="outline"
-                className="h-8 border-green-600 hover:text-white text-green-500 hover:bg-green-900"
+                className="h-8 border-gray-400 hover:text-green-500 text-white bg-green-900"
                 onClick={() => optimizeSection("education")}
                 disabled={loading.section === "education"}
               >
@@ -734,7 +734,7 @@ ${repo.description || "No description available"}
               <Button
                 size="sm"
                 variant="outline"
-                className="h-8 border-green-600 hover:text-white text-green-500 hover:bg-green-900"
+                className="h-8 border-gray-400 hover:text-green-500 text-white bg-green-900"
                 onClick={() => optimizeSection("projects")}
                 disabled={loading.section === "projects"}
               >
