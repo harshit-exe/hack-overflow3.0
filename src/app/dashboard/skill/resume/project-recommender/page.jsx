@@ -337,7 +337,7 @@ export default function ProjectRecommenderPage() {
                     placeholder="e.g. Frontend Developer, Data Scientist"
                     value={jobRole}
                     onChange={(e) => setJobRole(e.target.value)}
-                    className="bg-transperent border-gray-400 text-gray-200"
+                    className="bg-transperent border-gray-400 text-gray-200 placeholder:text-gray-400"
                   />
                 </div>
 
@@ -349,7 +349,7 @@ export default function ProjectRecommenderPage() {
                     placeholder="e.g. Healthcare, Finance, E-commerce"
                     value={industry}
                     onChange={(e) => setIndustry(e.target.value)}
-                    className="bg-transperent border-gray-400 text-gray-200"
+                    className="bg-transperent border-gray-400 text-gray-200 placeholder:text-gray-400"
                   />
                 </div>
 
@@ -361,7 +361,7 @@ export default function ProjectRecommenderPage() {
                     placeholder="Describe your career goals and what you want to achieve..."
                     value={careerGoals}
                     onChange={(e) => setCareerGoals(e.target.value)}
-                    className="min-h-[100px] bg-transperent border-gray-400 text-gray-200"
+                    className="min-h-[100px] bg-transperent border-gray-400 text-gray-200 placeholder:text-gray-400"
                   />
                 </div>
               </CardContent>

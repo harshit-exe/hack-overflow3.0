@@ -312,16 +312,16 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
       className="space-y-8 max-w-5xl mx-auto bg-zinc-900/90 rounded-2xl border border-indigo-600/30 shadow-xl shadow-indigo-600/10 backdrop-blur-sm"
     >
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="w-full grid grid-cols-2 bg-zinc-800/90 border-b border-indigo-600/30 rounded-t-2xl overflow-hidden">
+        <TabsList className="w-full pb-[2.5rem] grid grid-cols-2 bg-zinc-800/90 border-b border-indigo-600/30 rounded-t-2xl overflow-hidden">
           <TabsTrigger
             value="basic"
-            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-indigo-500 data-[state=active]:text-white rounded-lg m-1 transition-all duration-300 border-r border-indigo-600/30"
+            className="text-white data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-indigo-500 data-[state=active]:text-white rounded-lg m-1 transition-all duration-300 border-r border-indigo-600/30"
           >
             Basic Settings
           </TabsTrigger>
           <TabsTrigger
             value="advanced"
-            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-indigo-500 data-[state=active]:text-white rounded-lg m-1 transition-all duration-300"
+            className="text-white data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-indigo-500 data-[state=active]:text-white rounded-lg m-1 transition-all duration-300"
           >
             Advanced Features
           </TabsTrigger>
@@ -330,7 +330,7 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
         <TabsContent value="basic" className="p-6">
           <motion.div variants={container} initial="hidden" animate="show" className="space-y-6">
             <motion.div variants={item}>
-              <Label className="text-xl font-bold text-white mb-4 block">Career Path</Label>
+              <Label className="text-xl font-bold text-[#57FF31] mb-4 block">Career Path</Label>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
                 {careerPaths.map((path) => (
                   <Card
@@ -347,7 +347,7 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
                         <Icon icon={path.icon} className="w-8 h-8 text-white" />
                       </div>
                       <div>
-                        <h3 className="font-medium text-white">{path.label}</h3>
+                        <h3 className="font-medium text-blue-400">{path.label}</h3>
                         <p className="text-xs text-gray-300">{path.description}</p>
                       </div>
                       {careerPath === path.value && (
@@ -362,7 +362,7 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
             </motion.div>
 
             <motion.div variants={item}>
-              <Label className="text-xl font-bold text-white mb-4 block">Skill Level</Label>
+              <Label className="text-xl font-bold text-[#57FF31] mb-4 block">Skill Level</Label>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {skillLevels.map((level) => (
                   <Card
@@ -379,7 +379,7 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
                         <Icon icon={level.icon} className="w-8 h-8 text-white" />
                       </div>
                       <div>
-                        <h3 className="font-medium text-white">{level.label}</h3>
+                        <h3 className="font-medium text-blue-400">{level.label}</h3>
                         <p className="text-xs text-gray-300">{level.description}</p>
                       </div>
                       {skillLevel === level.value && (
@@ -394,7 +394,7 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
             </motion.div>
 
             <motion.div variants={item}>
-              <Label className="text-xl font-bold text-white mb-4 block">Learning Style</Label>
+              <Label className="text-xl font-bold text-[#57FF31] mb-4 block">Learning Style</Label>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {learningStyles.map((style) => (
                   <Card
@@ -411,7 +411,7 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
                         <Icon icon={style.icon} className="w-8 h-8 text-white" />
                       </div>
                       <div>
-                        <h3 className="font-medium text-white">{style.label}</h3>
+                        <h3 className="font-medium text-blue-400">{style.label}</h3>
                         <p className="text-xs text-gray-300">{style.description}</p>
                       </div>
                       {learningStyle === style.value && (
@@ -427,7 +427,7 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
 
             <motion.div variants={item}>
               <div className="flex items-center justify-between">
-                <Label className="text-xl font-bold text-white">Timeframe</Label>
+                <Label className="text-xl font-bold text-[#57FF31]">Timeframe</Label>
                 <span className="text-white font-medium">{timeframe} months</span>
               </div>
               <Slider
@@ -436,7 +436,7 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
                 step={1}
                 value={[timeframe]}
                 onValueChange={(value) => setTimeframe(value[0])}
-                className="my-4"
+                className="my-4 bg-blue-400"
               />
               <div className="flex justify-between text-xs text-gray-300">
                 <span>1 month</span>
@@ -447,7 +447,7 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
             </motion.div>
 
             <motion.div variants={item}>
-              <Label className="text-xl font-bold text-white mb-4 block">Focus Areas</Label>
+              <Label className="text-xl font-bold text-[#57FF31] mb-4 block">Focus Areas</Label>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 {focusAreas.map((area) => (
                   <Card
@@ -464,7 +464,7 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
                         <Icon icon={area.icon} className="w-8 h-8 text-white" />
                       </div>
                       <div>
-                        <h3 className="font-medium text-white">{area.label}</h3>
+                        <h3 className="font-medium text-blue-400">{area.label}</h3>
                         <p className="text-xs text-gray-300">{area.description}</p>
                       </div>
                       {selectedFocusAreas.includes(area.value) && (
@@ -492,7 +492,7 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
             </motion.div>
 
             <motion.div variants={item}>
-              <Label htmlFor="customGoals" className="text-xl font-bold text-white mb-2 block">
+              <Label htmlFor="customGoals" className="text-xl font-bold text-[#57FF31] mb-2 block">
                 Custom Goals (Optional)
               </Label>
               <Input

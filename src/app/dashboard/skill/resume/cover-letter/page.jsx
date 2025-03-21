@@ -193,7 +193,7 @@ export default function CoverLetterPage() {
                     placeholder="e.g. Acme Corporation"
                     value={formData.companyName}
                     onChange={(e) => handleInputChange("companyName", e.target.value)}
-                    className="bg-transperent border-gray-400 text-gray-200"
+                    className="bg-transperent border-gray-400 text-gray-200 placeholder:text-gray-400 "
                   />
                 </div>
 
@@ -203,7 +203,7 @@ export default function CoverLetterPage() {
                     placeholder="e.g. John Smith (leave blank if unknown)"
                     value={formData.hrName}
                     onChange={(e) => handleInputChange("hrName", e.target.value)}
-                    className="bg-transperent border-gray-400 text-gray-200"
+                    className="bg-transperent border-gray-400 text-gray-200 placeholder:text-gray-400"
                   />
                 </div>
 
@@ -213,7 +213,7 @@ export default function CoverLetterPage() {
                     placeholder="e.g. Senior Frontend Developer"
                     value={formData.jobRole}
                     onChange={(e) => handleInputChange("jobRole", e.target.value)}
-                    className="bg-transperent border-gray-400 text-gray-200"
+                    className="bg-transperent border-gray-400 text-gray-200 placeholder:text-gray-400"
                   />
                 </div>
 
@@ -223,7 +223,7 @@ export default function CoverLetterPage() {
                     placeholder="Paste the job description here for a more tailored cover letter..."
                     value={formData.jobDescription}
                     onChange={(e) => handleInputChange("jobDescription", e.target.value)}
-                    className="min-h-[150px] bg-transperent border-gray-400 text-gray-200"
+                    className="min-h-[150px] bg-transperent border-gray-400 text-gray-200 placeholder:text-gray-400"
                   />
                 </div>
               </CardContent>
