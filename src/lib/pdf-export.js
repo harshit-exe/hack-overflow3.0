@@ -1,131 +1,239 @@
-// This is an enhanced PDF export function
-// In a real application, you would use a library like jsPDF or pdfmake for better formatting
+// Enhanced PDF export function with professional formatting
 
 export const exportToPDF = (resume) => {
-    // Create a hidden element with the resume content in LaTeX-style formatting
-    const element = document.createElement("div")
-    element.innerHTML = `
-      <div class="latex-document">
-        <h1 class="latex-title">${resume.name}</h1>
-        ${resume.title ? `<h2 class="latex-subtitle">${resume.title}</h2>` : ""}
-        
-        ${
-          resume.contact
-            ? `<div class="latex-section">
-          <h3 class="latex-section-title">Contact</h3>
-          <div class="latex-content">${resume.contact.replace(/\n/g, "<br>")}</div>
-        </div>`
-            : ""
-        }
-        
-        ${
-          resume.bio
-            ? `<div class="latex-section">
-          <h3 class="latex-section-title">Professional Summary</h3>
-          <div class="latex-content">${resume.bio.replace(/\n/g, "<br>")}</div>
-        </div>`
-            : ""
-        }
-        
-        ${
-          resume.experience
-            ? `<div class="latex-section">
-          <h3 class="latex-section-title">Experience</h3>
-          <div class="latex-content">${resume.experience.replace(/\n/g, "<br>")}</div>
-        </div>`
-            : ""
-        }
-        
-        ${
-          resume.education
-            ? `<div class="latex-section">
-          <h3 class="latex-section-title">Education</h3>
-          <div class="latex-content">${resume.education.replace(/\n/g, "<br>")}</div>
-        </div>`
-            : ""
-        }
-        
-        ${
-          resume.skills
-            ? `<div class="latex-section">
-          <h3 class="latex-section-title">Skills</h3>
-          <div class="latex-content">${resume.skills}</div>
-        </div>`
-            : ""
-        }
-        
-        ${
-          resume.projects
-            ? `<div class="latex-section">
-          <h3 class="latex-section-title">Projects</h3>
-          <div class="latex-content">${resume.projects.replace(/\n/g, "<br>")}</div>
-        </div>`
-            : ""
-        }
-      </div>
-    `
-  
-    // Apply LaTeX-inspired styling
-    const style = document.createElement("style")
-    style.textContent = `
+  // Create a hidden element with the resume content in a professional format
+  const element = document.createElement("div")
+  element.innerHTML = `
+    <style>
       @page {
         size: A4;
         margin: 2cm;
       }
-      .latex-document {
-        font-family: "Computer Modern", "Latin Modern Roman", "Latin Modern Math", Georgia, serif;
+      body {
+        font-family: 'Arial', 'Helvetica', sans-serif;
         line-height: 1.5;
-        max-width: 800px;
+        color: #333;
+        margin: 0;
+        padding: 0;
+      }
+      .resume-container {
+        max-width: 21cm;
         margin: 0 auto;
         padding: 2cm;
-        color: #333;
-        background-color: white;
       }
-      .latex-title {
-        font-size: 24pt;
+      .header {
         text-align: center;
-        font-weight: normal;
-        margin-bottom: 0.5cm;
+        margin-bottom: 1.5cm;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 0.5cm;
+      }
+      .name {
+        font-size: 24pt;
+        font-weight: bold;
+        margin: 0;
         color: #2563eb;
       }
-      .latex-subtitle {
+      .title {
         font-size: 14pt;
-        text-align: center;
-        font-weight: normal;
-        margin-top: 0;
-        margin-bottom: 1cm;
+        margin: 0.3cm 0 0.5cm 0;
         color: #4b5563;
       }
-      .latex-section {
+      .contact-info {
+        font-size: 10pt;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1em;
+      }
+      .section {
         margin-bottom: 1cm;
       }
-      .latex-section-title {
+      .section-title {
         font-size: 14pt;
-        font-weight: normal;
-        border-bottom: 1px solid #2563eb;
+        font-weight: bold;
+        border-bottom: 1px solid #ddd;
         padding-bottom: 0.2cm;
         margin-bottom: 0.3cm;
         color: #2563eb;
       }
-      .latex-content {
-        margin-left: 0.5cm;
+      .section-content {
+        font-size: 10pt;
       }
-      .latex-content p {
-        margin-bottom: 0.5cm;
+      .two-column {
+        display: flex;
+        gap: 1cm;
       }
-      h1, h2, h3, h4, h5, h6 {
-        font-family: "Computer Modern", "Latin Modern Roman", serif;
+      .main-column {
+        flex: 2;
       }
-    `
-    element.appendChild(style)
-  
-    document.body.appendChild(element)
-  
-    // Use browser's print functionality to save as PDF
-    window.print()
-  
-    // Remove the element after printing
-    document.body.removeChild(element)
-  }
-  
-  
+      .side-column {
+        flex: 1;
+      }
+      .skills-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.3cm;
+      }
+      .skill-item {
+        background-color: #f3f4f6;
+        padding: 0.1cm 0.3cm;
+        border-radius: 0.2cm;
+        font-size: 9pt;
+      }
+      ul {
+        padding-left: 1cm;
+        margin: 0.3cm 0;
+      }
+      li {
+        margin-bottom: 0.2cm;
+      }
+      p {
+        margin: 0.2cm 0;
+      }
+      strong {
+        font-weight: bold;
+      }
+      a {
+        color: #2563eb;
+        text-decoration: none;
+      }
+      @media print {
+        body {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+      }
+    </style>
+    <div class="resume-container">
+      <div class="header">
+        <h1 class="name">${resume.name || "Your Name"}</h1>
+        ${resume.title ? `<h2 class="title">${resume.title}</h2>` : ""}
+        <div class="contact-info">
+          ${
+            resume.contact
+              ? resume.contact
+                  .split("\n")
+                  .map((line) => `<span>${line}</span>`)
+                  .join("")
+              : ""
+          }
+        </div>
+      </div>
+      
+      <div class="two-column">
+        <div class="main-column">
+          ${
+            resume.bio
+              ? `
+            <div class="section">
+              <h3 class="section-title">Professional Summary</h3>
+              <div class="section-content">
+                ${resume.bio.replace(/\n/g, "<br>")}
+              </div>
+            </div>
+          `
+              : ""
+          }
+          
+          ${
+            resume.experience
+              ? `
+            <div class="section">
+              <h3 class="section-title">Experience</h3>
+              <div class="section-content">
+                ${formatMarkdownForPDF(resume.experience)}
+              </div>
+            </div>
+          `
+              : ""
+          }
+          
+          ${
+            resume.projects
+              ? `
+            <div class="section">
+              <h3 class="section-title">Projects</h3>
+              <div class="section-content">
+                ${formatMarkdownForPDF(resume.projects)}
+              </div>
+            </div>
+          `
+              : ""
+          }
+        </div>
+        
+        <div class="side-column">
+          ${
+            resume.skills
+              ? `
+            <div class="section">
+              <h3 class="section-title">Skills</h3>
+              <div class="skills-list">
+                ${resume.skills
+                  .split(",")
+                  .map((skill) => `<span class="skill-item">${skill.trim()}</span>`)
+                  .join("")}
+              </div>
+            </div>
+          `
+              : ""
+          }
+          
+          ${
+            resume.education
+              ? `
+            <div class="section">
+              <h3 class="section-title">Education</h3>
+              <div class="section-content">
+                ${formatMarkdownForPDF(resume.education)}
+              </div>
+            </div>
+          `
+              : ""
+          }
+        </div>
+      </div>
+    </div>
+  `
+
+  document.body.appendChild(element)
+
+  // Use browser's print functionality to save as PDF
+  window.print()
+
+  // Remove the element after printing
+  document.body.removeChild(element)
+}
+
+// Format markdown for PDF export
+function formatMarkdownForPDF(text) {
+  if (!text) return ""
+
+  // Handle headers
+  text = text.replace(
+    /^## (.*?)$/gm,
+    '<h4 style="font-size: 11pt; font-weight: bold; margin: 0.4cm 0 0.2cm 0;">$1</h4>',
+  )
+  text = text.replace(/^# (.*?)$/gm, '<h3 style="font-size: 12pt; font-weight: bold; margin: 0.5cm 0 0.2cm 0;">$1</h3>')
+
+  // Handle bold
+  text = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+
+  // Handle italic
+  text = text.replace(/\*(.*?)\*/g, "<em>$1</em>")
+
+  // Handle links
+  text = text.replace(/\[(.*?)\]$$(.*?)$$/g, '<a href="$2">$1</a>')
+
+  // Handle lists
+  text = text.replace(/^- (.*?)$/gm, "<li>$1</li>").replace(/<li>.*?<\/li>/gs, (match) => `<ul>${match}</ul>`)
+
+  // Handle paragraphs
+  text = text.replace(/^([^<].*?)$/gm, "<p>$1</p>")
+
+  // Clean up empty paragraphs
+  text = text.replace(/<p><\/p>/g, "")
+
+  return text
+}
+

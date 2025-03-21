@@ -19,9 +19,13 @@ import {
   Save,
   Download,
   RotateCw,
+  Eye,
 } from "lucide-react"
 import { exportToPDF } from "@/lib/pdf-export"
+import { exportResumeJSON } from "@/lib/json-export"
 import MarkdownPreview from "./markdown-preview"
+import ResumeTemplate from "./resume-template"
+
 import {
   Dialog,
   DialogContent,
@@ -42,6 +46,8 @@ const ResumeBuilder = () => {
   const [repoAnalysis, setRepoAnalysis] = useState(null)
   const [showRepoSelector, setShowRepoSelector] = useState(false)
   const [statusMessage, setStatusMessage] = useState(null)
+  const [previewMode, setPreviewMode] = useState("markdown") // "markdown" or "template"
+  const [showPreview, setShowPreview] = useState(false)
 
   const [resume, setResume] = useState({
     name: "",
@@ -380,24 +386,14 @@ ${repo.description || "No description available"}
     }
   }
 
-  const exportResumeJSON = () => {
+  const handleExportJSON = () => {
     try {
-      // Create a blob with the resume data
-      const blob = new Blob([JSON.stringify(resume, null, 2)], { type: "application/json" })
-      const url = URL.createObjectURL(blob)
-
-      // Create a temporary link and trigger download
-      const a = document.createElement("a")
-      a.href = url
-      a.download = `resume-${new Date().toISOString().split("T")[0]}.json`
-      document.body.appendChild(a)
-      a.click()
-
-      // Clean up
-      document.body.removeChild(a)
-      URL.revokeObjectURL(url)
-
-      showStatus("Resume data exported as JSON")
+      const success = exportResumeJSON(resume)
+      if (success) {
+        showStatus("Resume data exported as JSON")
+      } else {
+        showStatus("Failed to export resume data")
+      }
     } catch (error) {
       console.error("Error exporting resume JSON:", error)
       showStatus("Failed to export resume data")
@@ -424,9 +420,15 @@ ${repo.description || "No description available"}
     }
   }
 
+  const togglePreviewMode = () => {
+    setShowPreview(!showPreview)
+  }
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <div className="space-y-6">
+      
+
         <Card className="bg-gray-800 border-gray-700">
           <CardContent className="pt-6">
             <div className="flex justify-between items-center mb-4">
@@ -446,7 +448,7 @@ ${repo.description || "No description available"}
                   variant="outline"
                   size="sm"
                   className="border-blue-600 text-blue-500 hover:bg-blue-900"
-                  onClick={exportResumeJSON}
+                  onClick={handleExportJSON}
                 >
                   <Download className="h-4 w-4 mr-1" />
                   Export
@@ -759,6 +761,11 @@ ${repo.description || "No description available"}
             <FileDown className="mr-2 h-4 w-4" />
             Export PDF
           </Button>
+
+          <Button onClick={togglePreviewMode} className="bg-purple-600 hover:bg-purple-700 text-white">
+            <Eye className="mr-2 h-4 w-4" />
+            {showPreview ? "Edit Mode" : "Preview Resume"}
+          </Button>
         </div>
 
         {atsScore !== null && (
@@ -794,9 +801,13 @@ ${repo.description || "No description available"}
 
       <div className="bg-gray-800 rounded-lg border border-gray-700 p-6 h-fit sticky top-6">
         <h2 className="text-xl font-semibold text-blue-400 mb-4">Resume Preview</h2>
-        <div className="prose prose-invert max-w-none text-gray-200">
-          <MarkdownPreview
-            content={`
+
+        {showPreview ? (
+          <ResumeTemplate resume={resume} />
+        ) : (
+          <div className="prose prose-invert max-w-none text-gray-200">
+            <MarkdownPreview
+              content={`
 # ${resume.name || "Your Name"}
 ${resume.title ? `## ${resume.title}` : ""}
 
@@ -841,9 +852,10 @@ ${
 ${resume.projects}`
     : ""
 }
-            `}
-          />
-        </div>
+              `}
+            />
+          </div>
+        )}
       </div>
 
       {/* Repository Selection Dialog */}
