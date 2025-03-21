@@ -54,27 +54,27 @@ const navigationItems = [
       {
         name: "Resume",
         icon: "mdi:file-document-edit-outline",
-        link: "/dashboard/resume", // Added link for parent item
+        link: "/dashboard/skill/resume", // Added link for parent item
         children: [
           {
             name: "Builder",
             icon: "mdi:file-document-plus",
-            link: "/dashboard/resume-builder",
+            link: "/dashboard/skill/resume/resume-builder",
           },
           {
             name: "Cover Letter",
             icon: "mdi:file-document-edit",
-            link: "/dashboard/cover-letter",
+            link: "/dashboard/skill/resume/cover-letter",
           },
           {
             name: "Blockchain",
             icon: "mdi:cube-outline",
-            link: "/dashboard/blockchain",
+            link: "/dashboard/skill/resume/blockchain",
           },
           {
             name: "Project Recommender",
             icon: "mdi:lightbulb-outline",
-            link: "/dashboard/project-recommender",
+            link: "/dashboard/skill/resume/project-recommender",
           },
         ],
       },

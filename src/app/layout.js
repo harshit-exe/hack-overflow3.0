@@ -2,6 +2,7 @@ import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { Toaster, toast } from 'sonner'
 
 
 export const metadata = {
@@ -17,6 +18,7 @@ export default function RootLayout({ children }) {
           className={`antialiased`}
         >
           {children}
+          <Toaster />
           <ToastContainer />
         </body>
       </html>
