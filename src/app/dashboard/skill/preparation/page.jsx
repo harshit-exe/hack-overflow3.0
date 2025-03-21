@@ -8,13 +8,13 @@ const Page = () => {
       {/* Card 1 - Resume Builder */}
       <PixelCard variant="pink">
         <div className="absolute text-white text-center px-4">
-          <Link href="/dashboard/skill/resume">
+          <Link href="/dashboard/skill/preparation/interview">
             <h2 className="text-2xl font-bold mb-2 cursor-pointer hover:underline">
-              Resume Builder
+             Mock Interview 
             </h2>
           </Link>
           <p className="text-sm opacity-80">
-            Build a professional resume that stands out in seconds.
+            Give Mock Interview To Ace In Your Path
           </p>
         </div>
       </PixelCard>
@@ -22,30 +22,18 @@ const Page = () => {
       {/* Card 2 - Preparation */}
       <PixelCard variant="blue">
         <div className="absolute text-white text-center px-4">
-          <Link href="/dashboard/skill/preparation">
+          <Link href="/dashboard/skill/preparation/mocktest">
             <h2 className="text-2xl font-bold mb-2 cursor-pointer hover:underline">
-              Preparation
+              Mocktest 
             </h2>
           </Link>
           <p className="text-sm opacity-80">
-            Get essential resources for interview and exam prep.
+            Pratice mock test in one click
           </p>
         </div>
       </PixelCard>
 
-      {/* Card 3 - Job Simulation */}
-      <PixelCard variant="yellow">
-        <div className="absolute text-white text-center px-4">
-          <Link href="/dashboard/skill/jobsimulation">
-            <h2 className="text-2xl font-bold mb-2 cursor-pointer hover:underline">
-              Job Simulation
-            </h2>
-          </Link>
-          <p className="text-sm opacity-80">
-            Practice real-world job scenarios with mock simulations.
-          </p>
-        </div>
-      </PixelCard>
+
     </div>
   );
 };

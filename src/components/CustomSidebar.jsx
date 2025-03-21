@@ -26,7 +26,7 @@ const navigationItems = [
     name: "Course Path",
     icon: "mdi:book-open-variant",
     color: "#60a5fa",
-    link: "/dashboard/path", // Added link for parent item
+    link: "/dashboard/skill/jobsimulation", // Added link for parent item
     children: [
       {
         name: "Virtual Mentor",
@@ -81,36 +81,25 @@ const navigationItems = [
       {
         name: "Preparation",
         icon: "mdi:notebook-outline",
-        link: "/dashboard/preparation", // Added link for parent item
+        link: "/dashboard/skill/preparation", // Added link for parent item
         children: [
           {
             name: "Mock Interview",
             icon: "mdi:account-voice",
-            link: "/dashboard/mock-interview",
+            link: "/dashboard/skill/preparation/interview",
           },
           {
             name: "Mock Test",
             icon: "mdi:clipboard-text-outline",
-            link: "/dashboard/mock-test",
+            link: "/dashboard/skill/preparation/mocktest",
           },
         ],
       },
       {
         name: "Job Simulation",
         icon: "mdi:virtual-reality",
-        link: "/dashboard/job-simulation", // Added link for parent item
-        children: [
-          {
-            name: "VR Job Simulation",
-            icon: "mdi:vr-headset",
-            link: "/dashboard/vr-job-simulation",
-          },
-          {
-            name: "VR Mentoring",
-            icon: "mdi:account-supervisor",
-            link: "/dashboard/vr-mentoring",
-          },
-        ],
+        link: "/dashboard/skill/jobsimulation", // Added link for parent item
+        
       },
     ],
   },
