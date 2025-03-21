@@ -3,8 +3,8 @@
 import { createContext, useContext, useEffect, useState } from "react"
 
 // const backendUrl = "https://backend-chat-9v3m.onrender.com" 
-// const backendUrl = "http://localhost:4000" 
-const backendUrl = "https://backend-chat-production-c21f.up.railway.app" 
+const backendUrl = "http://localhost:4000" 
+// const backendUrl = "https://backend-chat-production-c21f.up.railway.app" 
 
 const ChatContext = createContext()
 
