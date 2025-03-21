@@ -5,7 +5,7 @@ import { TrendingUp, TrendingDown, ChevronDown } from 'lucide-react';
 
 export const SalaryCard = () => {
   const [experienceLevel, setExperienceLevel] = useState('Experience Level');
-  const [cityTier, setCityTier] = useState('City Tier');
+//   const [cityTier, setCityTier] = useState('City Tier');
   const [hoveredRole, setHoveredRole] = useState(null);
 
   const roles = [
@@ -47,7 +47,7 @@ export const SalaryCard = () => {
         </div>
 
         <div className="relative transform transition-all duration-300 hover:scale-[1.02]">
-          <select
+          {/* <select
             value={cityTier}
             onChange={(e) => handleFilterChange('city', e.target.value)}
             className="w-full appearance-none bg-[#333] text-gray-300 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 hover:bg-[#3a3a3a]"
@@ -56,7 +56,7 @@ export const SalaryCard = () => {
             <option>Tier 1</option>
             <option>Tier 2</option>
             <option>Tier 3</option>
-          </select>
+          </select> */}
           <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
         </div>
       </div>

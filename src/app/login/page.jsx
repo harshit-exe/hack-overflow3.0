@@ -28,7 +28,7 @@ const page = () => {
     const response = await googleLogin(creds.credential);
     if (response.success) {
       toast.success("Google Login successful!");
-      router.push("/");
+      router.push("/dashboard");
     } else {
       toast.error(response.message);
     }
