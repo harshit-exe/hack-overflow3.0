@@ -7,8 +7,10 @@ import Badge from "../ui-components/badge";
 import GlowButton from "../ui-components/glow-button";
 import TextReveal from "../ui-components/text-reveal";
 import ParallaxLayer from "../ui-components/parallax-layer";
+import { useRouter } from "next/navigation";
 
 export default function Hero() {
+  const router = useRouter();
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: heroRef,
@@ -76,9 +78,10 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.8 }}
+            onClick={()=>router.push('/career-gen')}
           >
            
-            <GlowButton variant="primary" size="lg">
+            <GlowButton variant="primary" size="lg" >
               Get started
             </GlowButton>
           </motion.div>

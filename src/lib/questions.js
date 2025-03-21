@@ -1,0 +1,88 @@
+export const careerQuestions = [
+    {
+      question: "How do you prefer to solve problems?",
+      leftOption: "Logically 🧠",
+      rightOption: "Creatively 🎨",
+      icon: "💡",
+      imagePrompt: "logical vs creative thinking",
+    },
+    {
+      question: "What's your ideal work environment?",
+      leftOption: "Remote 🏠",
+      rightOption: "Office 🏢",
+      icon: "💼",
+      imagePrompt: "remote work vs office",
+    },
+    {
+      question: "Frontend or Backend?",
+      leftOption: "Frontend 🖥️",
+      rightOption: "Backend ⚙️",
+      icon: "💻",
+      imagePrompt: "frontend vs backend development",
+    },
+    {
+      question: "Data or Design?",
+      leftOption: "Data 📊",
+      rightOption: "Design 🎨",
+      icon: "🔍",
+      imagePrompt: "data analysis vs design",
+    },
+    {
+      question: "AI or Blockchain?",
+      leftOption: "AI 🤖",
+      rightOption: "Blockchain 🔗",
+      icon: "🚀",
+      imagePrompt: "artificial intelligence vs blockchain",
+    },
+    {
+      question: "User Experience or System Architecture?",
+      leftOption: "UX 👥",
+      rightOption: "Architecture 🏗️",
+      icon: "🔧",
+      imagePrompt: "user experience vs system architecture",
+    },
+    {
+      question: "Emerging Tech or Established Systems?",
+      leftOption: "Emerging 🆕",
+      rightOption: "Established 🏛️",
+      icon: "⚖️",
+      imagePrompt: "emerging technology vs established systems",
+    },
+    {
+      question: "Mobile or Web Development?",
+      leftOption: "Mobile 📱",
+      rightOption: "Web 🌐",
+      icon: "💻",
+      imagePrompt: "mobile app vs web development",
+    },
+    {
+      question: "Startup or Corporate?",
+      leftOption: "Startup 🚀",
+      rightOption: "Corporate 🏢",
+      icon: "💼",
+      imagePrompt: "startup vs corporate environment",
+    },
+    {
+      question: "Code or No-Code?",
+      leftOption: "Code 👨‍💻",
+      rightOption: "No-Code 🧩",
+      icon: "🖥️",
+      imagePrompt: "coding vs no-code development",
+    },
+    {
+      question: "Cybersecurity or Cloud Computing?",
+      leftOption: "Cybersecurity 🔒",
+      rightOption: "Cloud ☁️",
+      icon: "🛡️",
+      imagePrompt: "cybersecurity vs cloud computing",
+    },
+    {
+      question: "Open Source or Proprietary Software?",
+      leftOption: "Open Source 🌐",
+      rightOption: "Proprietary 🔐",
+      icon: "📦",
+      imagePrompt: "open source vs proprietary software",
+    },
+  ]
+  
+  
