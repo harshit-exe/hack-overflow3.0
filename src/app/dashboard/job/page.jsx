@@ -8,7 +8,7 @@ const Page = () => {
       {/* Card 1 - Resume Builder */}
       <PixelCard variant="pink">
         <div className="absolute text-white text-center px-4">
-          <Link href="/dashboard/resume-builder">
+          <Link href="/dashboard/trend">
             <h2 className="text-2xl font-bold mb-2 cursor-pointer hover:underline">
             Trend and Salary
             </h2>
@@ -22,7 +22,7 @@ const Page = () => {
       {/* Card 2 - Preparation */}
       <PixelCard variant="blue">
         <div className="absolute text-white text-center px-4">
-          <Link href="/dashboard/preparation">
+          <Link href="/dashboard/job-openings">
             <h2 className="text-2xl font-bold mb-2 cursor-pointer hover:underline">
             Job Opening
             </h2>
@@ -37,7 +37,7 @@ const Page = () => {
       {/* Card 3 - Job Simulation */}
       <PixelCard variant="yellow">
         <div className="absolute text-white text-center px-4">
-          <Link href="/dashboard/job-simulation">
+          <Link href="/dashboard/events">
             <h2 className="text-2xl font-bold mb-2 cursor-pointer hover:underline">
             Events and Updates
             </h2>
