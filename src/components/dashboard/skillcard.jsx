@@ -13,16 +13,14 @@ export const SkillsCard = ({ jobs }) => {
 
   useEffect(() => {
     async function fetchSkillsData() {
-      if (jobs && jobs.length > 0) {
-        setIsLoading(true);
-        try {
-          const skillsData = await getInDemandSkills(jobs, jobTitleFilter);
-          setSkills(skillsData);
-        } catch (error) {
-          console.error("Error:", error);
-        } finally {
-          setIsLoading(false);
-        }
+      setIsLoading(true);
+      try {
+        const skillsData = await getInDemandSkills(jobs, jobTitleFilter);
+        setSkills(skillsData);
+      } catch (error) {
+        console.error("Error:", error);
+      } finally {
+        setIsLoading(false);
       }
     }
 
