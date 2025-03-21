@@ -135,7 +135,7 @@ export function useGroqAI() {
                 Provide 3-5 career stages, starting from entry-level and progressing to senior positions.`,
             },
           ],
-          max_tokens: 1000,
+          max_tokens: 2000,
           temperature: 0.7,
         }),
       })
