@@ -138,19 +138,19 @@ export default function CoverLetterPage() {
     <main className="min-h-screen bg-black">
       <div className="container mx-auto py-8">
         <div className="flex items-center mb-6">
-          <Link href="/dashboard/skill/resume/resume-builder" className="flex items-center text-blue-500 hover:text-blue-400">
+          <Link href="/dashboard/skill/resume/resume-builder" className="flex items-center text-White hover:text-blue-400">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Resume Builder
           </Link>
         </div>
 
-        <h1 className="text-4xl font-bold text-blue-500 text-center mb-8 animate-fadeIn">
-          AI-Powered Cover Letter Generator
+        <h1 className="text-4xl font-bold text-white text-center mb-8 animate-fadeIn">
+        <span className="text-[#57FF31]">  AI </span> -Powered Cover Letter Generator
         </h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="space-y-6">
-            <Card className="bg-gray-800 border-gray-700">
+            <Card className="bg-[#181818] border-gray-700">
               <CardHeader>
                 <CardTitle className="text-xl font-semibold text-blue-400">Job Details</CardTitle>
                 <CardDescription className="text-gray-400">
@@ -193,7 +193,7 @@ export default function CoverLetterPage() {
                     placeholder="e.g. Acme Corporation"
                     value={formData.companyName}
                     onChange={(e) => handleInputChange("companyName", e.target.value)}
-                    className="bg-gray-700 border-gray-600 text-gray-200"
+                    className="bg-transperent border-gray-400 text-gray-200"
                   />
                 </div>
 
@@ -203,7 +203,7 @@ export default function CoverLetterPage() {
                     placeholder="e.g. John Smith (leave blank if unknown)"
                     value={formData.hrName}
                     onChange={(e) => handleInputChange("hrName", e.target.value)}
-                    className="bg-gray-700 border-gray-600 text-gray-200"
+                    className="bg-transperent border-gray-400 text-gray-200"
                   />
                 </div>
 
@@ -213,7 +213,7 @@ export default function CoverLetterPage() {
                     placeholder="e.g. Senior Frontend Developer"
                     value={formData.jobRole}
                     onChange={(e) => handleInputChange("jobRole", e.target.value)}
-                    className="bg-gray-700 border-gray-600 text-gray-200"
+                    className="bg-transperent border-gray-400 text-gray-200"
                   />
                 </div>
 
@@ -223,7 +223,7 @@ export default function CoverLetterPage() {
                     placeholder="Paste the job description here for a more tailored cover letter..."
                     value={formData.jobDescription}
                     onChange={(e) => handleInputChange("jobDescription", e.target.value)}
-                    className="min-h-[150px] bg-gray-700 border-gray-600 text-gray-200"
+                    className="min-h-[150px] bg-transperent border-gray-400 text-gray-200"
                   />
                 </div>
               </CardContent>
@@ -240,7 +240,7 @@ export default function CoverLetterPage() {
               </CardFooter>
             </Card>
 
-            <Card className="bg-gray-800 border-gray-700">
+            <Card className="bg-[#181818] border-gray-700">
               <CardHeader>
                 <CardTitle className="text-xl font-semibold text-blue-400">How It Works</CardTitle>
                 <CardDescription className="text-gray-400">
@@ -295,7 +295,7 @@ export default function CoverLetterPage() {
           </div>
 
           <div className="space-y-6">
-            <Card className="bg-gray-800 border-gray-700">
+            <Card className="bg-[#181818] border-gray-700">
               <CardHeader className="flex flex-row items-center justify-between">
                 <div>
                   <CardTitle className="text-xl font-semibold text-blue-400">Your Cover Letter</CardTitle>
@@ -370,7 +370,7 @@ export default function CoverLetterPage() {
                     </TabsContent>
                   </Tabs>
                 ) : (
-                  <div className="bg-gray-700 rounded-md p-6 flex flex-col items-center justify-center min-h-[400px] text-center">
+                  <div className="bg-[#181818] rounded-md p-6 flex flex-col items-center justify-center min-h-[400px] text-center">
                     <Wand2 className="h-12 w-12 text-gray-500 mb-4" />
                     <h3 className="text-gray-300 text-lg font-medium mb-2">No Cover Letter Generated Yet</h3>
                     <p className="text-gray-400 max-w-md">
@@ -382,7 +382,7 @@ export default function CoverLetterPage() {
               </CardContent>
             </Card>
 
-            <Card className="bg-gray-800 border-gray-700">
+            <Card className="bg-[#181818] border-gray-700">
               <CardHeader>
                 <CardTitle className="text-xl font-semibold text-blue-400">Cover Letter Tips</CardTitle>
                 <CardDescription className="text-gray-400">

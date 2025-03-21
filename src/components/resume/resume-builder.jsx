@@ -485,7 +485,7 @@ ${repo.description || "No description available"}
                   placeholder="e.g. octocat"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="bg-tranperant border-[#57FF31] text-gray-200"
+                  className="bg-tranperant border-gray-400 text-gray-200"
                 />
                 <Button
                   onClick={fetchGithubData}
@@ -560,7 +560,7 @@ ${repo.description || "No description available"}
               <Button
                 size="sm"
                 variant="outline"
-                className="h-8 border-green-600 text-green-500 hover:text-white hover:bg-green-900"
+                className="h-8 border-gray-400 text-green-500 hover:text-white hover:bg-green-900"
                 onClick={() => optimizeSection("name")}
                 disabled={loading.section === "name"}
               >
@@ -576,7 +576,7 @@ ${repo.description || "No description available"}
               placeholder="Full Name"
               value={resume.name}
               onChange={(e) => handleInputChange("name", e.target.value)}
-              className="bg-tranperant border-[#57FF31] text-gray-200"
+              className="bg-tranperant border-gray-400 text-gray-200"
             />
 
             <div className="flex justify-between items-center">
@@ -600,7 +600,7 @@ ${repo.description || "No description available"}
               placeholder="Professional Title"
               value={resume.title}
               onChange={(e) => handleInputChange("title", e.target.value)}
-              className="bg-tranperant border-[#57FF31] text-gray-200"
+              className="bg-tranperant border-gray-400 text-gray-200"
             />
 
             <div className="flex justify-between items-center">
@@ -624,7 +624,7 @@ ${repo.description || "No description available"}
               placeholder="Bio / Professional Summary"
               value={resume.bio}
               onChange={(e) => handleInputChange("bio", e.target.value)}
-              className="min-h-[120px] bg-tranperant border-[#57FF31] text-gray-200"
+              className="min-h-[120px] bg-tranperant border-gray-400 text-gray-200"
             />
 
             <div className="flex justify-between items-center">
@@ -648,7 +648,7 @@ ${repo.description || "No description available"}
               placeholder="Contact Information"
               value={resume.contact}
               onChange={(e) => handleInputChange("contact", e.target.value)}
-              className="min-h-[80px] bg-tranperant border-[#57FF31] text-gray-200"
+              className="min-h-[80px] bg-tranperant border-gray-400 text-gray-200"
             />
           </TabsContent>
 
