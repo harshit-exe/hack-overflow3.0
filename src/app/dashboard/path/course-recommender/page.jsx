@@ -14,7 +14,6 @@ import CareerTimeline from "@/components/course/career-timeline"
 import CareerChat from "@/components/course/career-chat"
 import ResourceLibrary from "@/components/course/resource-library"
 import CourseRecommendation from "@/components/course/course-recommendation"
-
 export default function AICareerPathGenerator() {
   const [input, setInput] = useState("")
   const [careerPath, setCareerPath] = useState(null)
@@ -75,7 +74,7 @@ export default function AICareerPathGenerator() {
           <div className="mt-12 space-y-8 animate-fadeIn">
             <Card className="bg-black/70 backdrop-blur-md border border-gray-800 rounded-xl overflow-hidden shadow-xl">
               <Tabs defaultValue="outline" className="w-full">
-                <TabsList className="w-full grid grid-cols-5 bg-black/80 rounded-t-xl p-1">
+                <TabsList className="w-full grid grid-cols-4 bg-black/80 rounded-t-xl p-1">
                   <TabsTrigger
                     value="outline"
                     className="text-base md:text-lg font-medium data-[state=active]:bg-[#4F46E5] data-[state=active]:text-white transition-all"
@@ -98,13 +97,6 @@ export default function AICareerPathGenerator() {
                     Courses
                   </TabsTrigger>
                   <TabsTrigger
-                    value="timeline"
-                    className="text-base md:text-lg font-medium data-[state=active]:bg-[#4F46E5] data-[state=active]:text-white transition-all"
-                  >
-                    <Briefcase className="w-4 h-4 mr-2" />
-                    Timeline
-                  </TabsTrigger>
-                  <TabsTrigger
                     value="chat"
                     className="text-base md:text-lg font-medium data-[state=active]:bg-[#4F46E5] data-[state=active]:text-white transition-all"
                   >
@@ -120,9 +112,6 @@ export default function AICareerPathGenerator() {
                 </TabsContent>
                 <TabsContent value="courses" className="p-6">
                   <CourseRecommendation careerPath={careerPath} searchTerm={input} />
-                </TabsContent>
-                <TabsContent value="timeline" className="p-6">
-                  <CareerTimeline careerPath={careerPath} />
                 </TabsContent>
                 <TabsContent value="chat" className="p-6">
                   <CareerChat careerPath={careerPath} scrapedData={scrapedData} />

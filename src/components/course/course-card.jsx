@@ -23,22 +23,58 @@ export default function CourseCard({ course, onClick }) {
     return "bg-gray-600"
   }
 
+  // Generate a placeholder image based on the course title
+  const generatePlaceholderImage = () => {
+    const firstLetter = title.charAt(0).toUpperCase()
+    const colors = ["#4F46E5", "#57FF31", "#FF3131", "#31A8FF", "#FFD131"]
+    const randomColor = colors[Math.floor(Math.abs(hashCode(title)) % colors.length)]
+
+    return (
+      <div className="w-full h-full bg-gradient-to-br from-[#4F46E5]/50 to-[#57FF31]/50 flex items-center justify-center">
+        <div
+          className="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold"
+          style={{ backgroundColor: randomColor }}
+        >
+          {firstLetter}
+        </div>
+      </div>
+    )
+  }
+
+  // Simple hash function for deterministic color selection
+  const hashCode = (str) => {
+    let hash = 0
+    for (let i = 0; i < str.length; i++) {
+      hash = (hash << 5) - hash + str.charCodeAt(i)
+      hash |= 0
+    }
+    return hash
+  }
+
   return (
     <Card
-      className="bg-black/50 backdrop-blur-md border border-gray-800 rounded-xl overflow-hidden shadow-lg hover:border-[#4F46E5] transition-all duration-300 cursor-pointer group"
+      className="bg-gray-900 backdrop-blur-md border border-gray-700 rounded-xl overflow-hidden shadow-lg hover:border-[#57FF31] transition-all duration-300 cursor-pointer group"
       onClick={onClick}
     >
       <div className="relative h-40 overflow-hidden">
-        {image ? (
+        {image && !image.includes("undefined") && !image.includes("null") ? (
           <img
             src={image || "/placeholder.svg"}
             alt={title}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            onError={(e) => {
+              e.target.style.display = "none"
+              e.target.parentNode.appendChild(
+                document.createRange().createContextualFragment(
+                  `<div class="w-full h-full bg-gradient-to-br from-[#4F46E5]/50 to-[#57FF31]/50 flex items-center justify-center">
+                  <span class="text-white text-lg font-bold">${platform}</span>
+                </div>`,
+                ),
+              )
+            }}
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-[#4F46E5]/30 to-[#57FF31]/30 flex items-center justify-center">
-            <span className="text-white text-lg font-bold">{platform}</span>
-          </div>
+          generatePlaceholderImage()
         )}
         <div className="absolute top-0 left-0 m-3">
           <Badge className={`${getPlatformColor()} text-white border-none`}>{platform}</Badge>
@@ -63,30 +99,30 @@ export default function CourseCard({ course, onClick }) {
           {title}
         </h3>
 
-        <p className="text-gray-400 text-sm mb-3 line-clamp-1">{instructor || "Unknown instructor"}</p>
+        <p className="text-gray-300 text-sm mb-3 line-clamp-1">{instructor || "Unknown instructor"}</p>
 
         <div className="flex flex-wrap gap-2 mb-3">
           {level && (
-            <Badge variant="outline" className="bg-black/50 text-white border-gray-700">
+            <Badge variant="outline" className="bg-gray-800 text-gray-200 border-gray-600">
               {level}
             </Badge>
           )}
 
           {duration && (
-            <Badge variant="outline" className="bg-black/50 text-white border-gray-700">
+            <Badge variant="outline" className="bg-gray-800 text-gray-200 border-gray-600">
               <Clock className="w-3 h-3 mr-1" /> {duration}
             </Badge>
           )}
 
           {rating && (
-            <Badge variant="outline" className="bg-black/50 text-white border-gray-700">
+            <Badge variant="outline" className="bg-gray-800 text-gray-200 border-gray-600">
               <Star className="w-3 h-3 mr-1 text-yellow-400" /> {rating}
             </Badge>
           )}
         </div>
 
         <div className="flex justify-between items-center mt-4">
-          <span className="text-xs text-gray-400">
+          <span className="text-xs text-gray-300">
             {course.enrollments ? `${course.enrollments.toLocaleString()} students` : ""}
           </span>
           <span className="text-[#57FF31] text-xs flex items-center group-hover:underline">
