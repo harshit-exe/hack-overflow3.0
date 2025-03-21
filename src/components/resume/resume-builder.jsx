@@ -42,6 +42,7 @@ import Link from "next/link"
 // Local storage key
 const RESUME_STORAGE_KEY = "resume-builder-data"
 
+
 const ResumeBuilder = () => {
   const [username, setUsername] = useState("")
   const [githubRepos, setGithubRepos] = useState([])
@@ -773,7 +774,7 @@ ${repo.description || "No description available"}
           <Link href="/dashboard/blockchain-verify">
             <Button className="bg-purple-600 hover:bg-purple-700 text-white">
               <Shield className="mr-2 h-4 w-4" />
-              Blockchain Verify
+              Verify Resume
             </Button>
           </Link>
         </div>
@@ -926,4 +927,5 @@ ${resume.projects}`
 }
 
 export default ResumeBuilder
+
 
