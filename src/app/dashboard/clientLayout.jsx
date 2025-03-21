@@ -139,48 +139,7 @@ export default function DashboardLayout({ children }) {
               </motion.h1>
             </Link>
 
-            <div className="hidden md:flex items-center pl-30 gap-4 ml-4">
-              <Link href="/dashboard">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-[#9ca3af] hover:text-white hover:bg-[#1a1a1a] rounded-lg"
-                >
-                  <Home className="mr-1 h-4 w-4" />
-                  Dashboard
-                </Button>
-              </Link>
-              <Link href="/dashboard/course-path">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-[#9ca3af] hover:text-white hover:bg-[#1a1a1a] rounded-lg"
-                >
-                  <BookOpen className="mr-1 h-4 w-4" />
-                  Courses
-                </Button>
-              </Link>
-              <Link href="/dashboard/skill-prepare">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-[#9ca3af] hover:text-white hover:bg-[#1a1a1a] rounded-lg"
-                >
-                  <Briefcase className="mr-1 h-4 w-4" />
-                  Skills
-                </Button>
-              </Link>
-              <Link href="/dashboard/job">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-[#9ca3af] hover:text-white hover:bg-[#1a1a1a] rounded-lg"
-                >
-                  <BarChart className="mr-1 h-4 w-4" />
-                  Jobs
-                </Button>
-              </Link>
-            </div>
+           
           </div>
 
           <div className="flex items-center gap-4">
@@ -271,7 +230,7 @@ export default function DashboardLayout({ children }) {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <Link href="/dashboard/vr-classroom" target="_blank">
+            <Link href="https://framevr.io/classcipher" target="_blank">
               <motion.div
                 className="flex items-center gap-2 bg-gradient-to-r from-[#1a1a1a] to-[#2a2a2a] hover:from-[#2a2a2a] hover:to-[#1a1a1a] text-white px-4 py-2 rounded-full transition-colors"
                 whileHover={{ scale: 1.05 }}
