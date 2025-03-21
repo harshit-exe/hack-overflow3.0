@@ -1,13 +1,42 @@
 // jobAnalysisService.js
 import { GroqForJob } from "./useGroqForJobs";
 
+// Helper function to extract JSON from AI response
+function extractJSONFromResponse(response) {
+  try {
+    // First attempt - try direct parsing
+    return JSON.parse(response);
+  } catch (error) {
+    try {
+      // Second attempt - try to find JSON within text response
+      // Look for content between square brackets (assuming array)
+      const jsonMatch = response.match(/\[.*\]/s);
+      if (jsonMatch) {
+        return JSON.parse(jsonMatch[0]);
+      }
+
+      // If that fails, look for content between curly braces (assuming object)
+      const objMatch = response.match(/\{.*\}/s);
+      if (objMatch) {
+        return JSON.parse(objMatch[0]);
+      }
+
+      // If all extraction attempts fail, throw the original error
+      throw error;
+    } catch (innerError) {
+      console.error("Failed to extract JSON from response:", response);
+      throw new Error("Invalid JSON response from API");
+    }
+  }
+}
+
 // 1. Get trending jobs
 export async function getTrendingJobs(jobsData) {
   const messages = [
     {
       role: "system",
       content:
-        "You are an AI assistant that analyzes job market data. Provide clear, concise analysis of job trends.",
+        "You are an AI assistant that analyzes job market data. Provide clear, concise analysis of job trends. IMPORTANT: Your response must be valid JSON - respond ONLY with a JSON array and nothing else.",
     },
     {
       role: "user",
@@ -19,11 +48,13 @@ export async function getTrendingJobs(jobsData) {
 
   try {
     const response = await GroqForJob(messages);
-    // Parse the JSON from the response text
-    return JSON.parse(response);
+    return extractJSONFromResponse(response);
   } catch (error) {
     console.error("Error getting trending jobs:", error);
-    return [];
+    // Return fallback data instead of empty array to prevent UI issues
+    return [
+      { title: "Software Engineer", openings: 0, reason: "Data unavailable" },
+    ];
   }
 }
 
@@ -33,7 +64,7 @@ export async function getSalaryForecasts(jobsData, filter = "") {
     {
       role: "system",
       content:
-        "You are an AI assistant that analyzes salary data in the job market. Provide accurate salary forecasts.",
+        "You are an AI assistant that analyzes salary data in the job market. Provide accurate salary forecasts. IMPORTANT: Your response must be valid JSON - respond ONLY with a JSON array and nothing else.",
     },
     {
       role: "user",
@@ -47,11 +78,11 @@ export async function getSalaryForecasts(jobsData, filter = "") {
 
   try {
     const response = await GroqForJob(messages);
-    // Parse the JSON from the response text
-    return JSON.parse(response);
+    return extractJSONFromResponse(response);
   } catch (error) {
     console.error("Error getting salary forecasts:", error);
-    return [];
+    // Return fallback data instead of empty array
+    return [{ title: "IT Manager", salary: "0 LPA", trend: "unavailable" }];
   }
 }
 
@@ -61,7 +92,7 @@ export async function getInDemandSkills(jobsData, jobTitle = "") {
     {
       role: "system",
       content:
-        "You are an AI assistant that analyzes job skill requirements. Identify the most in-demand skills from job listings.",
+        "You are an AI assistant that analyzes job skill requirements. Identify the most in-demand skills from job listings. IMPORTANT: Your response must be valid JSON - respond ONLY with a JSON array and nothing else.",
     },
     {
       role: "user",
@@ -75,10 +106,10 @@ export async function getInDemandSkills(jobsData, jobTitle = "") {
 
   try {
     const response = await GroqForJob(messages);
-    // Parse the JSON from the response text
-    return JSON.parse(response);
+    return extractJSONFromResponse(response);
   } catch (error) {
     console.error("Error getting in-demand skills:", error);
-    return [];
+    // Return fallback data instead of empty array
+    return [{ skill: "Data unavailable", rank: 1 }];
   }
 }
