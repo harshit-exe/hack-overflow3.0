@@ -6,52 +6,51 @@ import { useEffect, useState, useCallback } from "react";
 import { apiURL } from "@/constants/index";
 
 export const useAuth = () => {
-  const [authState, setAuthState] = useState({
-    isAuthenticated: false,
-    user: null,
-    loading: true,
-    error: null,
-  });
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
 
-  const checkAuth = async () => {
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch(`${apiURL}/api/auth/me`, {
+          method: "GET",
+          credentials: "include",
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          setIsAuthenticated(true);
+          setUser(data.user);
+        } else {
+          setIsAuthenticated(false);
+          setUser(null);
+        }
+      } catch (error) {
+        setIsAuthenticated(false);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
+
+  const signup = async (email, password, name) => {
     try {
-      const response = await fetch(`${apiURL}/api/auth/me`, {
-        method: "GET",
+      const response = await fetch(`${apiURL}/api/auth/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, name }),
         credentials: "include",
       });
 
-      const data = await response.json();
-
-      if (response.status === 401) {
-        // Automatic logout on invalid token
-        await logout();
-        return;
-      }
-
-      if (!response.ok)
-        throw new Error(data.message || "Authentication failed");
-
-      setAuthState({
-        isAuthenticated: true,
-        user: data.user,
-        loading: false,
-        error: null,
-      });
+      return await response.json();
     } catch (error) {
-      console.error("Auth check failed:", error);
-      setAuthState((prev) => ({
-        ...prev,
-        isAuthenticated: false,
-        user: null,
-        loading: false,
-        error: error.message,
-      }));
+      return { success: false, message: "Signup failed." };
     }
   };
-
-  useEffect(() => {
-    checkAuth();
-  }, []);
 
   const login = async (email, password) => {
     try {
@@ -64,55 +63,36 @@ export const useAuth = () => {
 
       const data = await response.json();
 
-      if (!response.ok) throw new Error(data.message);
+      if (data.success) {
+        setIsAuthenticated(true);
+        setUser(data.user);
+      }
 
-      await checkAuth(); // Re-validate after login
       return data;
     } catch (error) {
-      setAuthState((prev) => ({ ...prev, error: error.message }));
-      return { success: false, message: error.message };
+      return { success: false, message: "Login Failed" };
     }
   };
 
   const logout = async () => {
     try {
-      await fetch(`${apiURL}/api/auth/logout`, {
+      const response = await fetch(`${apiURL}/api/auth/logout`, {
         method: "POST",
         credentials: "include",
       });
 
-      setAuthState({
-        isAuthenticated: false,
-        user: null,
-        loading: false,
-        error: null,
-      });
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  };
-
-  const signup = async (name, email, password) => {
-    try {
-      const response = await fetch(`${apiURL}/api/auth/signup`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, email, password }),
-      });
-
-      if (response.status === 409)
-        return { success: response.success, message: response.message };
-
       const data = await response.json();
+
+      if (data.success) {
+        setIsAuthenticated(false);
+        setUser(null);
+      }
 
       return data;
     } catch (error) {
-      return { success: false, message: "Signup failed." };
+      return { success: false, message: "Logout Failed" };
     }
   };
-
   // const login = async (email, password) => {
   //   try {
   //     const response = await fetch(`${apiURL}/api/auth/login`, {
@@ -161,40 +141,28 @@ export const useAuth = () => {
   //   }
   // };
 
-  const googleLogin = useCallback(async (credential) => {
+  const googleLogin = async (token) => {
     try {
       const response = await fetch(`${apiURL}/api/auth/google`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ token: credential }),
-        credentials: "include",
+        body: JSON.stringify({ token }),
       });
 
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.message || "Google login failed");
+      if (data.success) {
+        setIsAuthenticated(true);
+        setUser(data.user);
       }
-
-      setAuthState({
-        isAuthenticated: true,
-        user: data.user,
-        loading: false,
-        error: null,
-      });
 
       return data;
     } catch (error) {
-      setAuthState((prev) => ({
-        ...prev,
-        error: error.message,
-        loading: false,
-      }));
-      return { success: false, message: error.message };
+      return { success: false, message: "Google Login failed" };
     }
-  }, []);
+  };
 
   // const logout = async () => {
   //   try {
@@ -222,11 +190,11 @@ export const useAuth = () => {
   // };
 
   return {
-    ...authState,
+    user,
+    isAuthenticated,
     signup,
     googleLogin,
     login,
     logout,
-    checkAuth,
   };
 };
