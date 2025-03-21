@@ -5,36 +5,37 @@ import { useSearchParams } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Loader2, Check, X, Clock, ExternalLink, ArrowLeft } from "lucide-react"
+import { Loader2, Check, X, Clock, ArrowLeft, Info, FileText } from "lucide-react"
 import Link from "next/link"
-import { getResumeHistory, verifyResumeOnBlockchain, getAddressExplorerUrl } from "@/lib/blockchain"
+import { verifyResume, getResumeHistory } from "@/lib/simplified-verification"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 
-export default function VerifyResume() {
+export default function VerifyResumePage() {
   const searchParams = useSearchParams()
   const [resumeHash, setResumeHash] = useState("")
-  const [walletAddress, setWalletAddress] = useState("")
+  const [userId, setUserId] = useState("")
   const [loading, setLoading] = useState(false)
   const [verificationResult, setVerificationResult] = useState(null)
   const [resumeHistory, setResumeHistory] = useState([])
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    // Get hash and address from URL parameters
+    // Get hash and userId from URL parameters
     const hash = searchParams.get("hash")
-    const address = searchParams.get("address")
+    const id = searchParams.get("userId")
 
     if (hash) setResumeHash(hash)
-    if (address) setWalletAddress(address)
+    if (id) setUserId(id)
 
-    // If both hash and address are provided, verify automatically
-    if (hash && address) {
-      verifyResume(hash, address)
+    // If both hash and userId are provided, verify automatically
+    if (hash && id) {
+      verifyResumeData(hash, id)
     }
   }, [searchParams])
 
-  const verifyResume = async (hash = resumeHash, address = walletAddress) => {
-    if (!hash || !address) {
-      setError("Please enter both resume hash and wallet address")
+  const verifyResumeData = async (hash = resumeHash, id = userId) => {
+    if (!hash || !id) {
+      setError("Please enter both verification hash and user ID")
       return
     }
 
@@ -42,23 +43,26 @@ export default function VerifyResume() {
     setError(null)
 
     try {
-      // Get resume history from blockchain
-      const history = await getResumeHistory(address)
+      // Get resume history
+      const history = getResumeHistory(id)
       setResumeHistory(history)
 
-      // Verify resume on blockchain
-      const result = await verifyResumeOnBlockchain(address, hash)
+      // Verify resume
+      const result = verifyResume(id, hash)
 
       if (result.verified) {
         setVerificationResult({
           verified: true,
           timestamp: result.timestamp,
-          message: "This resume is authentic and verified on the blockchain",
+          data: result.data,
+          changes: result.changes,
+          message: "This resume is authentic and has been verified",
         })
       } else {
         setVerificationResult({
           verified: false,
-          message: "This resume hash was not found on the blockchain",
+          message:
+            "This resume could not be verified. It may have been altered or the verification information is incorrect.",
         })
       }
     } catch (error) {
@@ -66,11 +70,16 @@ export default function VerifyResume() {
       setError(error.message)
       setVerificationResult({
         verified: false,
-        message: "Error verifying resume. Please check your connection and try again.",
+        message: "Error verifying resume. Please check your information and try again.",
       })
     } finally {
       setLoading(false)
     }
+  }
+
+  // Format date
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleString()
   }
 
   return (
@@ -90,7 +99,7 @@ export default function VerifyResume() {
             <CardHeader>
               <CardTitle className="text-xl font-semibold text-blue-400">Verify Resume Authenticity</CardTitle>
               <CardDescription className="text-gray-400">
-                Check if a resume is authentic and has been verified on the blockchain
+                Check if a resume is authentic and has been verified
               </CardDescription>
             </CardHeader>
 
@@ -98,9 +107,9 @@ export default function VerifyResume() {
               {/* Input Form */}
               <div className="space-y-4">
                 <div>
-                  <label className="text-sm text-gray-300 mb-1 block">Resume Hash</label>
+                  <label className="text-sm text-gray-300 mb-1 block">Verification Hash</label>
                   <Input
-                    placeholder="Enter resume hash..."
+                    placeholder="Enter verification hash..."
                     value={resumeHash}
                     onChange={(e) => setResumeHash(e.target.value)}
                     className="bg-gray-700 border-gray-600 text-gray-200"
@@ -108,11 +117,11 @@ export default function VerifyResume() {
                 </div>
 
                 <div>
-                  <label className="text-sm text-gray-300 mb-1 block">Wallet Address</label>
+                  <label className="text-sm text-gray-300 mb-1 block">User ID</label>
                   <Input
-                    placeholder="Enter wallet address..."
-                    value={walletAddress}
-                    onChange={(e) => setWalletAddress(e.target.value)}
+                    placeholder="Enter user ID..."
+                    value={userId}
+                    onChange={(e) => setUserId(e.target.value)}
                     className="bg-gray-700 border-gray-600 text-gray-200"
                   />
                 </div>
@@ -154,7 +163,100 @@ export default function VerifyResume() {
                   {verificationResult.verified && verificationResult.timestamp && (
                     <div className="mt-2 flex items-center text-gray-400 text-sm">
                       <Clock className="mr-1" size={14} />
-                      <span>Verified on: {new Date(verificationResult.timestamp).toLocaleString()}</span>
+                      <span>Verified on: {formatDate(verificationResult.timestamp)}</span>
+                    </div>
+                  )}
+
+                  {/* Display changes made in this version */}
+                  {verificationResult.verified &&
+                    verificationResult.changes &&
+                    verificationResult.changes.length > 0 && (
+                      <div className="mt-3">
+                        <Accordion type="single" collapsible className="w-full">
+                          <AccordionItem value="changes" className="border-gray-700">
+                            <AccordionTrigger className="text-sm text-gray-300 hover:text-gray-200">
+                              <div className="flex items-center">
+                                <FileText className="h-4 w-4 mr-2" />
+                                Changes in this version
+                              </div>
+                            </AccordionTrigger>
+                            <AccordionContent>
+                              <ul className="list-disc pl-5 space-y-1 text-sm text-gray-300">
+                                {verificationResult.changes.map((change, index) => (
+                                  <li key={index}>{change}</li>
+                                ))}
+                              </ul>
+                            </AccordionContent>
+                          </AccordionItem>
+                        </Accordion>
+                      </div>
+                    )}
+
+                  {/* Display verified resume data */}
+                  {verificationResult.verified && verificationResult.data && (
+                    <div className="mt-4 p-3 bg-gray-700 rounded-md">
+                      <h3 className="text-gray-200 font-medium mb-2">Verified Resume Information:</h3>
+                      <div className="space-y-1 text-sm">
+                        <p className="text-gray-300">
+                          <strong>Name:</strong> {verificationResult.data.name}
+                        </p>
+                        <p className="text-gray-300">
+                          <strong>Title:</strong> {verificationResult.data.title}
+                        </p>
+                        {verificationResult.data.skills && (
+                          <p className="text-gray-300">
+                            <strong>Skills:</strong> {verificationResult.data.skills}
+                          </p>
+                        )}
+
+                        <Accordion type="single" collapsible className="w-full mt-2">
+                          <AccordionItem value="details" className="border-gray-700">
+                            <AccordionTrigger className="text-sm text-gray-300 hover:text-gray-200">
+                              <div className="flex items-center">
+                                <Info className="h-4 w-4 mr-2" />
+                                View Full Resume Details
+                              </div>
+                            </AccordionTrigger>
+                            <AccordionContent>
+                              <div className="space-y-3 text-sm">
+                                {verificationResult.data.bio && (
+                                  <div>
+                                    <h4 className="font-medium text-gray-300">Professional Summary:</h4>
+                                    <p className="text-gray-400 whitespace-pre-line">{verificationResult.data.bio}</p>
+                                  </div>
+                                )}
+
+                                {verificationResult.data.experience && (
+                                  <div>
+                                    <h4 className="font-medium text-gray-300">Experience:</h4>
+                                    <p className="text-gray-400 whitespace-pre-line">
+                                      {verificationResult.data.experience}
+                                    </p>
+                                  </div>
+                                )}
+
+                                {verificationResult.data.education && (
+                                  <div>
+                                    <h4 className="font-medium text-gray-300">Education:</h4>
+                                    <p className="text-gray-400 whitespace-pre-line">
+                                      {verificationResult.data.education}
+                                    </p>
+                                  </div>
+                                )}
+
+                                {verificationResult.data.projects && (
+                                  <div>
+                                    <h4 className="font-medium text-gray-300">Projects:</h4>
+                                    <p className="text-gray-400 whitespace-pre-line">
+                                      {verificationResult.data.projects}
+                                    </p>
+                                  </div>
+                                )}
+                              </div>
+                            </AccordionContent>
+                          </AccordionItem>
+                        </Accordion>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -164,18 +266,43 @@ export default function VerifyResume() {
               {resumeHistory.length > 0 && (
                 <div>
                   <h3 className="text-gray-300 mb-2">Resume Update History</h3>
-                  <div className="space-y-2 max-h-[200px] overflow-y-auto">
+                  <div className="space-y-2 max-h-[300px] overflow-y-auto">
                     {resumeHistory.map((entry, index) => (
                       <div
                         key={index}
-                        className={`p-3 rounded-md flex justify-between items-center ${
+                        className={`p-3 rounded-md ${
                           entry.hash === resumeHash ? "bg-blue-900/30 border border-blue-700" : "bg-gray-700"
                         }`}
                       >
-                        <div className="flex items-center">
-                          <span className="text-gray-300 text-sm truncate max-w-[200px]">{entry.hash}</span>
+                        <div className="flex justify-between items-center">
+                          <div className="text-gray-300 text-sm">
+                            {entry.preview.name} - {entry.preview.title}
+                          </div>
+                          <span className="text-gray-400 text-xs">{formatDate(entry.timestamp)}</span>
                         </div>
-                        <span className="text-gray-400 text-xs">{new Date(entry.timestamp).toLocaleString()}</span>
+
+                        {entry.changes && entry.changes.length > 0 && (
+                          <div className="mt-2 text-xs text-gray-400">
+                            <strong>Changes:</strong> {entry.changes[0]}
+                            {entry.changes.length > 1 ? ` +${entry.changes.length - 1} more` : ""}
+                          </div>
+                        )}
+
+                        {entry.hash !== resumeHash && (
+                          <div className="mt-2 text-right">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-7 text-xs border-blue-600 text-blue-400 hover:bg-blue-900/30"
+                              onClick={() => {
+                                setResumeHash(entry.hash)
+                                verifyResumeData(entry.hash, userId)
+                              }}
+                            >
+                              Verify This Version
+                            </Button>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -183,28 +310,14 @@ export default function VerifyResume() {
               )}
             </CardContent>
 
-            <CardFooter className="flex flex-col space-y-4">
+            <CardFooter>
               <Button
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                onClick={() => verifyResume()}
+                onClick={() => verifyResumeData()}
                 disabled={loading}
               >
                 {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Verify Resume"}
               </Button>
-
-              {walletAddress && (
-                <div className="text-center text-gray-400 text-sm">
-                  <a
-                    href={getAddressExplorerUrl(walletAddress)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-400 hover:underline flex items-center justify-center"
-                  >
-                    View Address on Blockchain Explorer
-                    <ExternalLink className="h-3 w-3 ml-1" />
-                  </a>
-                </div>
-              )}
             </CardFooter>
           </Card>
         </div>

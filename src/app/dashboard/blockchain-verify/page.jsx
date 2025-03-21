@@ -4,76 +4,55 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Loader2, Check, AlertTriangle, ExternalLink, Copy, ArrowLeft } from "lucide-react"
+import { Loader2, Check, AlertTriangle, Copy, ArrowLeft, Clock, Info, FileText } from "lucide-react"
 import Link from "next/link"
 import {
-  connectWallet,
-  storeResumeOnBlockchain,
+  getUserId,
+  storeResumeForVerification,
   getResumeHistory,
-  generateQRCode,
-  getExplorerUrl,
-  getAddressExplorerUrl,
-} from "@/lib/blockchain"
+  generateVerificationQR,
+} from "@/lib/simplified-verification"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 
-export default function BlockchainVerifyPage() {
+export default function VerifyPage() {
   const [resume, setResume] = useState(null)
-  const [isConnected, setIsConnected] = useState(false)
-  const [walletAddress, setWalletAddress] = useState("")
+  const [userId, setUserId] = useState("")
   const [loading, setLoading] = useState(false)
   const [verificationStatus, setVerificationStatus] = useState(null)
   const [resumeHistory, setResumeHistory] = useState([])
   const [qrCode, setQrCode] = useState(null)
   const [error, setError] = useState(null)
-  const [networkName, setNetworkName] = useState("Sepolia Testnet")
+  const [showHashInfo, setShowHashInfo] = useState(false)
+  const [selectedVersion, setSelectedVersion] = useState(null)
 
   // Load resume data from local storage on component mount
   useEffect(() => {
     try {
+      // Get user ID
+      const id = getUserId()
+      setUserId(id)
+
+      // Load resume data
       const savedData = localStorage.getItem("resume-builder-data")
       if (savedData) {
         const parsedData = JSON.parse(savedData)
         setResume(parsedData)
       }
+
+      // Load resume history
+      loadResumeHistory()
     } catch (error) {
-      console.error("Error loading resume from local storage:", error)
+      console.error("Error loading data:", error)
       setError("Could not load resume data. Please go back and create a resume first.")
     }
   }, [])
 
-  // Check if MetaMask is installed
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      if (!window.ethereum) {
-        setError("MetaMask is not installed. Please install MetaMask to use blockchain features.")
-      }
-    }
-  }, [])
-
-  // Connect wallet on component mount
-  useEffect(() => {
-    const checkConnection = async () => {
-      try {
-        if (window.ethereum) {
-          const { address } = await connectWallet()
-          setWalletAddress(address)
-          setIsConnected(true)
-
-          // Load resume history
-          loadResumeHistory(address)
-        }
-      } catch (error) {
-        console.error("Error checking wallet connection:", error)
-      }
-    }
-
-    checkConnection()
-  }, [])
-
-  // Load resume history from blockchain
-  const loadResumeHistory = async (address) => {
+  // Load resume history
+  const loadResumeHistory = () => {
     try {
       setLoading(true)
-      const history = await getResumeHistory(address)
+      const history = getResumeHistory()
       setResumeHistory(history)
       setLoading(false)
     } catch (error) {
@@ -82,27 +61,7 @@ export default function BlockchainVerifyPage() {
     }
   }
 
-  // Handle wallet connection
-  const handleConnectWallet = async () => {
-    try {
-      setLoading(true)
-      setError(null)
-
-      const { address } = await connectWallet()
-      setWalletAddress(address)
-      setIsConnected(true)
-
-      // Load resume history
-      await loadResumeHistory(address)
-
-      setLoading(false)
-    } catch (error) {
-      setError(error.message)
-      setLoading(false)
-    }
-  }
-
-  // Store resume on blockchain
+  // Store resume for verification
   const handleVerifyResume = async () => {
     if (!resume) {
       setError("No resume data found. Please go back and create a resume first.")
@@ -113,27 +72,23 @@ export default function BlockchainVerifyPage() {
       setLoading(true)
       setError(null)
 
-      // Check if wallet is connected
-      if (!isConnected) {
-        await handleConnectWallet()
-      }
-
-      // Store resume on blockchain
-      const result = await storeResumeOnBlockchain(resume)
+      // Store resume for verification
+      const result = await storeResumeForVerification(resume)
 
       if (result.success) {
         setVerificationStatus({
           success: true,
           hash: result.hash,
-          txHash: result.txHash,
+          timestamp: result.timestamp,
+          changes: result.changes,
         })
 
         // Generate QR code
-        const qrCodeData = await generateQRCode(result.hash, walletAddress)
+        const qrCodeData = await generateVerificationQR(result.hash)
         setQrCode(qrCodeData)
 
         // Reload resume history
-        await loadResumeHistory(walletAddress)
+        loadResumeHistory()
       } else {
         setError(result.error)
       }
@@ -150,19 +105,27 @@ export default function BlockchainVerifyPage() {
     navigator.clipboard.writeText(text)
   }
 
+  // Format date
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleString()
+  }
+
+  // View version details
+  const viewVersionDetails = (version) => {
+    setSelectedVersion(version)
+  }
+
   return (
     <div className="min-h-screen bg-black">
       <div className="container mx-auto py-8">
         <div className="flex items-center mb-6">
-          <Link href="/" className="flex items-center text-blue-500 hover:text-blue-400">
+          <Link href="/dashboard/skill/resume/resume-builder" className="flex items-center text-blue-500 hover:text-blue-400">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Resume Builder
           </Link>
         </div>
 
-        <h1 className="text-4xl font-bold text-blue-500 text-center mb-8 animate-fadeIn">
-          Blockchain Resume Verification
-        </h1>
+        <h1 className="text-4xl font-bold text-blue-500 text-center mb-8 animate-fadeIn">Resume Verification System</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-6">
@@ -170,55 +133,24 @@ export default function BlockchainVerifyPage() {
               <CardHeader>
                 <CardTitle className="text-xl font-semibold text-blue-400">Verify Your Resume</CardTitle>
                 <CardDescription className="text-gray-400">
-                  Store your resume on the blockchain to prevent fraud and ensure authenticity
+                  Create a verifiable record of your resume to prevent fraud and ensure authenticity
                 </CardDescription>
               </CardHeader>
 
               <CardContent className="space-y-4">
-                {/* Wallet Connection Status */}
+                {/* User ID */}
                 <div className="flex items-center justify-between p-3 bg-gray-700 rounded-md">
                   <div className="flex items-center">
-                    <div className={`w-3 h-3 rounded-full mr-2 ${isConnected ? "bg-green-500" : "bg-red-500"}`}></div>
-                    <span className="text-gray-300">Wallet Status:</span>
+                    <div className="w-3 h-3 rounded-full mr-2 bg-green-500"></div>
+                    <span className="text-gray-300">Your Verification ID:</span>
                   </div>
 
-                  {isConnected ? (
-                    <div className="flex items-center">
-                      <span className="text-gray-300 text-sm mr-2 truncate max-w-[150px]">{walletAddress}</span>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6"
-                        onClick={() => copyToClipboard(walletAddress)}
-                      >
-                        <Copy className="h-3 w-3 text-gray-400" />
-                      </Button>
-                      <a
-                        href={getAddressExplorerUrl(walletAddress)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="ml-2"
-                      >
-                        <ExternalLink className="h-4 w-4 text-blue-400" />
-                      </a>
-                    </div>
-                  ) : (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-blue-500 text-blue-400 hover:bg-blue-900"
-                      onClick={handleConnectWallet}
-                      disabled={loading}
-                    >
-                      {loading ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : "Connect MetaMask"}
+                  <div className="flex items-center">
+                    <span className="text-gray-300 text-sm mr-2 truncate max-w-[150px]">{userId}</span>
+                    <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => copyToClipboard(userId)}>
+                      <Copy className="h-3 w-3 text-gray-400" />
                     </Button>
-                  )}
-                </div>
-
-                {/* Network Info */}
-                <div className="p-3 bg-gray-700 rounded-md flex justify-between items-center">
-                  <span className="text-gray-300">Network:</span>
-                  <Badge className="bg-purple-600">{networkName}</Badge>
+                  </div>
                 </div>
 
                 {/* Resume Status */}
@@ -246,14 +178,35 @@ export default function BlockchainVerifyPage() {
                   <div className="p-4 bg-green-900/30 border border-green-700 rounded-md">
                     <div className="flex items-center mb-2">
                       <Check className="text-green-500 mr-2" size={18} />
-                      <span className="text-green-400 font-medium">Resume Verified on Blockchain</span>
+                      <span className="text-green-400 font-medium">Resume Verified Successfully</span>
                     </div>
 
                     <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">Resume Hash:</span>
+                      <div className="flex justify-between items-center">
                         <div className="flex items-center">
-                          <span className="text-gray-300 truncate max-w-[200px]">{verificationStatus.hash}</span>
+                          <span className="text-gray-400 mr-1">Verification Hash:</span>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-5 w-5 p-0"
+                                  onClick={() => setShowHashInfo(true)}
+                                >
+                                  <Info className="h-3 w-3 text-blue-400" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Click for hash information</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </div>
+                        <div className="flex items-center">
+                          <span className="text-gray-300 truncate max-w-[200px] font-mono text-xs">
+                            {verificationStatus.hash}
+                          </span>
                           <Button
                             variant="ghost"
                             size="icon"
@@ -266,16 +219,20 @@ export default function BlockchainVerifyPage() {
                       </div>
 
                       <div className="flex justify-between">
-                        <span className="text-gray-400">Transaction:</span>
-                        <a
-                          href={getExplorerUrl(verificationStatus.txHash)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-400 hover:underline flex items-center"
-                        >
-                          View on Explorer
-                          <ExternalLink className="h-3 w-3 ml-1" />
-                        </a>
+                        <span className="text-gray-400">Timestamp:</span>
+                        <span className="text-gray-300">{formatDate(verificationStatus.timestamp)}</span>
+                      </div>
+
+                      {/* Changes Made */}
+                      <div className="mt-2">
+                        <h4 className="text-gray-300 font-medium mb-1">Changes in this version:</h4>
+                        <ul className="list-disc pl-5 space-y-1">
+                          {verificationStatus.changes.map((change, index) => (
+                            <li key={index} className="text-gray-300 text-xs">
+                              {change}
+                            </li>
+                          ))}
+                        </ul>
                       </div>
                     </div>
                   </div>
@@ -294,16 +251,12 @@ export default function BlockchainVerifyPage() {
                 <Button
                   className="w-full bg-green-600 hover:bg-green-700 text-white"
                   onClick={handleVerifyResume}
-                  disabled={loading || !resume || !window.ethereum}
+                  disabled={loading || !resume}
                 >
                   {loading ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   ) : (
-                    <>
-                      {verificationStatus && verificationStatus.success
-                        ? "Update Verification"
-                        : "Verify Resume on Blockchain"}
-                    </>
+                    <>{verificationStatus && verificationStatus.success ? "Update Verification" : "Verify Resume"}</>
                   )}
                 </Button>
               </CardFooter>
@@ -314,22 +267,44 @@ export default function BlockchainVerifyPage() {
               <Card className="bg-gray-800 border-gray-700">
                 <CardHeader>
                   <CardTitle className="text-xl font-semibold text-blue-400">Resume History</CardTitle>
-                  <CardDescription className="text-gray-400">
-                    Complete history of your resume updates on the blockchain
-                  </CardDescription>
+                  <CardDescription className="text-gray-400">Complete history of your resume updates</CardDescription>
                 </CardHeader>
 
                 <CardContent>
                   <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
                     {resumeHistory.map((entry, index) => (
-                      <div key={index} className="p-2 bg-gray-700 rounded-md flex justify-between items-center">
-                        <div className="flex items-center">
-                          <Badge variant="outline" className="bg-blue-900/30 text-blue-300 border-blue-500 mr-2">
+                      <div key={index} className="p-3 bg-gray-700 rounded-md">
+                        <div className="flex justify-between items-center mb-1">
+                          <Badge variant="outline" className="bg-blue-900/30 text-blue-300 border-blue-500">
                             v{resumeHistory.length - index}
                           </Badge>
-                          <span className="text-gray-300 text-sm truncate max-w-[150px]">{entry.hash}</span>
+                          <div className="flex items-center text-gray-400 text-xs">
+                            <Clock className="h-3 w-3 mr-1" />
+                            {formatDate(entry.timestamp)}
+                          </div>
                         </div>
-                        <span className="text-gray-400 text-xs">{new Date(entry.timestamp).toLocaleString()}</span>
+                        <div className="text-sm text-gray-300 mt-1">
+                          {entry.preview.name} - {entry.preview.title}
+                        </div>
+                        <div className="mt-2 flex justify-between items-center">
+                          <div className="text-xs text-gray-400">
+                            {entry.changes && entry.changes.length > 0 && (
+                              <span>
+                                {entry.changes[0]}
+                                {entry.changes.length > 1 ? ` +${entry.changes.length - 1} more` : ""}
+                              </span>
+                            )}
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 text-xs text-blue-400 hover:text-blue-300"
+                            onClick={() => viewVersionDetails(entry)}
+                          >
+                            <FileText className="h-3 w-3 mr-1" />
+                            Details
+                          </Button>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -378,23 +353,31 @@ export default function BlockchainVerifyPage() {
               </Card>
             )}
 
-            {/* Blockchain Info */}
+            {/* How It Works */}
             <Card className="bg-gray-800 border-gray-700">
               <CardHeader>
                 <CardTitle className="text-xl font-semibold text-blue-400">How It Works</CardTitle>
-                <CardDescription className="text-gray-400">
-                  Understanding blockchain-based resume verification
-                </CardDescription>
+                <CardDescription className="text-gray-400">Understanding resume verification</CardDescription>
               </CardHeader>
 
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <h3 className="text-gray-200 font-medium">What is blockchain verification?</h3>
+                  <h3 className="text-gray-200 font-medium">What is resume verification?</h3>
                   <p className="text-gray-400 text-sm">
-                    Blockchain verification creates a tamper-proof record of your resume by storing a cryptographic hash
-                    on a decentralized blockchain. This provides proof that your resume hasn't been altered since
-                    verification.
+                    Resume verification creates a tamper-proof record of your resume by storing a cryptographic hash and
+                    timestamp. This provides proof that your resume hasn't been altered since verification.
                   </p>
+                </div>
+
+                <div className="space-y-2">
+                  <h3 className="text-gray-200 font-medium">How the verification works:</h3>
+                  <ol className="text-gray-400 text-sm space-y-1 list-decimal pl-5">
+                    <li>Your resume is converted to a unique fingerprint (hash) using SHA-256 algorithm</li>
+                    <li>This hash is stored along with a timestamp and list of changes</li>
+                    <li>Each update creates a new entry in your history with detailed change tracking</li>
+                    <li>The QR code links to a verification page with your resume's unique hash</li>
+                    <li>Anyone with the QR code can verify your resume's authenticity and see its history</li>
+                  </ol>
                 </div>
 
                 <div className="space-y-2">
@@ -412,34 +395,111 @@ export default function BlockchainVerifyPage() {
                   <ul className="text-gray-400 text-sm space-y-1 list-disc pl-5">
                     <li>Quickly verify the authenticity of candidate resumes</li>
                     <li>See when resume information was last updated</li>
-                    <li>Reduce time spent on background checks</li>
+                    <li>View a complete history of resume changes</li>
                     <li>Identify candidates with verified credentials</li>
                   </ul>
-                </div>
-
-                <div className="space-y-2">
-                  <h3 className="text-gray-200 font-medium">Technical Details</h3>
-                  <p className="text-gray-400 text-sm">
-                    This verification system uses the Polygon Mumbai Testnet, a blockchain network designed for testing
-                    decentralized applications. Each verification creates a permanent record that can be independently
-                    verified.
-                  </p>
-                  <p className="text-gray-400 text-sm">
-                    <a
-                      href="https://mumbai.polygonscan.com/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-400 hover:underline"
-                    >
-                      View Polygon Mumbai Explorer
-                    </a>
-                  </p>
                 </div>
               </CardContent>
             </Card>
           </div>
         </div>
       </div>
+
+      {/* Hash Information Dialog */}
+      <Dialog open={showHashInfo} onOpenChange={setShowHashInfo}>
+        <DialogContent className="bg-gray-800 text-gray-200 border-gray-700">
+          <DialogHeader>
+            <DialogTitle className="text-blue-400">Verification Hash Information</DialogTitle>
+            <DialogDescription className="text-gray-400">Understanding how your resume is verified</DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 mt-4">
+            <div className="p-3 bg-gray-700 rounded-md">
+              <h3 className="text-gray-200 font-medium mb-2">What is a verification hash?</h3>
+              <p className="text-gray-300 text-sm">
+                A verification hash is a unique digital fingerprint of your resume created using the SHA-256
+                cryptographic algorithm. This hash will change if even a single character in your resume is modified,
+                making it perfect for verification.
+              </p>
+            </div>
+
+            {verificationStatus && verificationStatus.hash && (
+              <div className="p-3 bg-gray-700 rounded-md">
+                <h3 className="text-gray-200 font-medium mb-2">Your Current Hash:</h3>
+                <div className="bg-gray-900 p-2 rounded font-mono text-xs text-gray-300 break-all">
+                  {verificationStatus.hash}
+                </div>
+                <p className="text-gray-400 text-xs mt-2">
+                  This hash was generated on {formatDate(verificationStatus.timestamp)}
+                </p>
+              </div>
+            )}
+
+            <div className="p-3 bg-gray-700 rounded-md">
+              <h3 className="text-gray-200 font-medium mb-2">How verification works:</h3>
+              <ol className="text-gray-300 text-sm space-y-1 list-decimal pl-5">
+                <li>Your resume data is processed through the SHA-256 algorithm</li>
+                <li>The resulting hash is unique to your resume's exact content</li>
+                <li>When someone verifies your resume, a new hash is generated</li>
+                <li>If the new hash matches the stored hash, the resume is verified</li>
+                <li>If even one character is different, the hash won't match</li>
+              </ol>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Version Details Dialog */}
+      <Dialog open={!!selectedVersion} onOpenChange={() => setSelectedVersion(null)}>
+        <DialogContent className="bg-gray-800 text-gray-200 border-gray-700">
+          <DialogHeader>
+            <DialogTitle className="text-blue-400">Resume Version Details</DialogTitle>
+            <DialogDescription className="text-gray-400">
+              {selectedVersion && formatDate(selectedVersion.timestamp)}
+            </DialogDescription>
+          </DialogHeader>
+
+          {selectedVersion && (
+            <div className="space-y-4 mt-4">
+              <div className="p-3 bg-gray-700 rounded-md">
+                <h3 className="text-gray-200 font-medium mb-2">Version Information</h3>
+                <div className="grid grid-cols-2 gap-2 text-sm">
+                  <span className="text-gray-400">Name:</span>
+                  <span className="text-gray-300">{selectedVersion.preview.name}</span>
+                  <span className="text-gray-400">Title:</span>
+                  <span className="text-gray-300">{selectedVersion.preview.title}</span>
+                  <span className="text-gray-400">Version:</span>
+                  <span className="text-gray-300">
+                    {resumeHistory.findIndex((v) => v.hash === selectedVersion.hash) + 1} of {resumeHistory.length}
+                  </span>
+                </div>
+              </div>
+
+              <div className="p-3 bg-gray-700 rounded-md">
+                <h3 className="text-gray-200 font-medium mb-2">Hash</h3>
+                <div className="bg-gray-900 p-2 rounded font-mono text-xs text-gray-300 break-all">
+                  {selectedVersion.hash}
+                </div>
+              </div>
+
+              <div className="p-3 bg-gray-700 rounded-md">
+                <h3 className="text-gray-200 font-medium mb-2">Changes Made</h3>
+                {selectedVersion.changes && selectedVersion.changes.length > 0 ? (
+                  <ul className="list-disc pl-5 space-y-1">
+                    {selectedVersion.changes.map((change, index) => (
+                      <li key={index} className="text-gray-300 text-sm">
+                        {change}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-gray-400 text-sm">No specific changes recorded for this version.</p>
+                )}
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
