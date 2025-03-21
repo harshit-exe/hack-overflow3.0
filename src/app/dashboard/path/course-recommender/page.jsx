@@ -73,32 +73,32 @@ export default function AICareerPathGenerator() {
         {careerPath && (
           <div className="mt-12 space-y-8 animate-fadeIn">
             <Card className="bg-black/70 backdrop-blur-md border border-gray-800 rounded-xl overflow-hidden shadow-xl">
-              <Tabs defaultValue="outline" className="w-full">
+              <Tabs defaultValue="outline" className="w-full text-zinc-200">
                 <TabsList className="w-full grid grid-cols-4 bg-black/80 rounded-t-xl p-1">
                   <TabsTrigger
                     value="outline"
-                    className="text-base md:text-lg font-medium data-[state=active]:bg-[#4F46E5] data-[state=active]:text-white transition-all"
+                    className="text-white text-base md:text-lg font-medium data-[state=active]:bg-[#4F46E5] data-[state=active]:text-white transition-all"
                   >
                     <Briefcase className="w-4 h-4 mr-2" />
                     Career Path
                   </TabsTrigger>
                   <TabsTrigger
                     value="skills"
-                    className="text-base md:text-lg font-medium data-[state=active]:bg-[#4F46E5] data-[state=active]:text-white transition-all"
+                    className="text-white text-base md:text-lg font-medium data-[state=active]:bg-[#4F46E5] data-[state=active]:text-white transition-all"
                   >
                     <Zap className="w-4 h-4 mr-2" />
                     Skills
                   </TabsTrigger>
                   <TabsTrigger
                     value="courses"
-                    className="text-base md:text-lg font-medium data-[state=active]:bg-[#57FF31] data-[state=active]:text-black transition-all"
+                    className="text-white text-base md:text-lg font-medium data-[state=active]:bg-[#57FF31] data-[state=active]:text-black transition-all"
                   >
                     <BookOpen className="w-4 h-4 mr-2" />
                     Courses
                   </TabsTrigger>
                   <TabsTrigger
                     value="chat"
-                    className="text-base md:text-lg font-medium data-[state=active]:bg-[#4F46E5] data-[state=active]:text-white transition-all"
+                    className="text-white text-base md:text-lg font-medium data-[state=active]:bg-[#4F46E5] data-[state=active]:text-white transition-all"
                   >
                     <MessageSquare className="w-4 h-4 mr-2" />
                     Chat

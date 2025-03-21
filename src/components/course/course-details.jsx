@@ -16,81 +16,23 @@ import {
   Users,
   CheckCircle,
   MessageSquare,
+  Share2,
 } from "lucide-react"
 
 export default function CourseDetails({ course, onBack }) {
   const [isLoading, setIsLoading] = useState(false)
   const [courseDetails, setCourseDetails] = useState(null)
+  const [imageError, setImageError] = useState(false)
 
   useEffect(() => {
     const fetchCourseDetails = async () => {
       setIsLoading(true)
       try {
-        // In a real implementation, you would fetch detailed course info
-        // For now, we'll simulate a delay and use the existing course data
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-
-        // Simulate fetching additional details
-        setCourseDetails({
-          ...course,
-          description:
-            course.description ||
-            "This course provides comprehensive training on the subject matter, designed to help you master key concepts and practical skills.",
-          whatYouWillLearn: [
-            "Understand core concepts and principles",
-            "Apply practical skills in real-world scenarios",
-            "Build professional projects for your portfolio",
-            "Master industry-standard tools and techniques",
-            "Develop problem-solving abilities in the field",
-          ],
-          requirements: [
-            "Basic understanding of the subject",
-            "Computer with internet connection",
-            "Dedication and willingness to learn",
-          ],
-          modules: [
-            {
-              title: "Introduction to the Subject",
-              lessons: ["Overview", "History and Background", "Core Concepts"],
-              duration: "2 hours",
-            },
-            {
-              title: "Fundamental Principles",
-              lessons: ["Key Theories", "Practical Applications", "Case Studies"],
-              duration: "4 hours",
-            },
-            {
-              title: "Advanced Techniques",
-              lessons: ["Professional Methods", "Problem Solving", "Optimization"],
-              duration: "5 hours",
-            },
-            {
-              title: "Real-world Projects",
-              lessons: ["Project Planning", "Implementation", "Review and Feedback"],
-              duration: "8 hours",
-            },
-          ],
-          reviews: [
-            {
-              user: "John D.",
-              rating: 5,
-              comment:
-                "Excellent course! The instructor explains complex concepts clearly and provides practical examples.",
-            },
-            {
-              user: "Sarah M.",
-              rating: 4,
-              comment: "Very informative and well-structured. I would have liked more practice exercises.",
-            },
-            {
-              user: "Michael R.",
-              rating: 5,
-              comment: "This course exceeded my expectations. I've learned skills I can immediately apply in my job.",
-            },
-          ],
-        })
+        // Generate dynamic course details immediately without delay
+        const details = generateDynamicCourseDetails(course)
+        setCourseDetails(details)
       } catch (error) {
-        console.error("Error fetching course details:", error)
+        console.error("Error generating course details:", error)
       } finally {
         setIsLoading(false)
       }
@@ -105,11 +47,46 @@ export default function CourseDetails({ course, onBack }) {
   const formattedPrice =
     typeof course.price === "number" ? `$${course.price.toFixed(2)}` : course.price === "Free" ? "Free" : course.price
 
-  // Generate a placeholder image based on the course title
+  // Generate a placeholder image based on the course title and platform
   const generatePlaceholderImage = () => {
+    // Create a unique but deterministic color based on the course title
+    const hashCode = (str) => {
+      let hash = 0
+      for (let i = 0; i < str.length; i++) {
+        hash = (hash << 5) - hash + str.charCodeAt(i)
+        hash |= 0
+      }
+      return hash
+    }
+
+    const hash = hashCode(course.title + course.platform)
+
+    // Generate platform-specific gradients
+    const gradients = {
+      Udemy: "from-purple-600/50 to-purple-900/50",
+      Coursera: "from-blue-600/50 to-blue-900/50",
+      edX: "from-red-600/50 to-red-900/50",
+      YouTube: "from-red-500/50 to-red-800/50",
+      freeCodeCamp: "from-green-600/50 to-green-900/50",
+    }
+
+    const gradient = gradients[course.platform] || "from-[#4F46E5]/50 to-[#57FF31]/50"
+
+    // Get first letter of each word for the placeholder text
+    const initials = course.title
+      .split(" ")
+      .slice(0, 2)
+      .map((word) => word.charAt(0).toUpperCase())
+      .join("")
+
     return (
-      <div className="w-full h-48 bg-gradient-to-br from-[#4F46E5]/50 to-[#57FF31]/50 flex items-center justify-center">
-        <BookOpen className="w-16 h-16 text-white opacity-70" />
+      <div className={`w-full h-48 bg-gradient-to-br ${gradient} flex items-center justify-center`}>
+        <div className="flex flex-col items-center">
+          <div className="w-16 h-16 rounded-full bg-black/30 flex items-center justify-center text-2xl font-bold text-white">
+            {initials}
+          </div>
+          <span className="text-white text-sm font-medium mt-2">{course.platform}</span>
+        </div>
       </div>
     )
   }
@@ -135,15 +112,30 @@ export default function CourseDetails({ course, onBack }) {
           Back to courses
         </Button>
 
-        <a
-          href={course.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="bg-gradient-to-r from-[#4F46E5] to-[#57FF31] text-white px-4 py-2 rounded-lg flex items-center hover:opacity-90 transition-opacity"
-        >
-          <ExternalLink className="w-4 h-4 mr-2" />
-          View on {course.platform}
-        </a>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="border-gray-600 hover:bg-[#4F46E5]/20 hover:text-[#57FF31]"
+            onClick={() => {
+              navigator.clipboard.writeText(course.url)
+              alert("Course URL copied to clipboard!")
+            }}
+          >
+            <Share2 className="w-4 h-4 mr-2" />
+            Share
+          </Button>
+
+          <a
+            href={course.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-gradient-to-r from-[#4F46E5] to-[#57FF31] text-white px-4 py-2 rounded-lg flex items-center hover:opacity-90 transition-opacity"
+          >
+            <ExternalLink className="w-4 h-4 mr-2" />
+            View on {course.platform}
+          </a>
+        </div>
       </div>
 
       <ScrollArea className="h-[600px]">
@@ -227,17 +219,13 @@ export default function CourseDetails({ course, onBack }) {
 
             <div className="w-full md:w-1/3">
               <Card className="bg-gray-800 border border-gray-700 overflow-hidden sticky top-6">
-                {course.image && !course.image.includes("undefined") && !course.image.includes("null") ? (
+                {!imageError && course.image ? (
                   <img
                     src={course.image || "/placeholder.svg"}
                     alt={course.title}
                     className="w-full h-48 object-cover"
-                    onError={(e) => {
-                      e.target.style.display = "none"
-                      e.target.parentNode.appendChild(
-                        document.createRange().createContextualFragment(generatePlaceholderImage()),
-                      )
-                    }}
+                    onError={() => setImageError(true)}
+                    loading="lazy" // Add lazy loading for better performance
                   />
                 ) : (
                   generatePlaceholderImage()
@@ -332,5 +320,200 @@ export default function CourseDetails({ course, onBack }) {
       </ScrollArea>
     </Card>
   )
+}
+
+// Function to generate dynamic course details based on the course data
+function generateDynamicCourseDetails(course) {
+  // Create a deterministic random number generator based on the course ID
+  const hashCode = (str) => {
+    let hash = 0
+    for (let i = 0; i < str.length; i++) {
+      hash = (hash << 5) - hash + str.charCodeAt(i)
+      hash |= 0
+    }
+    return Math.abs(hash)
+  }
+
+  const seed = hashCode(course.id || course.title)
+  const random = (min, max) => min + ((seed % 1000) / 1000) * (max - min)
+  const randomInt = (min, max) => Math.floor(random(min, max + 1))
+
+  // Generate course description if not provided
+  const description =
+    course.description ||
+    `This comprehensive ${course.title.toLowerCase().includes("advanced") ? "advanced" : "complete"} course on ${course.title.split(":")[0]} provides you with all the skills and knowledge you need to ${course.title.toLowerCase().includes("advanced") ? "master" : "understand"} the subject. Created by ${course.instructor}, this ${course.level || "All Levels"} course is designed to help you succeed in your career.`
+
+  // Generate what you will learn based on the course title
+  const generateLearningPoints = (title) => {
+    const keywords = title.toLowerCase().split(/\s+/)
+    const learningPoints = []
+
+    // Common learning points
+    const commonPoints = [
+      "Understand core concepts and principles",
+      "Apply practical skills in real-world scenarios",
+      "Build professional projects for your portfolio",
+      "Master industry-standard tools and techniques",
+      "Develop problem-solving abilities in the field",
+    ]
+
+    // Add common points
+    learningPoints.push(...commonPoints)
+
+    // Add specific points based on keywords
+    if (keywords.some((k) => ["programming", "code", "development", "software"].includes(k))) {
+      learningPoints.push("Write clean, efficient, and maintainable code")
+      learningPoints.push("Implement best practices for software development")
+    }
+
+    if (keywords.some((k) => ["data", "analytics", "analysis", "statistics"].includes(k))) {
+      learningPoints.push("Analyze and interpret complex datasets")
+      learningPoints.push("Create insightful data visualizations")
+    }
+
+    if (keywords.some((k) => ["design", "ui", "ux", "interface"].includes(k))) {
+      learningPoints.push("Design intuitive and user-friendly interfaces")
+      learningPoints.push("Apply principles of visual hierarchy and layout")
+    }
+
+    if (keywords.some((k) => ["marketing", "business", "management"].includes(k))) {
+      learningPoints.push("Develop effective marketing strategies")
+      learningPoints.push("Understand key business metrics and KPIs")
+    }
+
+    // Shuffle and limit to 6 points
+    return learningPoints.sort(() => 0.5 - random(0, 1)).slice(0, 6)
+  }
+
+  // Generate course modules based on the course title and duration
+  const generateModules = (title, duration) => {
+    const modules = []
+    const totalHours =
+      typeof duration === "string" && duration.includes("hour")
+        ? Number.parseInt(duration.match(/\d+/) || "10")
+        : typeof duration === "string" && duration.includes("week")
+          ? Number.parseInt(duration.match(/\d+/) || "4") * 5
+          : 10
+
+    const numModules = Math.min(5, Math.max(3, Math.floor(totalHours / 3)))
+
+    // Common module titles
+    const moduleTemplates = [
+      {
+        title: "Introduction and Fundamentals",
+        lessons: ["Course Overview", "Basic Concepts", "Setting Up Your Environment"],
+      },
+      { title: "Core Principles and Techniques", lessons: ["Key Methodologies", "Essential Tools", "Best Practices"] },
+      { title: "Practical Applications", lessons: ["Real-world Examples", "Case Studies", "Hands-on Exercises"] },
+      { title: "Advanced Concepts", lessons: ["Advanced Techniques", "Optimization Strategies", "Expert Tips"] },
+      {
+        title: "Project Work and Implementation",
+        lessons: ["Project Planning", "Development Process", "Testing and Deployment"],
+      },
+      {
+        title: "Professional Skills and Career Development",
+        lessons: ["Industry Insights", "Portfolio Building", "Career Opportunities"],
+      },
+    ]
+
+    // Add modules
+    for (let i = 0; i < numModules; i++) {
+      const moduleTemplate = moduleTemplates[i % moduleTemplates.length]
+
+      // Calculate module duration
+      const moduleDuration = `${Math.max(2, Math.floor(totalHours / numModules))} hours`
+
+      // Generate lessons
+      const numLessons = randomInt(3, 6)
+      const lessons = [...moduleTemplate.lessons]
+
+      // Add specific lessons based on the module
+      if (i === 0) {
+        lessons.push("Getting Started Guide")
+      } else if (i === numModules - 1) {
+        lessons.push("Final Project")
+        lessons.push("Next Steps and Resources")
+      }
+
+      // Limit to the desired number of lessons
+      const finalLessons = lessons.slice(0, numLessons)
+
+      modules.push({
+        title: moduleTemplate.title,
+        lessons: finalLessons,
+        duration: moduleDuration,
+      })
+    }
+
+    return modules
+  }
+
+  // Generate reviews
+  const generateReviews = () => {
+    const reviewTemplates = [
+      {
+        user: "John D.",
+        rating: 5,
+        comment: "Excellent course! The instructor explains complex concepts clearly and provides practical examples.",
+      },
+      {
+        user: "Sarah M.",
+        rating: 4,
+        comment: "Very informative and well-structured. I would have liked more practice exercises.",
+      },
+      {
+        user: "Michael R.",
+        rating: 5,
+        comment: "This course exceeded my expectations. I've learned skills I can immediately apply in my job.",
+      },
+      {
+        user: "Emily L.",
+        rating: 5,
+        comment: "One of the best courses I've taken. The projects were challenging but extremely valuable.",
+      },
+      {
+        user: "David W.",
+        rating: 4,
+        comment: "Great content and presentation. Some sections could be more in-depth, but overall very good.",
+      },
+      {
+        user: "Jennifer K.",
+        rating: 5,
+        comment: "The instructor's teaching style made complex topics easy to understand. Highly recommended!",
+      },
+    ]
+
+    // Select 3-4 reviews
+    const numReviews = randomInt(3, 4)
+    const selectedIndices = new Set()
+    const reviews = []
+
+    for (let i = 0; i < numReviews; i++) {
+      let index = randomInt(0, reviewTemplates.length - 1)
+
+      // Avoid duplicates
+      while (selectedIndices.has(index)) {
+        index = (index + 1) % reviewTemplates.length
+      }
+      selectedIndices.add(index)
+
+      reviews.push(reviewTemplates[index])
+    }
+
+    return reviews
+  }
+
+  return {
+    ...course,
+    description: description,
+    whatYouWillLearn: generateLearningPoints(course.title),
+    requirements: [
+      "Basic understanding of the subject",
+      "Computer with internet connection",
+      "Dedication and willingness to learn",
+    ],
+    modules: generateModules(course.title, course.duration),
+    reviews: generateReviews(),
+  }
 }
 

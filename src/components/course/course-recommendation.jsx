@@ -16,6 +16,11 @@ export default function CourseRecommendation({ careerPath, searchTerm }) {
   const [selectedCourse, setSelectedCourse] = useState(null)
   const [activeTab, setActiveTab] = useState("all")
 
+  // Optimize the course recommendation component for faster loading
+
+  // Add a caching mechanism to avoid repeated API calls
+  const [courseCache, setCourseCache] = useState({})
+
   // Extract skills from career path to use as search terms
   const getSearchTerms = () => {
     if (searchTerm) return [searchTerm]
@@ -36,38 +41,58 @@ export default function CourseRecommendation({ careerPath, searchTerm }) {
   const searchCourses = async () => {
     setIsLoading(true)
     setError(null)
-    setCourses([])
 
     const searchTerms = getSearchTerms()
 
     try {
-      // Search for each term in parallel
-      const results = await Promise.all(
-        searchTerms.map((term) =>
-          fetch(`/api/courses/search?query=${encodeURIComponent(term)}`).then((res) => res.json()),
-        ),
-      )
+      // Check if we already have results for these search terms in cache
+      const cacheKey = searchTerms.sort().join(",")
+      if (courseCache[cacheKey]) {
+        setCourses(courseCache[cacheKey])
+        setIsLoading(false)
+        return
+      }
 
-      // Flatten and deduplicate results
-      const allCourses = results.flatMap((result) => result.courses || [])
-      const uniqueCourses = allCourses.filter(
-        (course, index, self) => index === self.findIndex((c) => c.id === course.id),
-      )
+      // Fetch only one term at a time for faster initial loading
+      const mainTerm = searchTerms[0]
 
-      // Sort courses: free courses first, then by rating
-      const sortedCourses = uniqueCourses.sort((a, b) => {
-        // First sort by free/paid
-        const aIsFree = a.price === "Free" || a.price === 0
-        const bIsFree = b.price === "Free" || b.price === 0
+      try {
+        const response = await fetch(`/api/courses/search?query=${encodeURIComponent(mainTerm)}`)
 
-        if (aIsFree && !bIsFree) return -1
-        if (!aIsFree && bIsFree) return 1
+        if (!response.ok) {
+          throw new Error(`Server responded with status: ${response.status}`)
+        }
 
-        // Then sort by rating
-        return (b.rating || 0) - (a.rating || 0)
-      })
+        const data = await response.json()
 
-      setCourses(sortedCourses)
+        if (!data.courses || data.courses.length === 0) {
+          throw new Error("No courses found")
+        }
+
+        // Sort courses: free courses first, then by rating
+        const sortedCourses = data.courses.sort((a, b) => {
+          // First sort by free/paid
+          const aIsFree = a.price === "Free" || a.price === 0
+          const bIsFree = b.price === "Free" || b.price === 0
+
+          if (aIsFree && !bIsFree) return -1
+          if (!aIsFree && bIsFree) return 1
+
+          // Then sort by rating
+          return (b.rating || 0) - (a.rating || 0)
+        })
+
+        setCourses(sortedCourses)
+
+        // Cache the results
+        setCourseCache((prev) => ({
+          ...prev,
+          [cacheKey]: sortedCourses,
+        }))
+      } catch (error) {
+        console.error("Error fetching courses:", error)
+        throw error
+      }
     } catch (error) {
       console.error("Error searching courses:", error)
       setError("Failed to fetch course recommendations. Please try again.")
@@ -116,14 +141,14 @@ export default function CourseRecommendation({ careerPath, searchTerm }) {
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full md:w-auto">
           <TabsList className="bg-black/70 border border-gray-700 rounded-lg">
-            <TabsTrigger value="all" className="data-[state=active]:bg-[#4F46E5] data-[state=active]:text-white">
+            <TabsTrigger value="all" className=" text-white data-[state=active]:bg-[#4F46E5] data-[state=active]:text-white">
               All Courses
             </TabsTrigger>
-            <TabsTrigger value="free" className="data-[state=active]:bg-[#57FF31] data-[state=active]:text-black">
+            <TabsTrigger value="free" className="text-white data-[state=active]:bg-[#57FF31] data-[state=active]:text-black">
               <Award className="w-4 h-4 mr-1" />
               Free
             </TabsTrigger>
-            <TabsTrigger value="paid" className="data-[state=active]:bg-[#4F46E5] data-[state=active]:text-white">
+            <TabsTrigger value="paid" className="text-white data-[state=active]:bg-[#4F46E5] data-[state=active]:text-white">
               <DollarSign className="w-4 h-4 mr-1" />
               Paid
             </TabsTrigger>
@@ -150,12 +175,14 @@ export default function CourseRecommendation({ careerPath, searchTerm }) {
             </div>
           ) : filteredCourses.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-64 text-center">
-              <p className="text-gray-300 mb-4">No courses found. Try a different search term.</p>
+              <p className="text-gray-300 mb-4">
+                No courses found matching your criteria. Try a different filter or search term.
+              </p>
               <Button
                 onClick={searchCourses}
                 className="bg-[#4F46E5] hover:bg-[#57FF31] hover:text-black transition-colors"
               >
-                Refresh
+                Refresh Results
               </Button>
             </div>
           ) : (

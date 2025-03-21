@@ -100,7 +100,7 @@ export default function SkillsRadarChart({ careerPath }) {
 
   return (
     <div className="w-full h-[70vh] flex flex-col items-center justify-center">
-      <h3 className="text-xl font-bold mb-6 text-white">Skills Analysis</h3>
+      
       <div className="w-full max-w-3xl h-[500px] flex items-center justify-center">
         <Radar data={chartData.data} options={chartData.options} />
       </div>
