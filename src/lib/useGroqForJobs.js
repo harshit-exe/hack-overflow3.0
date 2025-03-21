@@ -1,8 +1,11 @@
 const GROQ_API_KEY = "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";
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 
-async function GroqForJob(messages) {
+async function GroqForJob(messages, max_tokens = 1000) {
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+    
     const response = await fetch(GROQ_API_URL, {
       method: "POST",
       headers: {
@@ -12,10 +15,13 @@ async function GroqForJob(messages) {
       body: JSON.stringify({
         model: "deepseek-r1-distill-llama-70b",
         messages: messages,
-        max_tokens: 2000,
+        max_tokens: max_tokens,
         temperature: 0.7,
       }),
+      signal: controller.signal
     });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       throw new Error(`API request failed with status ${response.status}`);
