@@ -7,10 +7,10 @@ const Page = () => {
     <div className="flex justify-center items-center min-h-screen gap-6 flex-wrap p-6">
       {/* Card 1 - Resume Builder */}
       <PixelCard variant="pink">
-        <div className="absolute text-white text-center px-4">
+        <div className="absolute text-white text-center px-4 transition-transform transform hover:scale-105 hover:shadow-lg">
           <Link href="/dashboard/skill/resume">
             <h2 className="text-2xl font-bold mb-2 cursor-pointer hover:underline">
-              Resume Builder
+              📄 Resume Builder
             </h2>
           </Link>
           <p className="text-sm opacity-80">
@@ -21,10 +21,10 @@ const Page = () => {
 
       {/* Card 2 - Preparation */}
       <PixelCard variant="blue">
-        <div className="absolute text-white text-center px-4">
+        <div className="absolute text-white text-center px-4 transition-transform transform hover:scale-105 hover:shadow-lg">
           <Link href="/dashboard/skill/preparation">
             <h2 className="text-2xl font-bold mb-2 cursor-pointer hover:underline">
-              Preparation
+              📚 Preparation
             </h2>
           </Link>
           <p className="text-sm opacity-80">
@@ -35,10 +35,10 @@ const Page = () => {
 
       {/* Card 3 - Job Simulation */}
       <PixelCard variant="yellow">
-        <div className="absolute text-white text-center px-4">
+        <div className="absolute text-white text-center px-4 transition-transform transform hover:scale-105 hover:shadow-lg">
           <Link href="/dashboard/skill/jobsimulation">
             <h2 className="text-2xl font-bold mb-2 cursor-pointer hover:underline">
-              Job Simulation
+              💼 Job Simulation
             </h2>
           </Link>
           <p className="text-sm opacity-80">
