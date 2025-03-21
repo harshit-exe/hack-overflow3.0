@@ -19,7 +19,10 @@ import {
   Zap,
   Target,
   Award,
+  Users,
   Sparkles,
+  Rocket,
+  FileText,
 } from "lucide-react"
 import { jsPDF } from "jspdf"
 import html2canvas from "html2canvas"
@@ -35,7 +38,7 @@ const minimapStyle = {
 }
 
 const flowStyles = {
-  background: "#000000",
+  background: "#18181b", // zinc-900
 }
 
 const getLayoutedElements = (nodes, edges, direction = "TB") => {
@@ -68,6 +71,7 @@ const getLayoutedElements = (nodes, edges, direction = "TB") => {
   }
 }
 
+
 export default function RoadmapVisualization({ roadmapData }) {
   const [nodes, setNodes, onNodesChange] = useNodesState(roadmapData.nodes)
   const [edges, setEdges, onEdgesChange] = useEdgesState(roadmapData.edges)
@@ -81,9 +85,10 @@ export default function RoadmapVisualization({ roadmapData }) {
   const metadata = roadmapData.metadata || {
     careerPath: "software-developer",
     skillLevel: "intermediate",
+    learningStyle: "self-paced",
     timeframe: 12,
     focusAreas: ["technical-skills"],
-    features: ["skill-tracker", "certifications"],
+    features: ["skill-tracker", "market-demand", "mentor-suggestions", "resume-optimization"],
   }
 
   const features = {
@@ -92,11 +97,11 @@ export default function RoadmapVisualization({ roadmapData }) {
       title: "Skill Tracker",
       component: (
         <div className="space-y-4">
-          <h3 className="text-xl font-bold">Skill Progress</h3>
+          <h3 className="text-xl font-bold text-white">Skill Progress</h3>
           <div className="space-y-3">
             {nodes.slice(0, 5).map((node) => (
               <div key={node.id} className="space-y-1">
-                <div className="flex justify-between text-sm">
+                <div className="flex justify-between text-sm text-white">
                   <span>{node.data.skills[0]}</span>
                   <span>{completedNodes.includes(node.id) ? "100%" : "0%"}</span>
                 </div>
@@ -104,9 +109,9 @@ export default function RoadmapVisualization({ roadmapData }) {
               </div>
             ))}
           </div>
-          <div className="bg-indigo-900/30 p-3 rounded-lg mt-4">
-            <h4 className="font-medium mb-2">Recommended Next Steps</h4>
-            <ul className="text-sm space-y-2">
+          <div className="bg-zinc-800 p-3 rounded-lg mt-4 border border-indigo-600/20">
+            <h4 className="font-medium mb-2 text-white">Recommended Next Steps</h4>
+            <ul className="text-sm space-y-2 text-gray-300">
               {nodes
                 .filter((node) => !completedNodes.includes(node.id))
                 .slice(0, 3)
@@ -128,14 +133,14 @@ export default function RoadmapVisualization({ roadmapData }) {
       title: "Market Trends",
       component: (
         <div className="space-y-4">
-          <h3 className="text-xl font-bold">Job Market Insights</h3>
+          <h3 className="text-xl font-bold text-white">Job Market Insights</h3>
           <div className="space-y-3">
-            <div className="bg-indigo-900/30 p-3 rounded-lg">
+            <div className="bg-zinc-800 p-3 rounded-lg border border-indigo-600/20">
               <div className="flex justify-between items-center mb-2">
-                <h4 className="font-medium">In-Demand Skills</h4>
-                <Badge className="bg-green-500/90 text-white text-xs">Hot</Badge>
+                <h4 className="font-medium text-white">In-Demand Skills</h4>
+                <Badge className="bg-indigo-500 text-white text-xs">Hot</Badge>
               </div>
-              <ul className="text-sm space-y-2">
+              <ul className="text-sm space-y-2 text-gray-300">
                 {nodes[0]?.data.skills.map((skill, i) => (
                   <li key={i} className="flex items-center gap-2">
                     <span className="text-green-400">+{Math.floor(Math.random() * 30) + 10}%</span>
@@ -144,9 +149,9 @@ export default function RoadmapVisualization({ roadmapData }) {
                 ))}
               </ul>
             </div>
-            <div className="bg-indigo-900/30 p-3 rounded-lg">
-              <h4 className="font-medium mb-2">Emerging Opportunities</h4>
-              <ul className="text-sm space-y-2">
+            <div className="bg-zinc-800 p-3 rounded-lg border border-indigo-600/20">
+              <h4 className="font-medium mb-2 text-white">Emerging Opportunities</h4>
+              <ul className="text-sm space-y-2 text-gray-300">
                 <li className="flex items-start gap-2">
                   <ChevronRight className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
                   <span>Remote {metadata.careerPath.replace("-", " ")} roles increased by 34%</span>
@@ -161,26 +166,100 @@ export default function RoadmapVisualization({ roadmapData }) {
         </div>
       ),
     },
+    "mentor-suggestions": {
+      icon: <Users className="w-5 h-5" />,
+      title: "Mentors",
+      component: (
+        <div className="space-y-4">
+          <h3 className="text-xl font-bold text-white">Recommended Mentors</h3>
+          <div className="space-y-3">
+            {[1, 2, 3].map((i) => (
+              <Card key={i} className="bg-zinc-800 border-indigo-600/20">
+                <CardContent className="p-3 flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-indigo-600/30 flex items-center justify-center text-xl font-bold text-white">
+                    {String.fromCharCode(64 + i)}
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-white">Mentor {i}</h4>
+                    <p className="text-sm text-gray-300">
+                      {metadata.careerPath.replace("-", " ")} expert • {3 + i} years
+                    </p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="mt-2 h-7 text-xs text-white border-indigo-600/30 hover:bg-indigo-600/20"
+                    >
+                      Connect
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      ),
+    },
+    "resume-optimization": {
+      icon: <FileText className="w-5 h-5" />,
+      title: "Resume Optimization",
+      component: (
+        <div className="space-y-4">
+          <h3 className="text-xl font-bold text-white">Resume Analysis</h3>
+          <div className="bg-zinc-800 p-3 rounded-lg border border-indigo-600/20">
+            <h4 className="font-medium mb-2 text-white">ATS Score Estimation</h4>
+            <div className="space-y-1">
+              <div className="flex justify-between text-sm text-white">
+                <span>Current Resume Score</span>
+                <span>68%</span>
+              </div>
+              <Progress value={68} className="h-2" />
+              <p className="text-xs text-gray-300 mt-2">
+                Upload your resume for a detailed analysis and improvement suggestions
+              </p>
+            </div>
+          </div>
+          <div className="bg-zinc-800 p-3 rounded-lg border border-indigo-600/20">
+            <h4 className="font-medium mb-2 text-white">Keyword Recommendations</h4>
+            <div className="flex flex-wrap gap-2 mt-2">
+              {nodes[0]?.data.skills.map((skill, i) => (
+                <Badge key={i} className="bg-indigo-600/30 text-white">
+                  {skill}
+                </Badge>
+              ))}
+            </div>
+            <p className="text-xs text-gray-300 mt-2">Include these keywords in your resume to improve visibility</p>
+          </div>
+        </div>
+      ),
+    },
     certifications: {
       icon: <Award className="w-5 h-5" />,
       title: "Certifications",
       component: (
         <div className="space-y-4">
-          <h3 className="text-xl font-bold">Recommended Certifications</h3>
+          <h3 className="text-xl font-bold text-white">Recommended Certifications</h3>
           <div className="space-y-3">
             {nodes
               .filter((node) => node.data.certifications && node.data.certifications.length > 0)
               .slice(0, 3)
               .map((node, i) => (
-                <Card key={i} className="bg-black border-indigo-800">
+                <Card key={i} className="bg-zinc-800 border-indigo-600/20">
                   <CardContent className="p-3">
-                    <h4 className="font-medium">{node.data.certifications[0]}</h4>
-                    <p className="text-sm text-white mt-1">Aligns with: {node.data.label}</p>
+                    <h4 className="font-medium text-white">{node.data.certifications[0]}</h4>
+                    <p className="text-sm text-gray-300 mt-1">Aligns with: {node.data.label}</p>
                     <div className="flex gap-2 mt-2">
-                      <Button variant="outline" size="sm" className="h-7 text-xs">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-7 text-xs text-white border-indigo-600/30 hover:bg-indigo-600/20"
+                      >
                         Learn More
                       </Button>
-                      <Button variant="outline" size="sm" className="h-7 text-xs">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-7 text-xs text-white border-indigo-600/30 hover:bg-indigo-600/20"
+                      >
                         Add to Goals
                       </Button>
                     </div>
@@ -196,30 +275,30 @@ export default function RoadmapVisualization({ roadmapData }) {
       title: "Achievements",
       component: (
         <div className="space-y-4">
-          <h3 className="text-xl font-bold">Career Achievements</h3>
+          <h3 className="text-xl font-bold text-white">Career Achievements</h3>
           <div className="space-y-3">
             {achievements.map((achievement, i) => (
-              <Card key={i} className="bg-black border-green-600">
+              <Card key={i} className="bg-zinc-800 border-green-600">
                 <CardContent className="p-3">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center">
                       <Sparkles className="w-5 h-5 text-black" />
                     </div>
                     <div>
-                      <h4 className="font-medium">{achievement.title}</h4>
-                      <p className="text-sm text-white">{achievement.description}</p>
+                      <h4 className="font-medium text-white">{achievement.title}</h4>
+                      <p className="text-sm text-gray-300">{achievement.description}</p>
                     </div>
                   </div>
                 </CardContent>
               </Card>
             ))}
             {achievements.length === 0 && (
-              <div className="bg-indigo-900/30 p-3 rounded-lg">
-                <h4 className="font-medium mb-2">Unlock Achievements</h4>
-                <p className="text-sm text-white">
+              <div className="bg-zinc-800 p-3 rounded-lg border border-indigo-600/20">
+                <h4 className="font-medium mb-2 text-white">Unlock Achievements</h4>
+                <p className="text-sm text-gray-300">
                   Complete steps in your roadmap to earn achievements and track your progress.
                 </p>
-                <ul className="text-sm space-y-2 mt-3">
+                <ul className="text-sm space-y-2 mt-3 text-gray-300">
                   <li className="flex items-start gap-2">
                     <ChevronRight className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
                     <span>Complete first milestone: "Roadmap Pioneer"</span>
@@ -231,6 +310,48 @@ export default function RoadmapVisualization({ roadmapData }) {
                 </ul>
               </div>
             )}
+          </div>
+        </div>
+      ),
+    },
+    "career-detours": {
+      icon: <Rocket className="w-5 h-5" />,
+      title: "Career Paths",
+      component: (
+        <div className="space-y-4">
+          <h3 className="text-xl font-bold text-white">Alternative Career Paths</h3>
+          <div className="space-y-3">
+            <Card className="bg-zinc-800 border-indigo-600/20">
+              <CardContent className="p-3">
+                <h4 className="font-medium text-white">Related Roles</h4>
+                <ul className="text-sm space-y-2 mt-2 text-gray-300">
+                  {["Technical Lead", "Solutions Architect", "DevOps Specialist"].map((role, i) => (
+                    <li key={i} className="flex items-start gap-2">
+                      <ChevronRight className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
+                      <span>{role}</span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+            <Card className="bg-zinc-800 border-indigo-600/20">
+              <CardContent className="p-3">
+                <h4 className="font-medium text-white">Skill Overlap</h4>
+                <p className="text-sm text-gray-300 mt-1">Your current skills align with these alternative paths</p>
+                <div className="mt-2 space-y-1">
+                  <div className="flex justify-between text-sm text-white">
+                    <span>Product Management</span>
+                    <span>65%</span>
+                  </div>
+                  <Progress value={65} className="h-2" />
+                  <div className="flex justify-between text-sm text-white">
+                    <span>Technical Writing</span>
+                    <span>48%</span>
+                  </div>
+                  <Progress value={48} className="h-2" />
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       ),
@@ -278,6 +399,7 @@ export default function RoadmapVisualization({ roadmapData }) {
           particleCount: 100,
           spread: 70,
           origin: { y: 0.6 },
+          colors: ["#6366F1", "#a5b4fc", "#ffffff"],
         })
 
         // Add achievement if this is the first completed node
@@ -351,8 +473,10 @@ export default function RoadmapVisualization({ roadmapData }) {
                 <button
                   key={featureId}
                   className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                    featurePanel === featureId ? "bg-indigo-600" : "bg-indigo-900/50"
-                  } border border-indigo-700 hover:bg-indigo-700 transition-colors`}
+                    featurePanel === featureId
+                      ? "bg-gradient-to-r from-indigo-600 to-indigo-500 ring-2 ring-white/50"
+                      : "bg-zinc-800/80"
+                  } border border-indigo-600/30 hover:bg-indigo-600/70 transition-all duration-300 transform hover:scale-110 shadow-lg shadow-indigo-600/20`}
                   onClick={() => setFeaturePanel(featurePanel === featureId ? null : featureId)}
                   title={feature.title}
                 >
@@ -365,9 +489,9 @@ export default function RoadmapVisualization({ roadmapData }) {
         </div>
         <div className="flex items-center gap-2">
           <span className="text-white">Progress:</span>
-          <div className="w-48 h-4 bg-gray-800 rounded-full overflow-hidden">
+          <div className="w-48 h-4 bg-zinc-800/80 rounded-full overflow-hidden border border-indigo-600/20">
             <div
-              className="h-full bg-gradient-to-r from-indigo-600 to-green-400"
+              className="h-full bg-gradient-to-r from-indigo-600 via-indigo-500 to-indigo-400 animate-pulse"
               style={{ width: `${progress}%` }}
             ></div>
           </div>
@@ -383,14 +507,19 @@ export default function RoadmapVisualization({ roadmapData }) {
             exit={{ opacity: 0, height: 0 }}
             className="overflow-hidden"
           >
-            <Card className="bg-black border-indigo-800 mb-4">
+            <Card className="bg-zinc-900/90 border-indigo-600/30 mb-4 rounded-2xl shadow-lg shadow-indigo-600/10 backdrop-blur-sm transform transition-all">
               <CardContent className="p-4">
                 <div className="flex justify-between items-center mb-3">
-                  <h3 className="font-bold text-lg flex items-center gap-2">
+                  <h3 className="font-bold text-lg flex items-center gap-2 text-white">
                     {features[featurePanel]?.icon}
                     <span>{features[featurePanel]?.title}</span>
                   </h3>
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => setFeaturePanel(null)}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 text-white hover:bg-indigo-600/20"
+                    onClick={() => setFeaturePanel(null)}
+                  >
                     <ChevronLeft className="h-4 w-4" />
                   </Button>
                 </div>
@@ -401,7 +530,7 @@ export default function RoadmapVisualization({ roadmapData }) {
         </AnimatePresence>
       )}
 
-      <div className="h-[700px] border border-indigo-800 rounded-xl overflow-hidden shadow-lg relative">
+      <div className="h-[700px] border border-indigo-600/30 rounded-2xl overflow-hidden shadow-lg shadow-indigo-600/10 relative">
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -418,7 +547,7 @@ export default function RoadmapVisualization({ roadmapData }) {
           <Panel position="top-right" className="space-x-2">
             <Button
               onClick={() => onLayout("TB")}
-              className={`bg-indigo-600 text-white ${layoutDirection === "TB" ? "ring-2 ring-green-400" : ""}`}
+              className={`bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white rounded-full ${layoutDirection === "TB" ? "ring-2 ring-white/50" : ""} transition-all duration-300 transform hover:scale-105`}
               size="sm"
             >
               <ArrowDownCircle className="mr-2" size={16} />
@@ -426,13 +555,13 @@ export default function RoadmapVisualization({ roadmapData }) {
             </Button>
             <Button
               onClick={() => onLayout("LR")}
-              className={`bg-indigo-600 text-white ${layoutDirection === "LR" ? "ring-2 ring-green-400" : ""}`}
+              className={`bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white rounded-full ${layoutDirection === "LR" ? "ring-2 ring-white/50" : ""} transition-all duration-300 transform hover:scale-105`}
               size="sm"
             >
               <ArrowRightCircle className="mr-2" size={16} />
               Horizontal
             </Button>
-            <Button onClick={downloadRoadmapAsPDF} className="bg-green-400 text-black" size="sm">
+            <Button onClick={downloadRoadmapAsPDF} className="bg-indigo-600 text-white" size="sm">
               <Download className="mr-2" size={16} />
               Download PDF
             </Button>
@@ -442,4 +571,3 @@ export default function RoadmapVisualization({ roadmapData }) {
     </div>
   )
 }
-

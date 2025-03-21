@@ -10,6 +10,7 @@ import DashboardView from "@/components/RoadMap/dashboard-view"
 import RoadmapVisualization from "@/components/RoadMap/RoadmapVisualization"
 import RoadmapForm from "@/components/RoadMap/RoadmapForm"
 
+
 export default function CareerRoadmapPage() {
   const [roadmapData, setRoadmapData] = useState(null)
   const [showVisualization, setShowVisualization] = useState(false)
@@ -27,7 +28,7 @@ export default function CareerRoadmapPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-gradient-to-br from-zinc-950 to-zinc-900 text-white">
       <AnimatePresence mode="wait">
         {!showVisualization ? (
           <motion.div
@@ -44,7 +45,7 @@ export default function CareerRoadmapPage() {
               transition={{ duration: 0.5 }}
               className="text-center mb-12"
             >
-              <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-green-400">
+              <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-white to-indigo-300">
                 CAREER DEVELOPMENT ROADMAP
               </h1>
               <p className="text-white max-w-3xl mx-auto">
@@ -60,24 +61,24 @@ export default function CareerRoadmapPage() {
               <h2 className="text-2xl font-bold text-white">Your Career Development Roadmap</h2>
               <button
                 onClick={handleReset}
-                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md text-sm font-medium"
+                className="px-4 py-2 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white rounded-full text-sm font-medium transition-all duration-300 shadow-lg shadow-indigo-600/20"
               >
                 Create New Roadmap
               </button>
             </div>
 
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-2 max-w-md mx-auto mb-6">
+              <TabsList className="grid w-full grid-cols-2 max-w-md mx-auto mb-6 bg-zinc-900/80 backdrop-blur-sm rounded-xl overflow-hidden">
                 <TabsTrigger
                   value="roadmap"
-                  className="flex items-center justify-center gap-2 data-[state=active]:bg-indigo-700"
+                  className="flex items-center justify-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-indigo-500 data-[state=active]:text-white rounded-lg m-1 transition-all duration-300"
                 >
                   <MapPin size={16} />
                   <span>Roadmap</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="dashboard"
-                  className="flex items-center justify-center gap-2 data-[state=active]:bg-indigo-700"
+                  className="flex items-center justify-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-indigo-500 data-[state=active]:text-white rounded-lg m-1 transition-all duration-300"
                 >
                   <LayoutDashboard size={16} />
                   <span>Dashboard</span>

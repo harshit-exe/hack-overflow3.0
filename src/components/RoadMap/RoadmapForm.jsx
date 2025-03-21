@@ -12,7 +12,7 @@ import { Switch } from "@/components/ui/switch"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
-import { Sparkles, Zap, Target, Award, Users, Briefcase, Brain, Rocket, Check } from "lucide-react"
+import { Sparkles, Zap, Target, Award, Users, Briefcase, Brain, Rocket, Check, FileText } from "lucide-react"
 import { useGroqAI } from "./useGroqAI"
 
 const careerPaths = [
@@ -72,6 +72,22 @@ const skillLevels = [
   { value: "advanced", label: "Advanced", icon: "mdi:palm-tree", description: "3+ years experience" },
 ]
 
+const learningStyles = [
+  {
+    value: "self-paced",
+    label: "Self-paced",
+    icon: "mdi:book-open-page-variant",
+    description: "Learn at your own pace",
+  },
+  { value: "guided", label: "Guided", icon: "mdi:compass", description: "Structured learning path" },
+  {
+    value: "mentor-led",
+    label: "Mentor-led",
+    icon: "mdi:account-supervisor",
+    description: "Learn with expert guidance",
+  },
+]
+
 const focusAreas = [
   {
     value: "technical-skills",
@@ -116,61 +132,67 @@ const advancedFeatures = [
     id: "skill-tracker",
     title: "Skill Progression Tracker",
     description: "AI analyzes real-time progress & suggests next steps",
-    icon: <Target className="w-5 h-5 text-indigo-400" />,
+    icon: <Target className="w-5 h-5 text-white" />,
   },
   {
     id: "market-demand",
     title: "Real-Time Job Market Demand",
     description: "Roadmap updates based on industry trends",
-    icon: <Zap className="w-5 h-5 text-indigo-400" />,
+    icon: <Zap className="w-5 h-5 text-white" />,
   },
   {
     id: "mentor-suggestions",
-    title: "Personalized Mentor Suggestions",
+    title: "Mentor Matching & Career Advice",
     description: "AI matches you with mentors based on career goals",
-    icon: <Users className="w-5 h-5 text-indigo-400" />,
+    icon: <Users className="w-5 h-5 text-white" />,
+  },
+  {
+    id: "resume-optimization",
+    title: "Resume Optimization & ATS Score",
+    description: "AI reviews your resume and suggests improvements",
+    icon: <FileText className="w-5 h-5 text-white" />,
   },
   {
     id: "certifications",
-    title: "Skill Validation & Certification",
+    title: "Industry Certifications",
     description: "AI recommends certifications to boost credibility",
-    icon: <Award className="w-5 h-5 text-indigo-400" />,
+    icon: <Award className="w-5 h-5 text-white" />,
   },
   {
     id: "career-detours",
     title: "Smart Career Detours",
     description: "AI suggests alternative paths if job market shifts",
-    icon: <Rocket className="w-5 h-5 text-indigo-400" />,
+    icon: <Rocket className="w-5 h-5 text-white" />,
   },
   {
     id: "gamification",
-    title: "Gamified Career Journey",
+    title: "Gamified Learning & Achievements",
     description: "Unlock achievements for completing milestones",
-    icon: <Sparkles className="w-5 h-5 text-indigo-400" />,
-  },
-  {
-    id: "community",
-    title: "Community & Peer Learning",
-    description: "Connect with others on the same career path",
-    icon: <Users className="w-5 h-5 text-indigo-400" />,
+    icon: <Sparkles className="w-5 h-5 text-white" />,
   },
   {
     id: "freelance",
-    title: "AI-Powered Freelance Guidance",
+    title: "Freelance & Side Hustle Guidance",
     description: "Get suggestions for freelance projects based on skills",
-    icon: <Briefcase className="w-5 h-5 text-indigo-400" />,
+    icon: <Briefcase className="w-5 h-5 text-white" />,
   },
 ]
 
 export default function RoadmapForm({ setRoadmapData, onComplete }) {
   const [careerPath, setCareerPath] = useState("")
   const [skillLevel, setSkillLevel] = useState("")
+  const [learningStyle, setLearningStyle] = useState("")
   const [timeframe, setTimeframe] = useState(12)
   const [selectedFocusAreas, setSelectedFocusAreas] = useState([])
   const [includeCertifications, setIncludeCertifications] = useState(false)
   const [customGoals, setCustomGoals] = useState("")
   const [activeTab, setActiveTab] = useState("basic")
-  const [selectedFeatures, setSelectedFeatures] = useState(["skill-tracker", "certifications"])
+  const [selectedFeatures, setSelectedFeatures] = useState([
+    "skill-tracker",
+    "market-demand",
+    "mentor-suggestions",
+    "resume-optimization",
+  ])
   const { generateSubtasks, isLoading, error: groqError } = useGroqAI()
   const [localError, setLocalError] = useState(null)
 
@@ -202,6 +224,10 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
       setLocalError("Please select your skill level")
       return
     }
+    if (!learningStyle) {
+      setLocalError("Please select your learning style")
+      return
+    }
     if (selectedFocusAreas.length === 0) {
       setLocalError("Please select at least one focus area")
       return
@@ -216,7 +242,7 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
       .filter(Boolean)
       .join("\n")
 
-    const prompt = `Create a detailed career development roadmap for a ${skillLevel} level ${careerPath} professional with the following specifications:
+    const prompt = `Create a detailed career development roadmap for a ${skillLevel} level ${careerPath} professional with ${learningStyle} learning style and the following specifications:
     
     Timeline: ${timeframe} months
     Focus Areas: ${selectedFocusAreas.join(", ")}
@@ -228,12 +254,16 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
 
     For each step in the roadmap:
     1. Provide a clear title and timeframe
-    2. List 3-5 required skills
-    3. Include 2-3 learning resources with valid URLs
-    4. ${includeCertifications ? "Recommend relevant certifications" : "Skip certifications"}
-    5. Ensure logical progression between steps
+    2. List 3-5 required skills to develop
+    3. Include 2-3 specific learning resources with valid URLs (courses, tutorials, books)
+    4. Include 1-2 hands-on projects or assignments for practical experience
+    5. ${includeCertifications ? "Recommend relevant certifications" : "Skip certifications"}
+    6. Ensure logical progression between steps
     
-    Make the roadmap practical and industry-aligned.`
+    Make the roadmap practical, industry-aligned, and tailored to the ${learningStyle} learning style.
+    Include specific job roles they can target after completing each major milestone.
+    If the learning style is mentor-led, suggest specific types of mentors they should connect with.
+    If the career path is trending, highlight high-demand skills with growth percentages.`
 
     try {
       const roadmapData = await generateSubtasks(prompt)
@@ -245,6 +275,7 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
           metadata: {
             careerPath,
             skillLevel,
+            learningStyle,
             timeframe,
             focusAreas: selectedFocusAreas,
             features: selectedFeatures,
@@ -278,17 +309,20 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-8 max-w-5xl mx-auto bg-black rounded-xl border border-indigo-800 shadow-xl text-white"
+      className="space-y-8 max-w-5xl mx-auto bg-zinc-900/90 rounded-2xl border border-indigo-600/30 shadow-xl shadow-indigo-600/10 backdrop-blur-sm"
     >
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="w-full grid grid-cols-2 bg-indigo-950/50 border-b border-indigo-800 rounded-none">
+        <TabsList className="w-full grid grid-cols-2 bg-zinc-800/90 border-b border-indigo-600/30 rounded-t-2xl overflow-hidden">
           <TabsTrigger
             value="basic"
-            className="data-[state=active]:bg-indigo-700 rounded-none border-r border-indigo-800"
+            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-indigo-500 data-[state=active]:text-white rounded-lg m-1 transition-all duration-300 border-r border-indigo-600/30"
           >
             Basic Settings
           </TabsTrigger>
-          <TabsTrigger value="advanced" className="data-[state=active]:bg-indigo-700 rounded-none">
+          <TabsTrigger
+            value="advanced"
+            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-indigo-500 data-[state=active]:text-white rounded-lg m-1 transition-all duration-300"
+          >
             Advanced Features
           </TabsTrigger>
         </TabsList>
@@ -301,24 +335,24 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
                 {careerPaths.map((path) => (
                   <Card
                     key={path.value}
-                    className={`cursor-pointer transition-all duration-200 border text-white ${
+                    className={`cursor-pointer transition-all duration-300 border ${
                       careerPath === path.value
-                        ? "bg-indigo-600/20 border-indigo-400"
-                        : "bg-black/60 border-indigo-800 hover:border-indigo-600"
-                    }`}
+                        ? "bg-gradient-to-br from-indigo-600/30 to-indigo-600/10 border-indigo-500 shadow-lg shadow-indigo-600/20"
+                        : "bg-zinc-800/80 border-zinc-700 hover:border-indigo-500 hover:shadow-lg hover:shadow-indigo-600/10"
+                    } rounded-xl overflow-hidden transform hover:scale-[1.02]`}
                     onClick={() => setCareerPath(path.value)}
                   >
                     <CardContent className="p-4 flex items-center gap-3">
                       <div className="shrink-0">
-                        <Icon icon={path.icon} className="w-8 h-8 text-indigo-400" />
+                        <Icon icon={path.icon} className="w-8 h-8 text-white" />
                       </div>
                       <div>
-                        <h3 className="font-medium">{path.label}</h3>
-                        <p className="text-xs text-white">{path.description}</p>
+                        <h3 className="font-medium text-white">{path.label}</h3>
+                        <p className="text-xs text-gray-300">{path.description}</p>
                       </div>
                       {careerPath === path.value && (
                         <div className="ml-auto">
-                          <Check className="w-5 h-5 text-indigo-400" />
+                          <Check className="w-5 h-5 text-white" />
                         </div>
                       )}
                     </CardContent>
@@ -335,22 +369,54 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
                     key={level.value}
                     className={`cursor-pointer transition-all duration-200 border ${
                       skillLevel === level.value
-                        ? "bg-indigo-600/20 border-indigo-400"
-                        : "bg-black/60 border-indigo-800 hover:border-indigo-600"
+                        ? "bg-indigo-600/20 border-indigo-500"
+                        : "bg-zinc-800 border-zinc-700 hover:border-indigo-500"
                     }`}
                     onClick={() => setSkillLevel(level.value)}
                   >
                     <CardContent className="p-4 flex items-center gap-3">
                       <div className="shrink-0">
-                        <Icon icon={level.icon} className="w-8 h-8 text-indigo-400" />
+                        <Icon icon={level.icon} className="w-8 h-8 text-white" />
                       </div>
                       <div>
-                        <h3 className="font-medium">{level.label}</h3>
-                        <p className="text-xs text-white">{level.description}</p>
+                        <h3 className="font-medium text-white">{level.label}</h3>
+                        <p className="text-xs text-gray-300">{level.description}</p>
                       </div>
                       {skillLevel === level.value && (
                         <div className="ml-auto">
-                          <Check className="w-5 h-5 text-indigo-400" />
+                          <Check className="w-5 h-5 text-white" />
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </motion.div>
+
+            <motion.div variants={item}>
+              <Label className="text-xl font-bold text-white mb-4 block">Learning Style</Label>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                {learningStyles.map((style) => (
+                  <Card
+                    key={style.value}
+                    className={`cursor-pointer transition-all duration-200 border ${
+                      learningStyle === style.value
+                        ? "bg-indigo-600/20 border-indigo-500"
+                        : "bg-zinc-800 border-zinc-700 hover:border-indigo-500"
+                    }`}
+                    onClick={() => setLearningStyle(style.value)}
+                  >
+                    <CardContent className="p-4 flex items-center gap-3">
+                      <div className="shrink-0">
+                        <Icon icon={style.icon} className="w-8 h-8 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="font-medium text-white">{style.label}</h3>
+                        <p className="text-xs text-gray-300">{style.description}</p>
+                      </div>
+                      {learningStyle === style.value && (
+                        <div className="ml-auto">
+                          <Check className="w-5 h-5 text-white" />
                         </div>
                       )}
                     </CardContent>
@@ -362,7 +428,7 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
             <motion.div variants={item}>
               <div className="flex items-center justify-between">
                 <Label className="text-xl font-bold text-white">Timeframe</Label>
-                <span className="text-indigo-400 font-medium">{timeframe} months</span>
+                <span className="text-white font-medium">{timeframe} months</span>
               </div>
               <Slider
                 min={1}
@@ -372,7 +438,7 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
                 onValueChange={(value) => setTimeframe(value[0])}
                 className="my-4"
               />
-              <div className="flex justify-between text-xs text-white">
+              <div className="flex justify-between text-xs text-gray-300">
                 <span>1 month</span>
                 <span>1 year</span>
                 <span>3 years</span>
@@ -388,22 +454,22 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
                     key={area.value}
                     className={`cursor-pointer transition-all duration-200 border ${
                       selectedFocusAreas.includes(area.value)
-                        ? "bg-indigo-600/20 border-indigo-400"
-                        : "bg-black/60 border-indigo-800 hover:border-indigo-600"
+                        ? "bg-indigo-600/20 border-indigo-500"
+                        : "bg-zinc-800 border-zinc-700 hover:border-indigo-500"
                     }`}
                     onClick={() => handleFocusAreaToggle(area.value)}
                   >
                     <CardContent className="p-4 flex items-center gap-3">
                       <div className="shrink-0">
-                        <Icon icon={area.icon} className="w-8 h-8 text-indigo-400" />
+                        <Icon icon={area.icon} className="w-8 h-8 text-white" />
                       </div>
                       <div>
-                        <h3 className="font-medium">{area.label}</h3>
-                        <p className="text-xs text-white">{area.description}</p>
+                        <h3 className="font-medium text-white">{area.label}</h3>
+                        <p className="text-xs text-gray-300">{area.description}</p>
                       </div>
                       {selectedFocusAreas.includes(area.value) && (
                         <div className="ml-auto">
-                          <Check className="w-5 h-5 text-indigo-400" />
+                          <Check className="w-5 h-5 text-white" />
                         </div>
                       )}
                     </CardContent>
@@ -413,13 +479,13 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
             </motion.div>
 
             <motion.div variants={item}>
-              <div className="flex items-center gap-4 p-4 rounded-lg border border-indigo-800 bg-indigo-900/10">
+              <div className="flex items-center gap-4 p-4 rounded-lg border border-indigo-600/30 bg-zinc-800">
                 <Switch
                   id="certifications"
                   checked={includeCertifications}
                   onCheckedChange={setIncludeCertifications}
                 />
-                <Label htmlFor="certifications" className="text-lg cursor-pointer">
+                <Label htmlFor="certifications" className="text-lg cursor-pointer text-white">
                   Include Professional Certifications
                 </Label>
               </div>
@@ -434,7 +500,7 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
                 value={customGoals}
                 onChange={(e) => setCustomGoals(e.target.value)}
                 placeholder="Enter any specific goals or areas you want to focus on"
-                className="bg-black/80 border-indigo-800 focus:border-indigo-400"
+                className="bg-zinc-800 border-indigo-600/30 focus:border-indigo-500 text-white"
               />
             </motion.div>
           </motion.div>
@@ -442,9 +508,9 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
 
         <TabsContent value="advanced" className="p-6">
           <motion.div variants={container} initial="hidden" animate="show" className="space-y-6">
-            <motion.div variants={item} className="p-4 rounded-lg border border-indigo-800 bg-indigo-900/10">
-              <h3 className="text-xl font-bold flex items-center gap-2 mb-2">
-                <Brain className="text-indigo-400" />
+            <motion.div variants={item} className="p-4 rounded-lg border border-indigo-600/30 bg-zinc-800">
+              <h3 className="text-xl font-bold flex items-center gap-2 mb-2 text-white">
+                <Brain className="text-white" />
                 Advanced AI Features
               </h3>
               <p className="text-gray-300 text-sm">
@@ -459,8 +525,8 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
                   key={feature.id}
                   className={`cursor-pointer transition-all duration-200 border ${
                     selectedFeatures.includes(feature.id)
-                      ? "bg-indigo-600/20 border-indigo-400"
-                      : "bg-black/60 border-indigo-800 hover:border-indigo-600"
+                      ? "bg-indigo-600/20 border-indigo-500"
+                      : "bg-zinc-800 border-zinc-700 hover:border-indigo-500"
                   }`}
                   onClick={() => handleFeatureToggle(feature.id)}
                 >
@@ -469,16 +535,16 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
                       <div className="shrink-0 mt-1">{feature.icon}</div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <h3 className="font-medium">{feature.title}</h3>
+                          <h3 className="font-medium text-white">{feature.title}</h3>
                           {feature.id === "skill-tracker" && (
-                            <Badge className="bg-green-500/90 text-white text-xs">Popular</Badge>
+                            <Badge className="bg-indigo-500 text-white text-xs">Popular</Badge>
                           )}
                         </div>
-                        <p className="text-xs text-white">{feature.description}</p>
+                        <p className="text-xs text-gray-300">{feature.description}</p>
                       </div>
                       {selectedFeatures.includes(feature.id) && (
                         <div className="ml-auto">
-                          <Check className="w-5 h-5 text-indigo-400" />
+                          <Check className="w-5 h-5 text-white" />
                         </div>
                       )}
                     </div>
@@ -491,7 +557,11 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
       </Tabs>
 
       <div className="p-6 pt-0">
-        <Button type="submit" className="w-full h-14 bg-indigo-600 hover:bg-indigo-700 text-white" disabled={isLoading}>
+        <Button
+          type="submit"
+          className="w-full h-14 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white rounded-xl shadow-lg shadow-indigo-600/20 transform transition-transform hover:scale-[1.02]"
+          disabled={isLoading}
+        >
           {isLoading ? (
             <>
               <Icon icon="eos-icons:loading" className="animate-spin mr-2" />
@@ -506,7 +576,7 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
         </Button>
 
         {(groqError || localError) && (
-          <div className="bg-red-900/30 border border-red-500 text-red-200 p-4 rounded-lg mt-4">
+          <div className="bg-red-900/30 border border-red-500 text-red-100 p-4 rounded-lg mt-4">
             {groqError || localError}
           </div>
         )}
@@ -514,4 +584,3 @@ export default function RoadmapForm({ setRoadmapData, onComplete }) {
     </form>
   )
 }
-

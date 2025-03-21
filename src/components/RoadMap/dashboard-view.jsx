@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { motion } from "framer-motion"
 import { Target, Zap, Sparkles, Rocket, CheckCircle, ChevronRight } from "lucide-react"
 
+
 export default function DashboardView({ roadmapData }) {
   const [progress, setProgress] = useState(0)
   const [completedNodes, setCompletedNodes] = useState([])
@@ -15,9 +16,10 @@ export default function DashboardView({ roadmapData }) {
   const metadata = roadmapData.metadata || {
     careerPath: "software-developer",
     skillLevel: "intermediate",
+    learningStyle: "self-paced",
     timeframe: 12,
     focusAreas: ["technical-skills"],
-    features: ["skill-tracker", "certifications"],
+    features: ["skill-tracker", "market-demand", "mentor-suggestions", "resume-optimization"],
   }
 
   const nodes = roadmapData.nodes || []
@@ -71,9 +73,9 @@ export default function DashboardView({ roadmapData }) {
         <h2 className="text-2xl font-bold text-white">Career Dashboard</h2>
         <div className="flex items-center gap-2">
           <span className="text-white">Overall Progress:</span>
-          <div className="w-48 h-4 bg-gray-800 rounded-full overflow-hidden">
+          <div className="w-48 h-4 bg-zinc-800/80 rounded-full overflow-hidden border border-indigo-600/20">
             <div
-              className="h-full bg-gradient-to-r from-indigo-600 to-green-400"
+              className="h-full bg-gradient-to-r from-indigo-600 via-indigo-500 to-indigo-400 animate-pulse"
               style={{ width: `${progress}%` }}
             ></div>
           </div>
@@ -89,9 +91,9 @@ export default function DashboardView({ roadmapData }) {
       >
         {/* Progress Overview */}
         <motion.div variants={item}>
-          <Card className="bg-black border-indigo-800">
+          <Card className="bg-zinc-900/90 border-indigo-600/30 rounded-2xl shadow-lg shadow-indigo-600/10 backdrop-blur-sm transform transition-all hover:shadow-xl hover:shadow-indigo-600/20 hover:border-indigo-500/50">
             <CardHeader className="pb-2">
-              <CardTitle className="text-xl flex items-center gap-2">
+              <CardTitle className="text-xl flex items-center gap-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-indigo-200">
                 <Target className="w-5 h-5 text-indigo-400" />
                 Progress Overview
               </CardTitle>
@@ -99,7 +101,7 @@ export default function DashboardView({ roadmapData }) {
             <CardContent>
               <div className="space-y-4">
                 <div>
-                  <div className="flex justify-between mb-1">
+                  <div className="flex justify-between mb-1 text-white">
                     <span>Career Path Progress</span>
                     <span>{progress}%</span>
                   </div>
@@ -107,7 +109,7 @@ export default function DashboardView({ roadmapData }) {
                 </div>
 
                 <div>
-                  <h4 className="font-medium mb-2">Completed Milestones</h4>
+                  <h4 className="font-medium mb-2 text-white">Completed Milestones</h4>
                   {completedNodes.length > 0 ? (
                     <ul className="space-y-2">
                       {completedNodes.map((node) => (
@@ -118,7 +120,7 @@ export default function DashboardView({ roadmapData }) {
                       ))}
                     </ul>
                   ) : (
-                    <p className="text-white text-sm">No milestones completed yet</p>
+                    <p className="text-gray-300 text-sm">No milestones completed yet</p>
                   )}
                 </div>
               </div>
@@ -128,9 +130,9 @@ export default function DashboardView({ roadmapData }) {
 
         {/* Skill Tracker */}
         <motion.div variants={item}>
-          <Card className="bg-black border-indigo-800">
+          <Card className="bg-zinc-900/90 border-indigo-600/30 rounded-2xl shadow-lg shadow-indigo-600/10 backdrop-blur-sm transform transition-all hover:shadow-xl hover:shadow-indigo-600/20 hover:border-indigo-500/50">
             <CardHeader className="pb-2">
-              <CardTitle className="text-xl flex items-center gap-2">
+              <CardTitle className="text-xl flex items-center gap-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-indigo-200">
                 <Target className="w-5 h-5 text-indigo-400" />
                 Skill Progression
               </CardTitle>
@@ -139,7 +141,7 @@ export default function DashboardView({ roadmapData }) {
               <div className="space-y-3">
                 {nodes.slice(0, 5).map((node) => (
                   <div key={node.id} className="space-y-1">
-                    <div className="flex justify-between text-sm">
+                    <div className="flex justify-between text-sm text-white">
                       <span>{node.data.skills?.[0] || "Loading..."}</span>
                       <span>{node.data.isCompleted ? "100%" : "0%"}</span>
                     </div>
@@ -153,9 +155,9 @@ export default function DashboardView({ roadmapData }) {
 
         {/* Achievements */}
         <motion.div variants={item}>
-          <Card className="bg-black border-indigo-800">
+          <Card className="bg-zinc-900/90 border-indigo-600/30 rounded-2xl shadow-lg shadow-indigo-600/10 backdrop-blur-sm transform transition-all hover:shadow-xl hover:shadow-indigo-600/20 hover:border-indigo-500/50">
             <CardHeader className="pb-2">
-              <CardTitle className="text-xl flex items-center gap-2">
+              <CardTitle className="text-xl flex items-center gap-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-indigo-200">
                 <Sparkles className="w-5 h-5 text-indigo-400" />
                 Achievements
               </CardTitle>
@@ -164,23 +166,26 @@ export default function DashboardView({ roadmapData }) {
               {achievements.length > 0 ? (
                 <div className="space-y-3">
                   {achievements.map((achievement, i) => (
-                    <div key={i} className="flex items-center gap-3 bg-indigo-900/30 p-2 rounded-lg">
-                      <div className="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center">
-                        <Sparkles className="w-5 h-5 text-black" />
+                    <div
+                      key={i}
+                      className="flex items-center gap-3 bg-zinc-800/80 p-2 rounded-xl border border-indigo-600/20 hover:border-indigo-500/50 transition-all duration-300 transform hover:scale-[1.02]"
+                    >
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-indigo-600/20">
+                        <Sparkles className="w-5 h-5 text-white" />
                       </div>
                       <div>
-                        <h4 className="font-medium">{achievement.title}</h4>
-                        <p className="text-sm text-white">{achievement.description}</p>
+                        <h4 className="font-medium text-white">{achievement.title}</h4>
+                        <p className="text-sm text-gray-300">{achievement.description}</p>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
                 <div className="space-y-3">
-                  <p className="text-white text-sm">Complete steps in your roadmap to earn achievements</p>
-                  <div className="bg-indigo-900/30 p-3 rounded-lg">
-                    <h4 className="font-medium">Next Achievement</h4>
-                    <div className="flex items-center gap-2 mt-2">
+                  <p className="text-gray-300 text-sm">Complete steps in your roadmap to earn achievements</p>
+                  <div className="bg-zinc-800/80 p-3 rounded-xl border border-indigo-600/20 hover:border-indigo-500/50 transition-all duration-300 transform hover:scale-[1.02]">
+                    <h4 className="font-medium text-white">Next Achievement</h4>
+                    <div className="flex items-center gap-2 mt-2 text-gray-300">
                       <Sparkles className="w-5 h-5 text-indigo-400" />
                       <span>Roadmap Pioneer: Complete your first milestone</span>
                     </div>
@@ -193,21 +198,21 @@ export default function DashboardView({ roadmapData }) {
 
         {/* Job Market Insights */}
         <motion.div variants={item}>
-          <Card className="bg-black border-indigo-800">
+          <Card className="bg-zinc-900/90 border-indigo-600/30 rounded-2xl shadow-lg shadow-indigo-600/10 backdrop-blur-sm transform transition-all hover:shadow-xl hover:shadow-indigo-600/20 hover:border-indigo-500/50">
             <CardHeader className="pb-2">
-              <CardTitle className="text-xl flex items-center gap-2">
+              <CardTitle className="text-xl flex items-center gap-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-indigo-200">
                 <Zap className="w-5 h-5 text-indigo-400" />
                 Job Market Insights
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                <div className="bg-indigo-900/30 p-3 rounded-lg">
+                <div className="bg-zinc-800/80 p-3 rounded-xl border border-indigo-600/20 hover:border-indigo-500/50 transition-all duration-300 transform hover:scale-[1.02]">
                   <div className="flex justify-between items-center mb-2">
-                    <h4 className="font-medium">In-Demand Skills</h4>
-                    <Badge className="bg-green-500/90 text-white text-xs">Hot</Badge>
+                    <h4 className="font-medium text-white">In-Demand Skills</h4>
+                    <Badge className="bg-indigo-600 text-white text-xs">Hot</Badge>
                   </div>
-                  <ul className="text-sm space-y-2">
+                  <ul className="text-sm space-y-2 text-gray-300">
                     {nodes[0]?.data.skills?.map((skill, i) => (
                       <li key={i} className="flex items-center gap-2">
                         <span className="text-green-400">+{Math.floor(Math.random() * 30) + 10}%</span>
@@ -221,11 +226,44 @@ export default function DashboardView({ roadmapData }) {
           </Card>
         </motion.div>
 
+        {/* Resume Optimization */}
+        <motion.div variants={item}>
+          <Card className="bg-zinc-900/90 border-indigo-600/30 rounded-2xl shadow-lg shadow-indigo-600/10 backdrop-blur-sm transform transition-all hover:shadow-xl hover:shadow-indigo-600/20 hover:border-indigo-500/50">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-xl flex items-center gap-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-indigo-200">
+                <FileText className="w-5 h-5 text-indigo-400" />
+                Resume Optimization
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <div className="bg-zinc-800/80 p-3 rounded-xl border border-indigo-600/20 hover:border-indigo-500/50 transition-all duration-300 transform hover:scale-[1.02]">
+                  <h4 className="font-medium mb-2 text-white">ATS Score Estimation</h4>
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-sm text-white">
+                      <span>Current Resume Score</span>
+                      <span>68%</span>
+                    </div>
+                    <Progress value={68} className="h-2" />
+                  </div>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full text-white border-indigo-600/30 hover:bg-indigo-600/20"
+                >
+                  Upload Resume for Analysis
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
         {/* Next Steps */}
         <motion.div variants={item} className="md:col-span-2">
-          <Card className="bg-black border-indigo-800">
+          <Card className="bg-zinc-900/90 border-indigo-600/30 rounded-2xl shadow-lg shadow-indigo-600/10 backdrop-blur-sm transform transition-all hover:shadow-xl hover:shadow-indigo-600/20 hover:border-indigo-500/50">
             <CardHeader className="pb-2">
-              <CardTitle className="text-xl flex items-center gap-2">
+              <CardTitle className="text-xl flex items-center gap-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-indigo-200">
                 <Rocket className="w-5 h-5 text-indigo-400" />
                 Recommended Next Steps
               </CardTitle>
@@ -236,10 +274,13 @@ export default function DashboardView({ roadmapData }) {
                   .filter((node) => !node.data.isCompleted)
                   .slice(0, 2)
                   .map((node) => (
-                    <div key={node.id} className="bg-indigo-900/20 p-3 rounded-lg border border-indigo-800">
-                      <h4 className="font-medium">{node.data.label}</h4>
-                      <p className="text-xs text-white my-2">Focus on: {node.data.skills?.[0]}</p>
-                      <ul className="space-y-1 mt-3 text-sm">
+                    <div
+                      key={node.id}
+                      className="bg-zinc-800/80 p-3 rounded-xl border border-indigo-600/20 hover:border-indigo-500/50 transition-all duration-300 transform hover:scale-[1.02]"
+                    >
+                      <h4 className="font-medium text-white">{node.data.label}</h4>
+                      <p className="text-xs text-gray-300 my-2">Focus on: {node.data.skills?.[0]}</p>
+                      <ul className="space-y-1 mt-3 text-sm text-gray-300">
                         <li className="flex items-start gap-2">
                           <ChevronRight className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
                           <span>Review learning resources</span>
