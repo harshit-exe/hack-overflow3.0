@@ -8,17 +8,29 @@ function extractJSONFromResponse(response) {
   } catch (error) {
     try {
       // Second attempt - try to find JSON within text response
+<<<<<<< HEAD
+=======
+      // Look for content between square brackets (assuming array)
+>>>>>>> main
       const jsonMatch = response.match(/\[.*\]/s);
       if (jsonMatch) {
         return JSON.parse(jsonMatch[0]);
       }
 
+<<<<<<< HEAD
       // If that fails, look for content between curly braces
+=======
+      // If that fails, look for content between curly braces (assuming object)
+>>>>>>> main
       const objMatch = response.match(/\{.*\}/s);
       if (objMatch) {
         return JSON.parse(objMatch[0]);
       }
 
+<<<<<<< HEAD
+=======
+      // If all extraction attempts fail, throw the original error
+>>>>>>> main
       throw error;
     } catch (innerError) {
       console.error("Failed to extract JSON from response:", response);
@@ -27,13 +39,22 @@ function extractJSONFromResponse(response) {
   }
 }
 
+<<<<<<< HEAD
 // 1. Get trending jobs - now generates data directly without requiring job data input
 export async function getTrendingJobs(jobs = [], timeframe = "Last 30 days") {
+=======
+// 1. Get trending jobs
+export async function getTrendingJobs(jobsData) {
+>>>>>>> main
   const messages = [
     {
       role: "system",
       content:
+<<<<<<< HEAD
         "You are a professional data analyst for the Indian IT job market with access to the latest industry research and trends. Your task is to provide accurate, data-driven insights about the current job market. Format your responses ONLY as clean JSON without any explanations, markdown, or text wrappers. Your data should mirror what leading job market platforms like LinkedIn, Naukri, and Indeed would report.",
+=======
+        "You are an AI assistant that analyzes job market data. Provide clear, concise analysis of job trends. IMPORTANT: Your response must be valid JSON - respond ONLY with a JSON array and nothing else.",
+>>>>>>> main
     },
     {
       role: "user",
@@ -58,6 +79,7 @@ Return ONLY the JSON array.`,
   try {
     console.log("Requesting trending jobs data from Groq...");
     const response = await GroqForJob(messages);
+<<<<<<< HEAD
     console.log("Groq response received:", response.substring(0, 100) + "...");
     return extractJSONFromResponse(response);
   } catch (error) {
@@ -89,6 +111,14 @@ Return ONLY the JSON array.`,
         openings: 16900,
         reason: "Growing need for data infrastructure",
       },
+=======
+    return extractJSONFromResponse(response);
+  } catch (error) {
+    console.error("Error getting trending jobs:", error);
+    // Return fallback data instead of empty array to prevent UI issues
+    return [
+      { title: "Software Engineer", openings: 0, reason: "Data unavailable" },
+>>>>>>> main
     ];
   }
 }
@@ -103,7 +133,11 @@ export async function getSalaryForecasts(
     {
       role: "system",
       content:
+<<<<<<< HEAD
         "You are a senior compensation analyst specializing in the Indian IT sector with access to real-time salary benchmarking data across all major tech companies and startups. Your analysis incorporates data from industry salary surveys, offer letters, and company compensation bands. Provide ONLY clean JSON responses without any text explanations, markdown formatting, or code blocks. Your data should match what industry-leading compensation platforms like Levels.fyi, Glassdoor, and PayScale would report.",
+=======
+        "You are an AI assistant that analyzes salary data in the job market. Provide accurate salary forecasts. IMPORTANT: Your response must be valid JSON - respond ONLY with a JSON array and nothing else.",
+>>>>>>> main
     },
     {
       role: "user",
@@ -134,6 +168,7 @@ Return ONLY the JSON array.`,
   try {
     console.log("Requesting salary forecast data from Groq...");
     const response = await GroqForJob(messages);
+<<<<<<< HEAD
     console.log("Groq response received:", response.substring(0, 100) + "...");
     return extractJSONFromResponse(response);
   } catch (error) {
@@ -221,6 +256,13 @@ Return ONLY the JSON array.`,
     }
 
     return fallbackData;
+=======
+    return extractJSONFromResponse(response);
+  } catch (error) {
+    console.error("Error getting salary forecasts:", error);
+    // Return fallback data instead of empty array
+    return [{ title: "IT Manager", salary: "0 LPA", trend: "unavailable" }];
+>>>>>>> main
   }
 }
 
@@ -230,7 +272,11 @@ export async function getInDemandSkills(jobs = [], jobTitleFilter = "") {
     {
       role: "system",
       content:
+<<<<<<< HEAD
         "You are a technical skills analyst for the Indian IT recruitment industry with access to job board data, hiring trends, and technical screening requirements across the entire tech sector. Your insights are based on analysis of thousands of job descriptions, candidate screenings, and hiring manager requirements. Provide ONLY clean JSON responses without any text explanations, markdown formatting, or code blocks. Your data should match what leading skill assessment platforms like HackerRank, StackOverflow, and GitHub Trends would report.",
+=======
+        "You are an AI assistant that analyzes job skill requirements. Identify the most in-demand skills from job listings. IMPORTANT: Your response must be valid JSON - respond ONLY with a JSON array and nothing else.",
+>>>>>>> main
     },
     {
       role: "user",
@@ -265,6 +311,7 @@ Return ONLY the JSON array.`,
   try {
     console.log("Requesting in-demand skills data from Groq...");
     const response = await GroqForJob(messages);
+<<<<<<< HEAD
     console.log("Groq response received:", response.substring(0, 100) + "...");
     return extractJSONFromResponse(response);
   } catch (error) {
@@ -306,5 +353,12 @@ Return ONLY the JSON array.`,
         { name: "DevSecOps", rank: 5, demandScore: 79 },
       ];
     }
+=======
+    return extractJSONFromResponse(response);
+  } catch (error) {
+    console.error("Error getting in-demand skills:", error);
+    // Return fallback data instead of empty array
+    return [{ skill: "Data unavailable", rank: 1 }];
+>>>>>>> main
   }
 }

@@ -135,7 +135,7 @@ const BlockchainVerification = ({ resume }) => {
             <Button
               variant="outline"
               size="sm"
-              className="border-blue-500 text-blue-400 hover:bg-blue-900"
+              className="border-blue-500 hover:text-white text-blue-400 hover:bg-blue-900"
               onClick={handleConnectWallet}
               disabled={loading}
             >
