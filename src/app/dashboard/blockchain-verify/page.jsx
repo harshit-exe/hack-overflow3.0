@@ -116,7 +116,7 @@ export default function VerifyPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen">
       <div className="container mx-auto py-8">
         <div className="flex items-center mb-6">
           <Link href="/dashboard/skill/resume/resume-builder" className="flex items-center text-blue-500 hover:text-blue-400">

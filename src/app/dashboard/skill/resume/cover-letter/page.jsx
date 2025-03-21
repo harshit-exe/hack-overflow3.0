@@ -135,7 +135,7 @@ export default function CoverLetterPage() {
   }
 
   return (
-    <main className="min-h-screen bg-black">
+    <main className="min-h-screen ">
       <div className="container mx-auto py-8">
         <div className="flex items-center mb-6">
           <Link href="/dashboard/skill/resume/resume-builder" className="flex items-center text-White hover:text-blue-400">

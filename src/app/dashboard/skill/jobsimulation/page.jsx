@@ -24,7 +24,7 @@ export default function JobSimulation() {
     { title: "Project Manager", level: "Intermediate", icon: <UsersRound className="w-6 h-6 text-[#3FFF3F]" /> },
   ]
   return (
-    <div className="overflow-hidden min-h-screen bg-black text-white p-2">
+    <div className="overflow-hidden min-h-screen text-white p-2">
       <h1 className="text-4xl font-bold mb-6 animate-fade-in">Jobs Simulation</h1>
 
       <h2 className="text-2xl font-semibold mb-6 animate-fade-in-up">Choose Your Role</h2>

@@ -49,7 +49,7 @@ const Page = () => {
       {/* Card 4 - Job Simulation */}
       <PixelCard variant="green">
         <div className="absolute text-white text-center px-4">
-          <Link href="/dashboard/skill/resume/blockchain">
+          <Link href="/dashboard/blockchain-verify">
             <h2 className="text-2xl font-bold mb-2 cursor-pointer hover:underline">
             🔗 Blockchain
             </h2>
