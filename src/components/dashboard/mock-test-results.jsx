@@ -28,7 +28,7 @@ export function MockTestResults() {
   };
 
   return (
-    <div className="bg-gray-900 text-white p-5 rounded-xl w-96">
+    <div className="bg-gray-900 text-white p-5 rounded-xl w-full max-w-md mx-auto">
       <h2 className="text-lg font-semibold mb-4">Tasks</h2>
       <div className="flex items-center mb-4">
         <input
