@@ -14,16 +14,19 @@ export const SalaryCard = ({ jobs }) => {
 
   useEffect(() => {
     async function fetchSalaryData() {
-      if (jobs && jobs.length > 0) {
-        setIsLoading(true);
-        try {
-          const salaryData = await getSalaryForecasts(jobs, jobFilter);
-          setRoles(salaryData);
-        } catch (error) {
-          console.error("Error:", error);
-        } finally {
-          setIsLoading(false);
-        }
+      setIsLoading(true);
+      try {
+        // Pass both filters to the service
+        const salaryData = await getSalaryForecasts(
+          jobs,
+          jobFilter,
+          experienceLevel
+        );
+        setRoles(salaryData);
+      } catch (error) {
+        console.error("Error:", error);
+      } finally {
+        setIsLoading(false);
       }
     }
 

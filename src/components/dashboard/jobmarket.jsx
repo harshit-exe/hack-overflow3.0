@@ -11,21 +11,20 @@ export const JobMarketTrends = ({ jobs }) => {
 
   useEffect(() => {
     async function fetchTrendingJobs() {
-      if (jobs && jobs.length > 0) {
-        setIsLoading(true);
-        try {
-          const trendingJobs = await getTrendingJobs(jobs);
-          setJobData(trendingJobs);
-        } catch (error) {
-          console.error("Error:", error);
-        } finally {
-          setIsLoading(false);
-        }
+      setIsLoading(true);
+      try {
+        // Pass the timeframe to get period-specific data
+        const trendingJobs = await getTrendingJobs(jobs, timeframe);
+        setJobData(trendingJobs);
+      } catch (error) {
+        console.error("Error:", error);
+      } finally {
+        setIsLoading(false);
       }
     }
 
     fetchTrendingJobs();
-  }, [jobs, timeframe]); // Re-fetch if jobs data or timeframe changes
+  }, [jobs, timeframe]); // Re-fetch if timeframe changes
 
   const maxOpenings = Math.max(...(jobData.map((job) => job.openings) || [1]));
 
@@ -71,7 +70,7 @@ export const JobMarketTrends = ({ jobs }) => {
             {jobData.map((job, index) => (
               <div key={index} className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-300">{job.role || job.title}</span>
+                  <span className="text-gray-300">{job.title}</span>
                   <span className="text-gray-400">{job.openings}</span>
                 </div>
                 <div className="h-2 bg-[#333] rounded-full">
@@ -87,9 +86,9 @@ export const JobMarketTrends = ({ jobs }) => {
           </div>
 
           <div className="mt-4 text-xs text-gray-500">
-            {jobData.length > 0 && jobData[0].role
+            {jobData.length > 0
               ? `${
-                  jobData[0].role || jobData[0].title
+                  jobData[0].title
                 } showing highest demand in ${timeframe.toLowerCase()}`
               : "Analyzing job market trends..."}
           </div>
