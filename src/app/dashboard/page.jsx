@@ -5,6 +5,7 @@ import { SalaryCard } from "@/components/dashboard/salarycard";
 import { SkillsCard } from "@/components/dashboard/skillcard";
 import { ResumeCard } from "@/components/dashboard/resumecard";
 import { JobMarketTrends } from "@/components/dashboard/jobmarket";
+import { apiURL } from "@/constants";
 
 export default function Home() {
   const [jobs, setJobs] = useState([]);
