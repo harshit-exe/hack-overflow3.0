@@ -26,7 +26,7 @@ const navigationItems = [
     name: "Course Path",
     icon: "mdi:book-open-variant",
     color: "#60a5fa",
-    link: "/dashboard/skill/jobsimulation", // Added link for parent item
+    link: "/dashboard/path", // Added link for parent item
     children: [
       {
         name: "Virtual Mentor",
