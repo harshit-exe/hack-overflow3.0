@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { apiURL } from "@/constants";
 import { toast } from "react-toastify";
+import Link from "next/link";
 
 // Company logos
 const companyLogos = {
@@ -254,23 +255,21 @@ export default function JobListings() {
                 <div className="job-card-header">
                   <div className="company-logo">
                     <img
-                      src={
-                        companyLogos[job.employer_name] || "/placeholder.svg"
-                      }
-                      alt={`${job.employer_name} logo`}
+                      src={job?.employer_logo || "/placeholder.svg"}
+                      alt={`${job?.employer_name} logo`}
                     />
                   </div>
                   <div className="job-title-container">
-                    <h3>{job.job_title}</h3>
-                    <p className="company-name">{job.employer_name}</p>
+                    <h3>{job?.job_title}</h3>
+                    <p className="company-name">{job?.employer_name}</p>
                   </div>
                   <button
                     className={`bookmark-button ${
-                      bookmarkedJobs.includes(job.job_id) ? "bookmarked" : ""
+                      bookmarkedJobs.includes(job?.job_id) ? "bookmarked" : ""
                     }`}
-                    onClick={() => toggleBookmark(job.job_id)}
+                    onClick={() => toggleBookmark(job?.job_id)}
                     aria-label={
-                      bookmarkedJobs.includes(job.job_id)
+                      bookmarkedJobs.includes(job?.job_id)
                         ? "Remove bookmark"
                         : "Add bookmark"
                     }
@@ -281,7 +280,7 @@ export default function JobListings() {
                       height="24"
                       viewBox="0 0 24 24"
                       fill={
-                        bookmarkedJobs.includes(job.job_id)
+                        bookmarkedJobs.includes(job?.job_id)
                           ? "currentColor"
                           : "none"
                       }
@@ -361,14 +360,20 @@ export default function JobListings() {
                       <polyline points="12 6 12 12 16 14"></polyline>
                     </svg>
                     <span>
-                      {formatPostedTime(job.postedDays, job.postedWeeks)}
+                      {/* {formatPostedTime(job.postedDays, job.postedWeeks)} */}
+                      {job?.job_posted_at || "..."}
                     </span>
                   </div>
 
-                  <div className="posted-by">by {job.postedBy}</div>
+                  <div className="posted-by">by {job?.employer_name}</div>
                 </div>
 
-                <button className="apply-button">Check Out</button>
+                <Link
+                  href={job?.job_apply_link || "#"}
+                  className="apply-button"
+                >
+                  Check Out
+                </Link>
               </motion.div>
             ))}
           </div>
