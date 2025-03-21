@@ -1,4 +1,3 @@
-// jobAnalysisService.js
 import { GroqForJob } from "./useGroqForJobs";
 
 // Helper function to extract JSON from AI response
@@ -34,11 +33,25 @@ export async function getTrendingJobs(jobs = [], timeframe = "Last 30 days") {
     {
       role: "system",
       content:
-        "You are an AI assistant that provides realistic job market analysis data. IMPORTANT: Your response must be valid JSON - respond ONLY with a JSON array and nothing else.",
+        "You are a professional data analyst for the Indian IT job market with access to the latest industry research and trends. Your task is to provide accurate, data-driven insights about the current job market. Format your responses ONLY as clean JSON without any explanations, markdown, or text wrappers. Your data should mirror what leading job market platforms like LinkedIn, Naukri, and Indeed would report.",
     },
     {
       role: "user",
-      content: `Generate realistic data for the top 5 trending IT jobs in 2025, focusing on the ${timeframe} period. Return a JSON array where each object has: "title" (job title), "openings" (a realistic number between 1000-50000), and "reason" (a brief explanation of why it's trending). Make the data appropriate for the Indian job market.`,
+      content: `Generate accurate, research-backed data for the top 5 trending IT job roles in India for ${timeframe}. 
+
+Format as a JSON array with objects containing: 
+* "title" (specific job title that would appear on job boards)
+* "openings" (precise number between 5000-50000 based on market size) 
+* "reason" (concise, evidence-based explanation for the trend in 10-15 words)
+
+The data must reflect actual 2025 Indian IT market conditions including:
+- Current technology adoption cycles
+- Recent industry disruptions
+- Regional hiring patterns across major tech hubs
+- Company expansion trends
+- Actual in-demand skills
+
+Return ONLY the JSON array.`,
     },
   ];
 
@@ -90,17 +103,31 @@ export async function getSalaryForecasts(
     {
       role: "system",
       content:
-        "You are an AI assistant that provides realistic salary data for the Indian IT job market. IMPORTANT: Your response must be valid JSON - respond ONLY with a JSON array and nothing else.",
+        "You are a senior compensation analyst specializing in the Indian IT sector with access to real-time salary benchmarking data across all major tech companies and startups. Your analysis incorporates data from industry salary surveys, offer letters, and company compensation bands. Provide ONLY clean JSON responses without any text explanations, markdown formatting, or code blocks. Your data should match what industry-leading compensation platforms like Levels.fyi, Glassdoor, and PayScale would report.",
     },
     {
       role: "user",
-      content: `Generate realistic salary forecast data for the top 4 highest paying IT jobs in 2025${
-        jobFilter ? ` focusing on ${jobFilter} related roles` : ""
+      content: `Generate precise salary data for the top 4 highest-paying IT roles in India for 2025${
+        jobFilter ? ` within the ${jobFilter} specialization` : ""
       }${
         experienceLevel && experienceLevel !== "Experience Level"
           ? ` for professionals with ${experienceLevel} experience`
           : ""
-      }. Return a JSON array where each object has: "title" (job title), "salary" (a realistic value in LPA format like "25-35 LPA"), "trending" (a boolean indicating if salary is trending up). Make the data realistic and relevant for the Indian job market in 2025.`,
+      }.
+
+Format as a JSON array with objects containing:
+* "title" (specific job title that matches actual job listings)
+* "salary" (accurate salary range in LPA format like "25-35 LPA" based on current market rates)
+* "trending" (boolean indicating if salaries are currently increasing based on market demand)
+
+The data must reflect:
+- Actual compensation trends in Bangalore, Hyderabad, Delhi NCR, Mumbai, and Pune
+- Correct salary bands for MNCs vs Indian companies
+- Recent salary inflation or corrections in the IT sector
+- Experience-appropriate compensation structures
+- Company size and funding stage adjustments
+
+Return ONLY the JSON array.`,
     },
   ];
 
@@ -203,15 +230,35 @@ export async function getInDemandSkills(jobs = [], jobTitleFilter = "") {
     {
       role: "system",
       content:
-        "You are an AI assistant that analyzes in-demand skills in the tech industry. IMPORTANT: Your response must be valid JSON - respond ONLY with a JSON array and nothing else.",
+        "You are a technical skills analyst for the Indian IT recruitment industry with access to job board data, hiring trends, and technical screening requirements across the entire tech sector. Your insights are based on analysis of thousands of job descriptions, candidate screenings, and hiring manager requirements. Provide ONLY clean JSON responses without any text explanations, markdown formatting, or code blocks. Your data should match what leading skill assessment platforms like HackerRank, StackOverflow, and GitHub Trends would report.",
     },
     {
       role: "user",
-      content: `Generate realistic data for the top 5 most in-demand skills ${
+      content: `Generate precise skill demand data for the top 5 most required technical skills ${
         jobTitleFilter
-          ? `for ${jobTitleFilter} positions`
-          : "in the Indian tech industry for 2025"
-      }. Return a JSON array where each object has: "name" (skill name), "rank" (1-5 with 1 being highest), and "demandScore" (a percentage between 70-95). Make the data realistic and market-relevant.`,
+          ? `for ${jobTitleFilter} positions in India`
+          : "in the Indian tech sector for 2025"
+      }.
+
+Format as a JSON array with objects containing:
+* "name" (specific technical skill or technology, not general categories)
+* "rank" (integer 1-5 with 1 being highest demand)
+* "demandScore" (precise percentage between 70-95 based on actual job requirement frequency)
+
+The data must reflect:
+- Actual technical requirements from recent job postings
+- Version-specific framework and library demand (e.g., "React 18" not just "React")
+- Industry-specific technology preferences
+- Regional variations in skill requirements
+- Emerging technologies with rapid adoption curves
+
+${
+  jobTitleFilter
+    ? `For ${jobTitleFilter} positions, focus on the specific technical stack typically required for this role in Indian companies.`
+    : ""
+}
+
+Return ONLY the JSON array.`,
     },
   ];
 
