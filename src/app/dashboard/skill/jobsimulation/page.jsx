@@ -42,7 +42,7 @@ export default function JobSimulation() {
         {/* Featured simulation preview */}
         <div className="relative rounded-xl overflow-hidden group animate-fade-in-up w-[55vw]">
           <img
-            src="/VR.jpeg"
+            src="/Container.png"
             alt="VR Simulation Preview"
             width={600}
             height={400}

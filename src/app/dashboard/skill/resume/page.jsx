@@ -1,66 +1,74 @@
+'use client'
+
 import React from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import PixelCard from "@/components/pixel-card/pixel-card";
 
 const Page = () => {
   return (
-    <div className="flex justify-center items-center min-h-screen gap-6 flex-wrap p-6">
-      {/* Card 1 - Resume Builder */}
-      <PixelCard variant="pink">
-        <div className="absolute text-white text-center px-4">
-          <Link href="/dashboard/skill/resume/resume-builder">
-            <h2 className="text-2xl font-bold mb-2 cursor-pointer hover:underline">
-              Resume Builder
-            </h2>
-          </Link>
-          <p className="text-sm opacity-80">
-            Build a professional resume that stands out in seconds.
-          </p>
-        </div>
-      </PixelCard>
-
-      {/* Card 2 - Preparation */}
-      <PixelCard variant="blue">
-        <div className="absolute text-white text-center px-4">
-          <Link href="/dashboard/skill/resume/cover-letter">
-            <h2 className="text-2xl font-bold mb-2 cursor-pointer hover:underline">
-              Cover Letter 
-            </h2>
-          </Link>
-          <p className="text-sm opacity-80">
-            Make Cover Letter In One Click
-          </p>
-        </div>
-      </PixelCard>
-
-      {/* Card 3 - Job Simulation */}
-      <PixelCard variant="yellow">
-        <div className="absolute text-white text-center px-4">
-          <Link href="/dashboard/skill/resume/project-recommender">
-            <h2 className="text-2xl font-bold mb-2 cursor-pointer hover:underline">
-              Project Recommender
-            </h2>
-          </Link>
-          <p className="text-sm opacity-80">
-            Bulid real-world project
-          </p>
-        </div>
-      </PixelCard>
-      {/* Card 4 - Job Simulation */}
-      <PixelCard variant="yellow">
-        <div className="absolute text-white text-center px-4">
-          <Link href="/dashboard/skill/resume/blockchain">
-            <h2 className="text-2xl font-bold mb-2 cursor-pointer hover:underline">
-              Blockchain
-            </h2>
-          </Link>
-          <p className="text-sm opacity-80">
-            Blockchian based Resume
-          </p>
-        </div>
-      </PixelCard>
+    <div className="flex justify-center items-center min-h-screen gap-6 flex-wrap p-6 ]">
+      {/* Card Component */}
+      {cardData.map(({ variant, href, title, description, emoji }, index) => (
+        <motion.div
+          key={index}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="relative"
+        >
+          <PixelCard
+            variant={variant}
+            className="shadow-xxl hover:shadow-2xl transition-shadow duration-300"
+          >
+            <div className="absolute text-white text-center px-4 font-mono">
+              <Link href={href}>
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  className="text-2xl font-bold mb-2 cursor-pointer hover:underline text-[#57FF31] px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                  style={{ fontFamily: "Orbitron, sans-serif" }}
+                >
+                  {emoji} {title}
+                </motion.button>
+              </Link>
+              <p className="text-sm opacity-80 text-gray-200 mt-2">{description}</p>
+            </div>
+          </PixelCard>
+        </motion.div>
+      ))}
     </div>
   );
 };
+
+const cardData = [
+  {
+    variant: "purple",
+    href: "/dashboard/skill/resume/resume-builder",
+    title: "Resume Builder",
+    description: "🚀 Build a professional resume that stands out in seconds.",
+    emoji: "📄",
+  },
+  {
+    variant: "cyan",
+    href: "/dashboard/skill/resume/cover-letter",
+    title: "Cover Letter",
+    description: "📝 Make a Cover Letter in One Click!",
+    emoji: "✉️",
+  },
+  {
+    variant: "orange",
+    href: "/dashboard/skill/resume/project-recommender",
+    title: "Project Recommender",
+    description: "💡 Build real-world projects effortlessly!",
+    emoji: "🔧",
+  },
+  {
+    variant: "red",
+    href: "/dashboard/skill/resume/blockchain",
+    title: "Blockchain Resume",
+    description: "🔗 Create a Blockchain-based resume for security & trust!",
+    emoji: "🛡️",
+  },
+];
 
 export default Page;
