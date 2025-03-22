@@ -13,7 +13,7 @@ async function GroqForJob(messages, max_tokens = 1000) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "deepseek-r1-distill-llama-70b",
+        model: "gemma2-9b-it",
         messages: messages,
         max_tokens: max_tokens,
         temperature: 0.7,
