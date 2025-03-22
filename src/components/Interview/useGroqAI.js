@@ -13,7 +13,7 @@ export function useGroqAI() {
   const [retryCount, setRetryCount] = useState(0)
 
   const callGroqAPI = useCallback(
-    async (messages, model = "deepseek-r1-distill-llama-70b", maxTokens = 150, temperature = 0.7) => {
+    async (messages, model = "gemma2-9b-it", maxTokens = 350, temperature = 0.7) => {
       setIsLoading(true)
       setError(null)
 
@@ -113,7 +113,7 @@ Answer: ${answer}
 ${detailedFeedback ? "Provide detailed feedback with specific improvement suggestions and a numerical score from 0-100." : "Evaluate the answer and provide short, constructive feedback in 2-3 sentences."}`,
         },
       ]
-      return callGroqAPI(messages,"deepseek-r1-distill-llama-70b", maxTokens)
+      return callGroqAPI(messages,"gemma2-9b-it", maxTokens)
     },
     [callGroqAPI],
   )
@@ -141,7 +141,7 @@ ${detailedFeedback ? "Provide detailed feedback with specific improvement sugges
         Keep it concise but informative.`,
         },
       ]
-      return callGroqAPI(messages, "deepseek-r1-distill-llama-70b", 400, 0.7)
+      return callGroqAPI(messages, "gemma2-9b-it", 400, 0.7)
     },
     [callGroqAPI],
   )
@@ -159,7 +159,7 @@ ${detailedFeedback ? "Provide detailed feedback with specific improvement sugges
         },
       ]
 
-      return callGroqAPI(messages, "deepseek-r1-distill-llama-70b", 100, 0.7)
+      return callGroqAPI(messages, "gemma2-9b-it", 100, 0.7)
     },
     [callGroqAPI],
   )

@@ -773,21 +773,21 @@ ${repo.description || "No description available"}
             {showPreview ? "Edit Mode" : "Preview Resume"}
           </Button>
 
-          <Link href="/blockchain-verify">
+          <Link href="/verify">
             <Button className="bg-purple-600 hover:bg-purple-700 text-white cursor-pointer">
               <Shield className="mr-2 h-4 w-4" />
               Verify Resume
             </Button>
           </Link>
 
-          <Link href="/cover-letter">
+          <Link href="/dashboard/skill/resume/cover-letterr">
             <Button className="bg-purple-600 hover:bg-purple-700 text-white cursor-pointer">
               <FileText className="mr-2 h-4 w-4" />
               Cover Letter
             </Button>
           </Link>
 
-          <Link href="/project-recommender">
+          <Link href="/dashboard/skill/resume/project-recommender">
             <Button className="bg-purple-600 hover:bg-purple-700 text-white cursor-pointer">
               <Sparkles className="mr-2 h-4 w-4" />
               Project Ideas

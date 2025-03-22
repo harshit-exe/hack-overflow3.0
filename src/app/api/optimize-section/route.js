@@ -106,7 +106,7 @@ export async function POST(request) {
     // Use Groq AI to optimize the section with a more reliable approach
     try {
       const { text } = await generateText({
-        model: groq("llama-3-8b-8192", { apiKey }),
+        model: groq("gemma2-9b-it", { apiKey }),
         system: systemPrompt,
         prompt: prompt,
         temperature: 0.7,
@@ -120,7 +120,7 @@ export async function POST(request) {
       // Fallback approach with simplified prompt if the first attempt fails
       try {
         const { text } = await generateText({
-          model: groq("llama-3-8b-8192", { apiKey }),
+          model: groq("gemma2-9b-it", { apiKey }),
           prompt: `Improve this resume ${section}: ${content}`,
         })
 
