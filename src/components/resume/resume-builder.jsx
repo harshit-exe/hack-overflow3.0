@@ -443,7 +443,7 @@ ${repo.description || "No description available"}
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-green-600 text-green-500 hover:bg-green-900"
+                  className="border-green-600 text-gray-200 bg-green-600 hover:bg-green-700 hover:text-white cursor-pointer"
                   onClick={handleManualSave}
                   disabled={loading.save}
                 >
@@ -453,7 +453,7 @@ ${repo.description || "No description available"}
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-blue-600 text-blue-500 hover:bg-blue-900"
+                  className="border-blue-600 text-gray-200 bg-blue-600 hover:bg-blue-700 hover:text-white cursor-pointer"
                   onClick={handleExportJSON}
                 >
                   <Download className="h-4 w-4 mr-1" />
@@ -462,7 +462,7 @@ ${repo.description || "No description available"}
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-red-600 text-red-500 hover:bg-red-900"
+                  className="border-red-600 text-gray-200 bg-red-600 hover:bg-red-700 hover:text-white cursor-pointer"
                   onClick={resetResume}
                 >
                   <RotateCw className="h-4 w-4 mr-1" />
@@ -487,12 +487,12 @@ ${repo.description || "No description available"}
                   placeholder="e.g. octocat"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="bg-gray-700 border-gray-600 text-gray-200"
+                  className="bg-gray-700 border-gray-600 text-gray-200 placeholder:text-gray-400"
                 />
                 <Button
                   onClick={fetchGithubData}
                   variant="outline"
-                  className="border-blue-500 text-blue-400 hover:bg-blue-900"
+                  className=" border-blue-500 text-gray-200 bg-blue-600 hover:bg-blue-700 hover:text-white cursor-pointer"
                   disabled={loading.github}
                 >
                   {loading.github ? <Loader2 className="h-4 w-4 animate-spin" /> : "Fetch"}
@@ -539,19 +539,19 @@ ${repo.description || "No description available"}
 
         <Tabs defaultValue="personal" className="bg-gray-800 rounded-md p-4 border border-gray-700">
           <TabsList className="grid grid-cols-4 mb-4 bg-gray-700">
-            <TabsTrigger value="personal" className="data-[state=active]:bg-blue-900 data-[state=active]:text-blue-100">
+            <TabsTrigger value="personal" className="text-white data-[state=active]:bg-blue-900 data-[state=active]:text-blue-100">
               Personal
             </TabsTrigger>
             <TabsTrigger
               value="experience"
-              className="data-[state=active]:bg-blue-900 data-[state=active]:text-blue-100"
+              className="text-white data-[state=active]:bg-blue-900 data-[state=active]:text-blue-100"
             >
               Experience
             </TabsTrigger>
-            <TabsTrigger value="skills" className="data-[state=active]:bg-blue-900 data-[state=active]:text-blue-100">
+            <TabsTrigger value="skills" className="text-white data-[state=active]:bg-blue-900 data-[state=active]:text-blue-100">
               Skills
             </TabsTrigger>
-            <TabsTrigger value="projects" className="data-[state=active]:bg-blue-900 data-[state=active]:text-blue-100">
+            <TabsTrigger value="projects" className="text-white data-[state=active]:bg-blue-900 data-[state=active]:text-blue-100">
               Projects
             </TabsTrigger>
           </TabsList>
@@ -562,7 +562,7 @@ ${repo.description || "No description available"}
               <Button
                 size="sm"
                 variant="outline"
-                className="h-8 border-green-600 text-green-500 hover:bg-green-900"
+                className="h-8 border-green-600 text-gray-200 bg-green-600 hover:bg-green-700 hover:text-white cursor-pointer"
                 onClick={() => optimizeSection("name")}
                 disabled={loading.section === "name"}
               >
@@ -578,7 +578,7 @@ ${repo.description || "No description available"}
               placeholder="Full Name"
               value={resume.name}
               onChange={(e) => handleInputChange("name", e.target.value)}
-              className="bg-gray-700 border-gray-600 text-gray-200"
+              className="bg-gray-700 border-gray-600 text-gray-200 placeholder:text-gray-400"
             />
 
             <div className="flex justify-between items-center">
@@ -586,7 +586,7 @@ ${repo.description || "No description available"}
               <Button
                 size="sm"
                 variant="outline"
-                className="h-8 border-green-600 text-green-500 hover:bg-green-900"
+                className="h-8 border-green-600 text-gray-200 bg-green-600 hover:bg-green-700 hover:text-white cursor-pointer"
                 onClick={() => optimizeSection("title")}
                 disabled={loading.section === "title"}
               >
@@ -602,7 +602,7 @@ ${repo.description || "No description available"}
               placeholder="Professional Title"
               value={resume.title}
               onChange={(e) => handleInputChange("title", e.target.value)}
-              className="bg-gray-700 border-gray-600 text-gray-200"
+              className="bg-gray-700 border-gray-600 text-gray-200 placeholder:text-gray-400"
             />
 
             <div className="flex justify-between items-center">
@@ -610,7 +610,7 @@ ${repo.description || "No description available"}
               <Button
                 size="sm"
                 variant="outline"
-                className="h-8 border-green-600 text-green-500 hover:bg-green-900"
+                className="h-8 border-green-600 text-gray-200 bg-green-600 hover:bg-green-700 hover:text-white cursor-pointer"
                 onClick={() => optimizeSection("bio")}
                 disabled={loading.section === "bio"}
               >
@@ -626,7 +626,7 @@ ${repo.description || "No description available"}
               placeholder="Bio / Professional Summary"
               value={resume.bio}
               onChange={(e) => handleInputChange("bio", e.target.value)}
-              className="min-h-[120px] bg-gray-700 border-gray-600 text-gray-200"
+              className="min-h-[120px] bg-gray-700 border-gray-600 text-gray-200 placeholder:text-gray-400"
             />
 
             <div className="flex justify-between items-center">
@@ -634,7 +634,7 @@ ${repo.description || "No description available"}
               <Button
                 size="sm"
                 variant="outline"
-                className="h-8 border-green-600 text-green-500 hover:bg-green-900"
+                className="h-8 border-green-600 text-gray-200 bg-green-600 hover:bg-green-700 hover:text-white cursor-pointer"
                 onClick={() => optimizeSection("contact")}
                 disabled={loading.section === "contact"}
               >
@@ -650,7 +650,7 @@ ${repo.description || "No description available"}
               placeholder="Contact Information"
               value={resume.contact}
               onChange={(e) => handleInputChange("contact", e.target.value)}
-              className="min-h-[80px] bg-gray-700 border-gray-600 text-gray-200"
+              className="min-h-[80px] bg-gray-700 border-gray-600 text-gray-200 placeholder:text-gray-400"
             />
           </TabsContent>
 
@@ -660,7 +660,7 @@ ${repo.description || "No description available"}
               <Button
                 size="sm"
                 variant="outline"
-                className="h-8 border-green-600 text-green-500 hover:bg-green-900"
+                className="h-8 border-green-600 text-gray-200 bg-green-600 hover:bg-green-700 hover:text-white cursor-pointer"
                 onClick={() => optimizeSection("experience")}
                 disabled={loading.section === "experience"}
               >
@@ -676,7 +676,7 @@ ${repo.description || "No description available"}
               placeholder="Work Experience (Markdown format)"
               value={resume.experience}
               onChange={(e) => handleInputChange("experience", e.target.value)}
-              className="min-h-[300px] bg-gray-700 border-gray-600 text-gray-200"
+              className="min-h-[300px] bg-gray-700 border-gray-600 text-gray-200 placeholder:text-gray-400"
             />
           </TabsContent>
 
@@ -686,7 +686,7 @@ ${repo.description || "No description available"}
               <Button
                 size="sm"
                 variant="outline"
-                className="h-8 border-green-600 text-green-500 hover:bg-green-900"
+                className="h-8 border-green-600 text-gray-200 bg-green-600 hover:bg-green-700 hover:text-white cursor-pointer"
                 onClick={() => optimizeSection("skills")}
                 disabled={loading.section === "skills"}
               >
@@ -702,7 +702,7 @@ ${repo.description || "No description available"}
               placeholder="Skills (comma separated)"
               value={resume.skills}
               onChange={(e) => handleInputChange("skills", e.target.value)}
-              className="min-h-[100px] bg-gray-700 border-gray-600 text-gray-200 mb-4"
+              className="min-h-[100px] bg-gray-700 border-gray-600 text-gray-200 mb-4 placeholder:text-gray-400"
             />
 
             <div className="flex justify-between items-center mb-2">
@@ -710,7 +710,7 @@ ${repo.description || "No description available"}
               <Button
                 size="sm"
                 variant="outline"
-                className="h-8 border-green-600 text-green-500 hover:bg-green-900"
+                className="h-8 border-green-600 text-gray-200 bg-green-600 hover:bg-green-700 hover:text-white cursor-pointer"
                 onClick={() => optimizeSection("education")}
                 disabled={loading.section === "education"}
               >
@@ -726,7 +726,7 @@ ${repo.description || "No description available"}
               placeholder="Education (Markdown format)"
               value={resume.education}
               onChange={(e) => handleInputChange("education", e.target.value)}
-              className="min-h-[200px] bg-gray-700 border-gray-600 text-gray-200"
+              className="min-h-[200px] bg-gray-700 border-gray-600 text-gray-200 placeholder:text-gray-400"
             />
           </TabsContent>
 
@@ -736,7 +736,7 @@ ${repo.description || "No description available"}
               <Button
                 size="sm"
                 variant="outline"
-                className="h-8 border-green-600 text-green-500 hover:bg-green-900"
+                className="h-8 border-green-600 text-gray-200 bg-green-600 hover:bg-green-700 hover:text-white cursor-pointer"
                 onClick={() => optimizeSection("projects")}
                 disabled={loading.section === "projects"}
               >
@@ -752,43 +752,43 @@ ${repo.description || "No description available"}
               placeholder="Projects (Markdown format)"
               value={resume.projects}
               onChange={(e) => handleInputChange("projects", e.target.value)}
-              className="min-h-[300px] bg-gray-700 border-gray-600 text-gray-200"
+              className="min-h-[300px] bg-gray-700 border-gray-600 text-gray-200 placeholder:text-gray-400"
             />
           </TabsContent>
         </Tabs>
 
         <div className="flex flex-wrap gap-2">
-          <Button onClick={analyzeATS} className="bg-green-600 hover:bg-green-700 text-white" disabled={loading.ats}>
+          <Button onClick={analyzeATS} className="bg-green-600 hover:bg-green-700 text-white cursor-pointer" disabled={loading.ats}>
             {loading.ats ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Zap className="mr-2 h-4 w-4" />}
             Analyze ATS Score
           </Button>
 
-          <Button onClick={handleExportPDF} className="bg-blue-600 hover:bg-blue-700 text-white">
+          <Button onClick={handleExportPDF} className="bg-blue-600 hover:bg-blue-700 text-white cursor-pointer">
             <FileDown className="mr-2 h-4 w-4" />
             Export PDF
           </Button>
 
-          <Button onClick={togglePreviewMode} className="bg-purple-600 hover:bg-purple-700 text-white">
+          <Button onClick={togglePreviewMode} className="bg-purple-600 hover:bg-purple-700 text-white cursor-pointer">
             <Eye className="mr-2 h-4 w-4" />
             {showPreview ? "Edit Mode" : "Preview Resume"}
           </Button>
 
           <Link href="/blockchain-verify">
-            <Button className="bg-purple-600 hover:bg-purple-700 text-white">
+            <Button className="bg-purple-600 hover:bg-purple-700 text-white cursor-pointer">
               <Shield className="mr-2 h-4 w-4" />
               Verify Resume
             </Button>
           </Link>
 
           <Link href="/cover-letter">
-            <Button className="bg-purple-600 hover:bg-purple-700 text-white">
+            <Button className="bg-purple-600 hover:bg-purple-700 text-white cursor-pointer">
               <FileText className="mr-2 h-4 w-4" />
               Cover Letter
             </Button>
           </Link>
 
           <Link href="/project-recommender">
-            <Button className="bg-purple-600 hover:bg-purple-700 text-white">
+            <Button className="bg-purple-600 hover:bg-purple-700 text-white cursor-pointer">
               <Sparkles className="mr-2 h-4 w-4" />
               Project Ideas
             </Button>
