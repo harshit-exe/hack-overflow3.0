@@ -780,7 +780,7 @@ ${repo.description || "No description available"}
             </Button>
           </Link>
 
-          <Link href="/dashboard/skill/resume/cover-letterr">
+          <Link href="/dashboard/skill/resume/cover-letter">
             <Button className="bg-purple-600 hover:bg-purple-700 text-white cursor-pointer">
               <FileText className="mr-2 h-4 w-4" />
               Cover Letter
