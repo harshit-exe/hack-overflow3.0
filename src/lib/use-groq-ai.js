@@ -105,7 +105,7 @@ export function useGroqAI() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-        model: "deepseek-r1-distill-llama-70b",
+        model: "gemma2-9b-it",
           messages: [
             {
               role: "system",
