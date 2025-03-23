@@ -230,7 +230,7 @@ export default function DashboardLayout({ children }) {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <Link href="https://framevr.io/classcipher" target="_blank">
+            <Link href="h" target="_blank">
               <motion.div
                 className="flex items-center gap-2 bg-gradient-to-r from-[#1a1a1a] to-[#2a2a2a] hover:from-[#2a2a2a] hover:to-[#1a1a1a] text-white px-4 py-2 rounded-full transition-colors"
                 whileHover={{ scale: 1.05 }}

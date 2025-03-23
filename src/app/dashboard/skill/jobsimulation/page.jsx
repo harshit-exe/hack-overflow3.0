@@ -52,7 +52,7 @@ export default function JobSimulation() {
             <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
               <h3 className="text-2xl font-bold mb-2">Corporate Simulation</h3>
               <p className="text-zinc-300 text-sm mb-4">Advanced Development Environment</p>
-              <Link href="https://framevr.io/jobvrsim#welcome" target="_blank" className="bg-[#4F46E5] hover:bg-[#4338CA] text-white px-4 py-2 ml-80 mr-60 pl-4 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 ">
+              <Link href="h" target="_blank" className="bg-[#4F46E5] hover:bg-[#4338CA] text-white px-4 py-2 ml-80 mr-60 pl-4 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 ">
                 <Play className=" w-4 h-4 transform group-hover/btn:scale-110 transition-transform duration-300" />
                 Enter In Virtual Simulation
               </Link>
